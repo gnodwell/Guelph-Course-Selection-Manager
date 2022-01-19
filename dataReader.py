@@ -19,6 +19,7 @@ def getCoursesBySemester(courses, semester):
         try:
             if (i['semesters'].find(semester) != -1):
                 returnArray.append(i)
+                
         except:
             catch = 1
 
@@ -39,8 +40,9 @@ def getCoursesByCredit(courses, credit):
 #seaches courses by matching names
 def getCoursesByName(courses, name):
     returnArray = []
+    #added upper so user can enter a combination of upper and lower case
     for i in courses:
-        if (i['name'] == name):
+        if (i['name'].upper() == name.upper()):
             returnArray.append(i)
 
     return returnArray
@@ -76,6 +78,7 @@ def main():
     print("4: Credit Weights")
     print("5: Exit Program")
     usrInput = input('--> ')
+
 
     while (usrInput != "5") :
         res = []
