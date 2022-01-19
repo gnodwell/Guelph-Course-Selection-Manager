@@ -50,7 +50,7 @@ def getCoursesByName(courses, name):
 
 def main():
     #open file and load json data into 'data'
-    f = open("data.json", "r")
+    f = open("scraper/data.json", "r")
     data = json.load(f)
     f.close()
 
