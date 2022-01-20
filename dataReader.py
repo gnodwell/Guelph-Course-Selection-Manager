@@ -58,6 +58,7 @@ def getCoursesBySemester(courses, semester):
 
             #print(sem)
             
+            #matching the keywords
             for j in uInput:
                 for s in sem:
                     if (j.upper() == s.upper()):
@@ -100,7 +101,14 @@ def getCoursesByName(courses, name):
 
     return returnArray
 
-
+#output function
+def outputJSON(course):
+    print("Course Code: " + course['cCode'])
+    print("Credits: " + course['creditWeight'])
+    print("Title: " + course['name'])
+    print("Description: " + course['description'])
+    print("Semesters: " + course['semesters'])
+    
 
 
 def main():
@@ -156,8 +164,9 @@ def main():
 
         if (len(res) > 0):
             for i in res:
-                print(i)
-                print('\n\n')
+                print('\n')
+                outputJSON(i)
+                print('\n')
         else :
             print("No Courses Found.")
 
