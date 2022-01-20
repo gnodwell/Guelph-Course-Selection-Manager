@@ -195,7 +195,8 @@ def main():
             print("2: Course Code")
             print("3: Semester's Available")
             print("4: Credit Weights")
-            print("5: Exit Program")
+            print("5: Credit Weights + Semester's Available")
+            print("6: Exit Program")
             usrInput = input('--> ')
         elif (usrInput == "n"):
             exit (0)
