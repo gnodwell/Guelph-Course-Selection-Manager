@@ -15,11 +15,64 @@ def getCoursesByCode(courses, code):
 #searches courses for matching semesters
 def getCoursesBySemester(courses, semester):
     returnArray = []
+    flagA = 1
+    flagB = 0
+
+    #parse user input
+    uInput = semester.split()
+
+    #find and remove the irrelevant keywords like 'only' and 'and'
+    for word in uInput:
+        if (word.upper() == 'AND' or word.upper() == "ONLY"):
+            uInput.remove(word)
+
+    for w in uInput:
+        if (w.upper() == "FALL,"):
+            uInput.remove(w);
+            uInput.append("FALL")
+        elif (w.upper() == "SUMMER,"):
+            uInput.remove(w);
+            uInput.append("SUMMER")
+        elif (w.upper() == "WINTER,"):
+            uInput.remove(w);
+            uInput.append("WINTER")
+
+    #print(uInput)
+
     for i in courses:
         try:
-            if (i['semesters'].find(semester) != -1):
-                returnArray.append(i)
+            #if (i['semesters'].find(semester) != -1):
+                #returnArray.append(i)
+
+            sem = i['semesters'].split()
+            
+
+            #find and remove the irrelevant keywords like 'only' and 'and'
+            for word in sem:
+                if (word.upper() == 'AND' or word.upper() == "ONLY"):
+                    sem.remove(word)
+
+            #removing any commas from the words
+            for word in sem:
+                word.replace(",", "")
+
+            #print(sem)
+            
+            for j in uInput:
+                for s in sem:
+                    if (j.upper() == s.upper()):
+                        flagB = 1
+                if(flagB == 0):
+                    flagA = 0
                 
+                flagB = 0    
+
+            if(flagA == 1 and len(sem) == len(uInput)):
+                returnArray.append(i)
+
+            flagA = 1
+            flagB = 0
+
         except:
             catch = 1
 
@@ -105,6 +158,8 @@ def main():
             for i in res:
                 print(i)
                 print('\n\n')
+        else :
+            print("No Courses Found.")
 
         usrInput = input("Would you like to perform another search? (y/n)")
         usrInput = usrInput.lower()
