@@ -44,7 +44,7 @@ const getUrls = async (page) => {
 const initBrowser = async () => {
     //open browser
     const browser = await playwright.chromium.launch({
-        headless: false
+        headless: true
     });
 
     //open page
@@ -134,6 +134,8 @@ const getCoursesDataFromMajor = async (page) => {
 const main = async () => {
     //init
     const [browser, page] = await initBrowser();
+
+    console.log('loading data from https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/');
 
     // get the urls for each majors
     const urls = await getUrls(page);
