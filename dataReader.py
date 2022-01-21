@@ -16,7 +16,6 @@ def getCoursesByCode(courses, code):
 def getCoursesBySemester(courses, semester):
     returnArray = []
     flagA = 1
-    #flagB = 0
 
     #parse user input
     uInput = semester.split()
@@ -129,6 +128,14 @@ def getCoursesByCreditSemesters(courses, credit, semesters):
 
     return returnArray
 
+#searches courses by semester + name
+def getCoursesBySemesterCourseName(courses, semesters, name):
+    nameCourses = getCoursesByName(courses, name)
+    returnArray = getCoursesBySemester(nameCourses, semesters)
+
+    return returnArray
+    
+
 #output function
 def outputJSON(course):
     print("Course Code: " + course['cCode'])
@@ -165,12 +172,13 @@ def main():
     print("2: Course Code")
     print("3: Semester's Available")
     print("4: Credit Weights")
-    print("5: Credit Weights + Semester's Available")
-    print("6: Exit Program")
+    print("5: Credit Weights + Semesters Available")
+    print("6: Course Name + Semesters Available")
+    print("7: Exit Program")
     usrInput = input('--> ')
 
 
-    while (usrInput != "6") :
+    while (usrInput != "7") :
         res = []
         if (usrInput == "1") :
             courseName = input("Please enter the name of the course you are looking for: ")
@@ -193,6 +201,11 @@ def main():
             courseCredit = input("Please enter the credit weight you are looking for: ")
             courseSemester = input("Please enter the semester you are looking for: ")
             res = getCoursesByCreditSemesters(courses, courseCredit, courseSemester)
+        elif (usrInput == "6"):
+            #search course name + semesters
+            courseName = input("Please enter the name of the course you are looking for: ")
+            courseSemester = input("Please enter the semester you are looking for: ")
+            res = getCoursesBySemesterCourseName(courses, courseSemester, courseName)
         else:
             print ("Incorrect Input, Please try again")
 
