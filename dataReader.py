@@ -16,28 +16,39 @@ def getCoursesByCode(courses, code):
 def getCoursesBySemester(courses, semester):
     returnArray = []
     flagA = 1
-    flagB = 0
+    #flagB = 0
 
     #parse user input
     uInput = semester.split()
+    newKeyWords = []
 
     #find and remove the irrelevant keywords like 'only' and 'and'
     for word in uInput:
         if (word.upper() == 'AND' or word.upper() == "ONLY"):
             uInput.remove(word)
 
+    #make new list of keywords from user input
     for w in uInput:
-        if (w.upper() == "FALL,"):
-            uInput.remove(w);
-            uInput.append("FALL")
-        elif (w.upper() == "SUMMER,"):
-            uInput.remove(w);
-            uInput.append("SUMMER")
-        elif (w.upper() == "WINTER,"):
-            uInput.remove(w);
-            uInput.append("WINTER")
+        if (w.upper().find("FALL") != -1):
+            newKeyWords.append("FALL")
+        elif (w.upper().find("SUMMER") != -1):
+            newKeyWords.append("SUMMER")
+        elif (w.upper().find("WINTER") != -1):
+            newKeyWords.append("WINTER")
+        elif (w.upper().find("DVM") != -1):
+            newKeyWords.append("DVM")
+        elif (w.upper().find("PHASE") != -1):
+            newKeyWords.append("PHASE")
+        elif (w.find("1") != -1):
+            newKeyWords.append("1")
+        elif (w.find("2") != -1):
+            newKeyWords.append("2")
+        elif (w.find("3") != -1):
+            newKeyWords.append("3")
+        elif (w.find("4") != -1):
+            newKeyWords.append("4")
 
-    #print(uInput)
+    #print(newKeyWords)
 
     for i in courses:
         try:
@@ -59,20 +70,30 @@ def getCoursesBySemester(courses, semester):
             #print(sem)
             
             #matching the keywords
-            for j in uInput:
-                for s in sem:
-                    if (j.upper() == s.upper()):
-                        flagB = 1
-                if(flagB == 0):
-                    flagA = 0
-                
-                flagB = 0    
+            for keyWord in newKeyWords:
+                for word in sem:
 
-            if(flagA == 1 and len(sem) == len(uInput)):
-                returnArray.append(i)
+                    #looking for the keywords "DVM PHASE [NUM]" consecutively
+                    #otherwise if the other keywords are found then append
+                    
+                    if(keyWord.upper() == "PHASE" or keyWord == "1" or keyWord == "2" or keyWord == "3" or keyWord == "4"):
+                        flagA = 1
+                        #do nothing
+                    elif(keyWord.upper() == "DVM" and word.upper() == "DVM"):
+                        
+                        if(newKeyWords[newKeyWords.index(keyWord) + 1].upper() == "PHASE"):
+                            
+                            if(newKeyWords[newKeyWords.index(keyWord) + 2] == "1" and sem[sem.index(word) + 2] == "1"):
+                                returnArray.append(i)
+                            if(newKeyWords[newKeyWords.index(keyWord) + 2] == "2" and sem[sem.index(word) + 2] == "2"):
+                                returnArray.append(i)
+                            if(newKeyWords[newKeyWords.index(keyWord) + 2] == "3" and sem[sem.index(word) + 2] == "3"):
+                                returnArray.append(i)
+                            if(newKeyWords[newKeyWords.index(keyWord) + 2] == "4" and sem[sem.index(word) + 2] == "4"):
+                                returnArray.append(i)
+                    elif(word.upper() == keyWord.upper()):
+                        returnArray.append(i)
 
-            flagA = 1
-            flagB = 0
 
         except:
             catch = 1
@@ -195,7 +216,8 @@ def main():
             print("2: Course Code")
             print("3: Semester's Available")
             print("4: Credit Weights")
-            print("5: Exit Program")
+            print("5: Credit Weights + Semester's Available")
+            print("6: Exit Program")
             usrInput = input('--> ')
         elif (usrInput == "n"):
             exit (0)
