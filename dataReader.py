@@ -48,7 +48,7 @@ def getCoursesBySemester(courses, semester):
         elif (w.find("4") != -1):
             newKeyWords.append("4")
 
-    print(newKeyWords)
+    #print(newKeyWords)
 
     for i in courses:
         try:
