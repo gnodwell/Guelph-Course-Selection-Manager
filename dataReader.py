@@ -1,4 +1,5 @@
 import json
+from operator import le
 
 
 #searches courses for matching cCodes
@@ -111,7 +112,7 @@ def getCoursesByCredit(courses, credit):
     return returnArray
 
 
-#seaches courses by matching names
+#searches courses by matching names
 def getCoursesByName(courses, name):
     returnArray = []
     #added upper so user can enter a combination of upper and lower case
@@ -121,6 +122,18 @@ def getCoursesByName(courses, name):
 
     return returnArray
 
+#searches courses in given academic level
+def getCoursesByLevel(courses, level):
+		returnArray = []
+		for i in courses:
+				cCode = i['cCode']
+                # find course level
+				levelIndex = cCode.find('*')
+				if cCode[levelIndex+1] == level[0]:
+						returnArray.append(i)
+			
+		return returnArray			
+	
 #searches courses by matching creditWeights + semesters
 def getCoursesByCreditSemesters(courses, credit, semesters):
     creditCourses = getCoursesByCredit(courses, credit)
@@ -141,11 +154,14 @@ def outputJSON(course):
     print("Course Code: " + course['cCode'])
     print("Credits: " + course['creditWeight'])
     print("Title: " + course['name'])
-    print("Description: " + course['description'])
-    print("Semesters: " + course['semesters'])
+
+    # check for existence of field
+    if course['description']:
+        print("Description: " + course['description'])
+    if course['semesters']:
+        print("Semesters: " + course['semesters'])
+    print('')
     
-
-
 def main():
     #open file and load json data into 'data'
     f = open("scraper/data.json", "r")
@@ -174,11 +190,11 @@ def main():
     print("4: Credit Weights")
     print("5: Credit Weights + Semesters Available")
     print("6: Course Name + Semesters Available")
-    print("7: Exit Program")
+    print("7: Course Level")
+    print("8: Exit Program")
     usrInput = input('--> ')
 
-
-    while (usrInput != "7") :
+    while (usrInput != "8") :
         res = []
         if (usrInput == "1") :
             courseName = input("Please enter the name of the course you are looking for: ")
@@ -206,18 +222,22 @@ def main():
             courseName = input("Please enter the name of the course you are looking for: ")
             courseSemester = input("Please enter the semester you are looking for: ")
             res = getCoursesBySemesterCourseName(courses, courseSemester, courseName)
+        elif (usrInput == "7"):
+            #search credit weights
+            courseLevel = input("Please enter the course level you are looking for: ")
+            res = getCoursesByLevel(courses, courseLevel)
         else:
             print ("Incorrect Input, Please try again")
 
         if (len(res) > 0):
+            print('')
             for i in res:
-                print('\n')
                 outputJSON(i)
-                print('\n')
+            print("Total courses: {} \n".format(len(res)))
         else :
             print("No Courses Found.")
 
-        usrInput = input("Would you like to perform another search? (y/n)")
+        usrInput = input("Would you like to perform another search? (y/n) ")
         usrInput = usrInput.lower()
         while (usrInput != 'y' and usrInput != 'n'):
             usrInput = input("Unexpected input, Please try again: ")
@@ -229,8 +249,10 @@ def main():
             print("2: Course Code")
             print("3: Semester's Available")
             print("4: Credit Weights")
-            print("5: Credit Weights + Semester's Available")
-            print("6: Exit Program")
+            print("5: Credit Weights + Semesters Available")
+            print("6: Course Name + Semesters Available")
+            print("7: Course Level")
+            print("8: Exit Program")
             usrInput = input('--> ')
         elif (usrInput == "n"):
             exit (0)
