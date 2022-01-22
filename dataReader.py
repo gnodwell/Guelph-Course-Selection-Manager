@@ -1,6 +1,4 @@
 import json
-from operator import le
-
 
 #searches courses for matching cCodes
 def getCoursesByCode(courses, code):
@@ -126,13 +124,22 @@ def getCoursesByName(courses, name):
 def getCoursesByLevel(courses, level):
     returnArray = []
     for i in courses:
-            cCode = i['cCode']
-            # find course level
-            levelIndex = cCode.find('*')
-            if cCode[levelIndex+1] == level[0]:
-                    returnArray.append(i)
+        cCode = i['cCode']
+        # find course level
+        levelIndex = cCode.find('*')
+        if cCode[levelIndex+1] == level[0]:
+            returnArray.append(i)
         
     return returnArray			
+
+#searches course in Distance Education format
+def getCourseByDE(courses):
+    returnArray = []
+    for i in courses:
+        if i['offerings']:
+            returnArray.append(i)
+
+    return returnArray
 	
 #searches courses by matching creditWeights + semesters
 def getCoursesByCreditSemesters(courses, credit, semesters):
@@ -198,11 +205,12 @@ def main():
     print("6: Course Name + Semesters Available")
     print("7: Course Name + Credit Weights")
     print("8: Course Level")
-    print("9: Exit Program")
+    print("9: Courses in Distance Education")
+    print("10: Exit Program")
     usrInput = input('--> ')
 
 
-    while (usrInput != "9") :
+    while (usrInput != "10") :
         res = []
         if (usrInput == "1") :
             courseName = input("Please enter the name of the course you are looking for: ")
@@ -239,6 +247,9 @@ def main():
             #search course level
             courseLevel = input("Please enter the course level you are looking for: ")
             res = getCoursesByLevel(courses, courseLevel)
+        elif (usrInput == "9"):
+            #search Distance Education
+            res = getCourseByDE(courses)
         else:
             print ("Incorrect Input, Please try again")
 
@@ -267,7 +278,8 @@ def main():
             print("6: Course Name + Semesters Available")
             print("7: Course Name + Credit Weights")
             print("8: Course Level")
-            print("9: Exit Program")
+            print("9: Courses in Distance Education")
+            print("10: Exit Program")
             usrInput = input('--> ')
         elif (usrInput == "n"):
             exit (0)
