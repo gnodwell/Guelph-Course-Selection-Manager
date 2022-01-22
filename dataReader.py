@@ -124,15 +124,15 @@ def getCoursesByName(courses, name):
 
 #searches courses in given academic level
 def getCoursesByLevel(courses, level):
-		returnArray = []
-		for i in courses:
-				cCode = i['cCode']
-                # find course level
-				levelIndex = cCode.find('*')
-				if cCode[levelIndex+1] == level[0]:
-						returnArray.append(i)
-			
-		return returnArray			
+    returnArray = []
+    for i in courses:
+            cCode = i['cCode']
+            # find course level
+            levelIndex = cCode.find('*')
+            if cCode[levelIndex+1] == level[0]:
+                    returnArray.append(i)
+        
+    return returnArray			
 	
 #searches courses by matching creditWeights + semesters
 def getCoursesByCreditSemesters(courses, credit, semesters):
@@ -148,6 +148,12 @@ def getCoursesBySemesterCourseName(courses, semesters, name):
 
     return returnArray
     
+#searches courses by name + credits
+def getCoursesByCourseNameCreditWeights(courses, name, credits):
+    creditCourses = getCoursesByCredit(courses, credits)
+    returnArray = getCoursesByName(creditCourses, name)
+    
+    return returnArray
 
 #output function
 def outputJSON(course):
@@ -190,11 +196,13 @@ def main():
     print("4: Credit Weights")
     print("5: Credit Weights + Semesters Available")
     print("6: Course Name + Semesters Available")
-    print("7: Course Level")
-    print("8: Exit Program")
+    print("7: Course Name + Credit Weights")
+    print("8: Course Level")
+    print("9: Exit Program")
     usrInput = input('--> ')
 
-    while (usrInput != "8") :
+
+    while (usrInput != "9") :
         res = []
         if (usrInput == "1") :
             courseName = input("Please enter the name of the course you are looking for: ")
@@ -223,7 +231,12 @@ def main():
             courseSemester = input("Please enter the semester you are looking for: ")
             res = getCoursesBySemesterCourseName(courses, courseSemester, courseName)
         elif (usrInput == "7"):
-            #search credit weights
+            #search by course name + credits
+            courseCredit = input("Please enter the credit weight you are looking for: ")
+            courseName = input("Please enter the name of the course you are looking for: ")
+            res = getCoursesByCourseNameCreditWeights(courses, courseName, courseCredit)     
+        elif (usrInput == "8"):
+            #search course level
             courseLevel = input("Please enter the course level you are looking for: ")
             res = getCoursesByLevel(courses, courseLevel)
         else:
@@ -244,6 +257,7 @@ def main():
             usrInput = usrInput.lower()
 
         if (usrInput == "y"):
+            print("Welcome to our coursesearch")
             print("How would you like to search? (Please enter the number associated with the method)")
             print("1: Course Name")
             print("2: Course Code")
@@ -251,8 +265,9 @@ def main():
             print("4: Credit Weights")
             print("5: Credit Weights + Semesters Available")
             print("6: Course Name + Semesters Available")
-            print("7: Course Level")
-            print("8: Exit Program")
+            print("7: Course Name + Credit Weights")
+            print("8: Course Level")
+            print("9: Exit Program")
             usrInput = input('--> ')
         elif (usrInput == "n"):
             exit (0)
