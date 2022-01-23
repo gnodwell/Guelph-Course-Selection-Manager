@@ -104,10 +104,22 @@ def getCoursesBySemester(courses, semester):
 #@param credit This is the credit weight that will be used to search
 #@return returnArray This is an array filled with results from the search
 def getCoursesByCredit(courses, credit):
-    formattedCredit = "[" + str(credit) + "]"
+    
+    #change format from string to decimal
+    creditFloat = float(credit)
     returnArray = []
+
     for i in courses:
-        if (i['creditWeight'] == formattedCredit):
+        
+        #parse the string from JSON and convert to float
+        JSONstring = ""
+        for char in i['creditWeight']:
+            if((char >= '0' and char <= '9') or char == '.'):
+                JSONstring = JSONstring + char
+        
+        JSONfloat = float(JSONstring)
+
+        if(JSONfloat == creditFloat):
             returnArray.append(i)
 
     return returnArray
@@ -224,6 +236,9 @@ def printCourses(res):
 
 
 def main():
+    #flag used to check for an error in the user input
+    flagError = 0
+
     #open file and load json data into 'data'
     with open("scraper/data.json", "r") as f:
         data = json.load(f)
@@ -240,7 +255,7 @@ def main():
             courses.append(j)
 
     #Start of CLI
-    print("\nWelcome to our coursesearch!")
+    print("\nWelcome to our course search!")
     while True:
         print("How would you like to search? (Please enter the number associated with the method)")
         print("1: Course Name")
@@ -264,8 +279,17 @@ def main():
             #search coursename
         elif (usrInput == "2"):
             courseCode = input("Please enter the code of the course you are looking for: ")
-            res = getCoursesByCode(courses, courseCode)
-            #search course code
+            #error checking the user input
+            if not(len(courseCode) >= 8):
+                print("Incorrect format for course code\nEx: PSYC*1000\n\n")
+                flagError = 1
+            elif(courseCode[3] != '*' and courseCode[4] != '*'):
+                print("2")
+                print("Incorrect format for course code\nEx: PSYC*1000\n\n")
+                flagError = 1
+            else:
+                res = getCoursesByCode(courses, courseCode)
+                #search course code
         elif (usrInput == "3"):
             #search semesters
             courseSemester = input("Please enter the semester you are looking for: ")
@@ -273,6 +297,17 @@ def main():
         elif (usrInput == "4"):
             #search credit weights
             courseCredit = input("Please enter the credit weight you are looking for: ")
+            #error checking the user input (must be of the format "0.25")
+            count = 0
+            for char in courseCredit:
+                if(count == 1):
+                    if(char != '.'):
+                        print("Incorrect format for course credit\nEx: 0.25\n")
+                        flagError = 1
+                elif(not(char >= '0' and char <= '9')):
+                    print("Incorrect format for course credit\nEx: 0.25\n")
+                    flagError = 1
+                count = count + 1
             res = getCoursesByCredit(courses, courseCredit)
         elif (usrInput == "5"):
             #search credit weights + semesters
@@ -302,7 +337,10 @@ def main():
             print ("Incorrect Input, Please try again. \n")
             continue
 
-        printCourses(res)
+        if(flagError != 1): 
+            printCourses(res)
+
+        flagError = 0;
 
     print('--x Bye!')
 
