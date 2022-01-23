@@ -10,7 +10,6 @@ def getCoursesByCode(courses, code):
 
     return returnArray
 
-
 #searches courses for matching semesters
 def getCoursesBySemester(courses, semester):
     returnArray = []
@@ -98,7 +97,6 @@ def getCoursesBySemester(courses, semester):
 
     return returnArray
 
-
 #searches courses for matching creditWeights
 def getCoursesByCredit(courses, credit):
     formattedCredit = "[" + str(credit) + "]"
@@ -108,7 +106,6 @@ def getCoursesByCredit(courses, credit):
             returnArray.append(i)
 
     return returnArray
-
 
 #searches courses by matching names
 def getCoursesByName(courses, name):
@@ -175,12 +172,22 @@ def outputJSON(course):
         print("Semesters: " + course['semesters'])
     print('')
     
+#print resulting courses
+def printCourses(res):
+    if (len(res) > 0):
+        print('')
+        for i in res:
+            outputJSON(i)
+        print("Total courses: {}".format(len(res)))
+    else :
+        print("\nNo Courses Found.")
+    print('\n--x\n')
+ 
 def main():
     #open file and load json data into 'data'
-    f = open("scraper/data.json", "r")
-    data = json.load(f)
-    f.close()
-
+    with open("scraper/data.json", "r") as f:
+        data = json.load(f)
+    
     #Splits each of the majors and stores into the array
     majors = []
     for i in data:
@@ -191,26 +198,25 @@ def main():
     for i in majors:
         for j in i['title']:
             courses.append(j)
-            #print (j['cCode'])
-
 
     #Start of CLI
-    print("Welcome to our coursesearch")
-    print("How would you like to search? (Please enter the number associated with the method)")
-    print("1: Course Name")
-    print("2: Course Code")
-    print("3: Semester's Available")
-    print("4: Credit Weights")
-    print("5: Credit Weights + Semesters Available")
-    print("6: Course Name + Semesters Available")
-    print("7: Course Name + Credit Weights")
-    print("8: Course Level")
-    print("9: Courses in Distance Education")
-    print("10: Exit Program")
-    usrInput = input('--> ')
-
-
-    while (usrInput != "10") :
+    print("\nWelcome to our coursesearch!")    
+    while True:
+        print("How would you like to search? (Please enter the number associated with the method)")
+        print("1: Course Name")
+        print("2: Course Code")
+        print("3: Semester's Available")
+        print("4: Credit Weights")
+        print("5: Credit Weights + Semesters Available")
+        print("6: Course Name + Semesters Available")
+        print("7: Course Name + Credit Weights")
+        print("8: Course Level")
+        print("9: Courses in Distance Education")
+        print("10: Exit Program")
+        usrInput = input('\n--> ')
+        usrInput = usrInput.strip()
+        
+        print('')
         res = []
         if (usrInput == "1") :
             courseName = input("Please enter the name of the course you are looking for: ")
@@ -250,41 +256,15 @@ def main():
         elif (usrInput == "9"):
             #search Distance Education
             res = getCourseByDE(courses)
+        elif (usrInput == "10"):
+            break
         else:
-            print ("Incorrect Input, Please try again")
+            print ("Incorrect Input, Please try again. \n")
+            continue
 
-        if (len(res) > 0):
-            print('')
-            for i in res:
-                outputJSON(i)
-            print("Total courses: {} \n".format(len(res)))
-        else :
-            print("No Courses Found.")
-
-        usrInput = input("Would you like to perform another search? (y/n) ")
-        usrInput = usrInput.lower()
-        while (usrInput != 'y' and usrInput != 'n'):
-            usrInput = input("Unexpected input, Please try again: ")
-            usrInput = usrInput.lower()
-
-        if (usrInput == "y"):
-            print("Welcome to our coursesearch")
-            print("How would you like to search? (Please enter the number associated with the method)")
-            print("1: Course Name")
-            print("2: Course Code")
-            print("3: Semester's Available")
-            print("4: Credit Weights")
-            print("5: Credit Weights + Semesters Available")
-            print("6: Course Name + Semesters Available")
-            print("7: Course Name + Credit Weights")
-            print("8: Course Level")
-            print("9: Courses in Distance Education")
-            print("10: Exit Program")
-            usrInput = input('--> ')
-        elif (usrInput == "n"):
-            exit (0)
-
-
+        printCourses(res)
+    
+    print('--x Bye!')
 
 if __name__ == "__main__":
     main()
