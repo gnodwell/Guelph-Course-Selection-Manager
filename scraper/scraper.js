@@ -43,7 +43,7 @@ const getUrls = async (page) => {
  */
 const initBrowser = async () => {
     //open browser
-    const browser = await playwright.chromium.launch({
+    const browser = await playwright.firefox.launch({
         headless: true
     });
 
