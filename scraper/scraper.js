@@ -149,14 +149,17 @@ const main = async () => {
             await page.goto(url);
             
             //get major title
-            // let title = null;
-            // title = await page.$eval('//h1[contains(@class, "page-title")]', elm => elm.innerText);
+            let title = null;
+            title = await page.$eval('//h1[contains(@class, "page-title")]', elm => elm.innerText);
 
             //get all the course data for the major
             majorData = await getCoursesDataFromMajor(page);
 
             //add data from major to total data array
-            allData.push({title: majorData});
+            allData.push({
+                major: title,
+                title: majorData
+            });
             
         } catch (err) {
             console.log(err);
