@@ -167,7 +167,6 @@ def getCourseByDE(courses):
     return returnArray
 
 
-#searches courses by matching creditWeights + semesters
 
 #This function searches for courses with specified credit weight and offered in a specified semester
 #@param courses This is an array of json objects of all the courses
@@ -192,8 +191,6 @@ def getCoursesBySemesterCourseName(courses, semesters, name):
 
     return returnArray
 
-
-#searches courses by name + credits
 #This function searches for a course with a specified name and a specifed credit weight
 #@param courses This is an array of json objects of all the courses
 #@param name This is the name of the course used to search
@@ -220,21 +217,22 @@ def outputJSON(course):
         print("Semesters: " + course['semesters'])
     print('')
 
-
-#print resulting courses
 #This function is used to print the results of the search
 #@param res This is the array filled with the results from the search
 def printCourses(res):
+    hasPrinted = False
     if (len(res) > 0):
         print('')
         for i in res:
             outputJSON(i)
         print("Total courses: {}".format(len(res)))
+        hasPrinted = True
     else :
         print("\nNo Courses Found.")
+        hasPrinted = False
     print('\n--x\n')
-
-
+    return hasPrinted
+ 
 def main():
     #flag used to check for an error in the user input
     flagError = 0
