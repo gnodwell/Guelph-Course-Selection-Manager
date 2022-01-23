@@ -1,6 +1,11 @@
 import json
 
-#searches courses for matching cCodes
+
+
+#This function searches for a specificed course code
+#@param courses This is an array of json objects of all the courses
+#@param code This is the course code that will be used to search
+#@return returnArray This is an array filled with results from the search
 def getCoursesByCode(courses, code):
     returnArray = []
     code = code.upper()
@@ -10,7 +15,11 @@ def getCoursesByCode(courses, code):
 
     return returnArray
 
-#searches courses for matching semesters
+
+#This function searches for a course that is offered in a specified semester
+#@param courses This is an array of json objects of all the courses
+#@param semester This is the semester that will be used to search
+#@return returnArray This is an array filled with results from the search
 def getCoursesBySemester(courses, semester):
     returnArray = []
     flagA = 1
@@ -49,11 +58,7 @@ def getCoursesBySemester(courses, semester):
 
     for i in courses:
         try:
-            #if (i['semesters'].find(semester) != -1):
-                #returnArray.append(i)
-
             sem = i['semesters'].split()
-            
 
             #find and remove the irrelevant keywords like 'only' and 'and'
             for word in sem:
@@ -64,22 +69,19 @@ def getCoursesBySemester(courses, semester):
             for word in sem:
                 word.replace(",", "")
 
-            #print(sem)
-            
             #matching the keywords
             for keyWord in newKeyWords:
                 for word in sem:
 
                     #looking for the keywords "DVM PHASE [NUM]" consecutively
                     #otherwise if the other keywords are found then append
-                    
                     if(keyWord.upper() == "PHASE" or keyWord == "1" or keyWord == "2" or keyWord == "3" or keyWord == "4"):
                         flagA = 1
                         #do nothing
                     elif(keyWord.upper() == "DVM" and word.upper() == "DVM"):
-                        
+
                         if(newKeyWords[newKeyWords.index(keyWord) + 1].upper() == "PHASE"):
-                            
+
                             if(newKeyWords[newKeyWords.index(keyWord) + 2] == "1" and sem[sem.index(word) + 2] == "1"):
                                 returnArray.append(i)
                             if(newKeyWords[newKeyWords.index(keyWord) + 2] == "2" and sem[sem.index(word) + 2] == "2"):
@@ -91,23 +93,42 @@ def getCoursesBySemester(courses, semester):
                     elif(word.upper() == keyWord.upper()):
                         returnArray.append(i)
 
-
         except:
             catch = 1
 
     return returnArray
 
-#searches courses for matching creditWeights
+
+#This function searches for courses with a specified credit weights
+#@param courses This is an array of json objects of all the courses
+#@param credit This is the credit weight that will be used to search
+#@return returnArray This is an array filled with results from the search
 def getCoursesByCredit(courses, credit):
-    formattedCredit = "[" + str(credit) + "]"
+    
+    #change format from string to decimal
+    creditFloat = float(credit)
     returnArray = []
+
     for i in courses:
-        if (i['creditWeight'] == formattedCredit):
+        
+        #parse the string from JSON and convert to float
+        JSONstring = ""
+        for char in i['creditWeight']:
+            if((char >= '0' and char <= '9') or char == '.'):
+                JSONstring = JSONstring + char
+        
+        JSONfloat = float(JSONstring)
+
+        if(JSONfloat == creditFloat):
             returnArray.append(i)
 
     return returnArray
 
-#searches courses by matching names
+
+#This function searches for courses with a specified name
+#@param courses This is an array of json objects of all the courses
+#@param name This is the name of the course to search for
+#@return returnArray This is an array filled with results from the search
 def getCoursesByName(courses, name):
     returnArray = []
     #added upper so user can enter a combination of upper and lower case
@@ -117,7 +138,11 @@ def getCoursesByName(courses, name):
 
     return returnArray
 
-#searches courses in given academic level
+
+#This function searches for courses with a specified course level
+#@param courses This is an array of json objects of all the courses
+#@param level This is the course level to search for
+#@return returnArray This is an array filled with results from the search
 def getCoursesByLevel(courses, level):
     returnArray = []
     for i in courses:
@@ -126,10 +151,13 @@ def getCoursesByLevel(courses, level):
         levelIndex = cCode.find('*')
         if cCode[levelIndex+1] == level[0]:
             returnArray.append(i)
-        
-    return returnArray			
 
-#searches course in Distance Education format
+    return returnArray
+
+
+#This function searches for courses that are offered in distant education
+#@param courses This is an array of json objects of all the courses
+#@return returnArray This is an array filled with results from the search
 def getCourseByDE(courses):
     returnArray = []
     for i in courses:
@@ -137,29 +165,46 @@ def getCourseByDE(courses):
             returnArray.append(i)
 
     return returnArray
-	
-#searches courses by matching creditWeights + semesters
+
+
+
+#This function searches for courses with specified credit weight and offered in a specified semester
+#@param courses This is an array of json objects of all the courses
+#@param credit This is the credit weight used to search
+#@param semesters This is the semesters used to search
+#@return This is an array filled with results from the search
 def getCoursesByCreditSemesters(courses, credit, semesters):
     creditCourses = getCoursesByCredit(courses, credit)
     returnArray = getCoursesBySemester(creditCourses, semesters)
 
     return returnArray
 
-#searches courses by semester + name
+
+#This function searches for a course with a specified name and offered in a specified semester
+#@param courses This is an array of json objects of all the courses
+#@param semesters This is the semesters used to search
+#@param name This is the name of the course used to search
+#@return This is an array filled with results from the search
 def getCoursesBySemesterCourseName(courses, semesters, name):
     nameCourses = getCoursesByName(courses, name)
     returnArray = getCoursesBySemester(nameCourses, semesters)
 
     return returnArray
-    
-#searches courses by name + credits
+
+#This function searches for a course with a specified name and a specifed credit weight
+#@param courses This is an array of json objects of all the courses
+#@param name This is the name of the course used to search
+#@param credits This is the credit weight of the course used to search
+#@return This is an array filled with results from the search
 def getCoursesByCourseNameCreditWeights(courses, name, credits):
     creditCourses = getCoursesByCredit(courses, credits)
     returnArray = getCoursesByName(creditCourses, name)
-    
+
     return returnArray
 
-#output function
+
+#This function formats and prints the output of the program to the command line
+#@param course This is the course information that is to be printed
 def outputJSON(course):
     print("Course Code: " + course['cCode'])
     print("Credits: " + course['creditWeight'])
@@ -171,8 +216,9 @@ def outputJSON(course):
     if course['semesters']:
         print("Semesters: " + course['semesters'])
     print('')
-    
-#print resulting courses
+
+#This function is used to print the results of the search
+#@param res This is the array filled with the results from the search
 def printCourses(res):
     hasPrinted = False
     if (len(res) > 0):
@@ -188,10 +234,13 @@ def printCourses(res):
     return hasPrinted
  
 def main():
+    #flag used to check for an error in the user input
+    flagError = 0
+
     #open file and load json data into 'data'
     with open("scraper/data.json", "r") as f:
         data = json.load(f)
-    
+
     #Splits each of the majors and stores into the array
     majors = []
     for i in data:
@@ -204,7 +253,7 @@ def main():
             courses.append(j)
 
     #Start of CLI
-    print("\nWelcome to our coursesearch!")    
+    print("\nWelcome to our course search!")
     while True:
         print("How would you like to search? (Please enter the number associated with the method)")
         print("1: Course Name")
@@ -219,7 +268,7 @@ def main():
         print("10: Exit Program")
         usrInput = input('\n--> ')
         usrInput = usrInput.strip()
-        
+
         print('')
         res = []
         if (usrInput == "1") :
@@ -228,8 +277,17 @@ def main():
             #search coursename
         elif (usrInput == "2"):
             courseCode = input("Please enter the code of the course you are looking for: ")
-            res = getCoursesByCode(courses, courseCode)
-            #search course code
+            #error checking the user input
+            if not(len(courseCode) >= 8):
+                print("Incorrect format for course code\nEx: PSYC*1000\n\n")
+                flagError = 1
+            elif(courseCode[3] != '*' and courseCode[4] != '*'):
+                print("2")
+                print("Incorrect format for course code\nEx: PSYC*1000\n\n")
+                flagError = 1
+            else:
+                res = getCoursesByCode(courses, courseCode)
+                #search course code
         elif (usrInput == "3"):
             #search semesters
             courseSemester = input("Please enter the semester you are looking for: ")
@@ -237,6 +295,17 @@ def main():
         elif (usrInput == "4"):
             #search credit weights
             courseCredit = input("Please enter the credit weight you are looking for: ")
+            #error checking the user input (must be of the format "0.25")
+            count = 0
+            for char in courseCredit:
+                if(count == 1):
+                    if(char != '.'):
+                        print("Incorrect format for course credit\nEx: 0.25\n")
+                        flagError = 1
+                elif(not(char >= '0' and char <= '9')):
+                    print("Incorrect format for course credit\nEx: 0.25\n")
+                    flagError = 1
+                count = count + 1
             res = getCoursesByCredit(courses, courseCredit)
         elif (usrInput == "5"):
             #search credit weights + semesters
@@ -252,7 +321,7 @@ def main():
             #search by course name + credits
             courseCredit = input("Please enter the credit weight you are looking for: ")
             courseName = input("Please enter the name of the course you are looking for: ")
-            res = getCoursesByCourseNameCreditWeights(courses, courseName, courseCredit)     
+            res = getCoursesByCourseNameCreditWeights(courses, courseName, courseCredit)
         elif (usrInput == "8"):
             #search course level
             courseLevel = input("Please enter the course level you are looking for: ")
@@ -266,9 +335,13 @@ def main():
             print ("Incorrect Input, Please try again. \n")
             continue
 
-        printCourses(res)
-    
+        if(flagError != 1): 
+            printCourses(res)
+
+        flagError = 0;
+
     print('--x Bye!')
+
 
 if __name__ == "__main__":
     main()
