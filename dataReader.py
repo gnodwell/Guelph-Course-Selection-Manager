@@ -174,14 +174,18 @@ def outputJSON(course):
     
 #print resulting courses
 def printCourses(res):
+    hasPrinted = False
     if (len(res) > 0):
         print('')
         for i in res:
             outputJSON(i)
         print("Total courses: {}".format(len(res)))
+        hasPrinted = True
     else :
         print("\nNo Courses Found.")
+        hasPrinted = False
     print('\n--x\n')
+    return hasPrinted
  
 def main():
     #open file and load json data into 'data'
