@@ -26,6 +26,7 @@ def getCoursesBySemester(courses, semester):
 
     #parse user input
     uInput = semester.split()
+    #print(uInput, '\n\n')
     newKeyWords = []
 
     #find and remove the irrelevant keywords like 'only' and 'and'
@@ -33,6 +34,7 @@ def getCoursesBySemester(courses, semester):
         if (word.upper() == 'AND' or word.upper() == "ONLY"):
             uInput.remove(word)
 
+    
     #make new list of keywords from user input
     for w in uInput:
         if (w.upper().find("FALL") != -1):
@@ -54,11 +56,12 @@ def getCoursesBySemester(courses, semester):
         elif (w.find("4") != -1):
             newKeyWords.append("4")
 
-    #print(newKeyWords)
-
+    
+    #go through the list of courses
     for i in courses:
         try:
             sem = i['semesters'].split()
+            semList = []
 
             #find and remove the irrelevant keywords like 'only' and 'and'
             for word in sem:
@@ -66,8 +69,9 @@ def getCoursesBySemester(courses, semester):
                     sem.remove(word)
 
             #removing any commas from the words
-            for word in sem:
-                word.replace(",", "")
+            for j in range(len(sem)):
+                if sem[j][-1] == ',':
+                    sem[j] = sem[j][:-1]
 
             #matching the keywords
             for keyWord in newKeyWords:
