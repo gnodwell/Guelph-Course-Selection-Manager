@@ -219,6 +219,7 @@ def outputJSON(course):
 
 #This function is used to print the results of the search
 #@param res This is the array filled with the results from the search
+#@return hasPrinted boolean for whether courses were printed or not.
 def printCourses(res):
     hasPrinted = False
     if (len(res) > 0):
@@ -232,11 +233,34 @@ def printCourses(res):
         hasPrinted = False
     print('\n--x\n')
     return hasPrinted
- 
-def main():
-    #flag used to check for an error in the user input
-    flagError = 0
 
+#This function is used to validate user input for course code
+#@param courseCode user input for course code
+def validateCourseCode(courseCode):
+    if not(len(courseCode) >= 8):
+        print("\nIncorrect format for course code\nEx: PSYC*1000\n")
+        return False
+    elif(courseCode[3] != '*' and courseCode[4] != '*'):
+        print("\nIncorrect format for course code\nEx: PSYC*1000\n")
+        return False
+    return True
+
+def validateCourseCreditWeight(courseCredit):
+    try : 
+        float(courseCredit)
+    except :
+        print("\nIncorrect format for course credit.\nEx: 0.25\n")
+        return False
+    return True
+
+def validateCourseLevel(courseLevel):
+    if len(courseLevel) == 4 and courseLevel.isdigit():
+        return True
+    else:
+        print("\nIncorrect format for course level.\nEx: 1000\n")
+        return False
+
+def main():
     #open file and load json data into 'data'
     with open("scraper/data.json", "r") as f:
         data = json.load(f)
@@ -272,22 +296,17 @@ def main():
         print('')
         res = []
         if (usrInput == "1") :
+            #search coursename
             courseName = input("Please enter the name of the course you are looking for: ")
             res = getCoursesByName(courses, courseName)
-            #search coursename
         elif (usrInput == "2"):
+            #search course code
             courseCode = input("Please enter the code of the course you are looking for: ")
             #error checking the user input
-            if not(len(courseCode) >= 8):
-                print("Incorrect format for course code\nEx: PSYC*1000\n\n")
-                flagError = 1
-            elif(courseCode[3] != '*' and courseCode[4] != '*'):
-                print("2")
-                print("Incorrect format for course code\nEx: PSYC*1000\n\n")
-                flagError = 1
-            else:
+            if validateCourseCode(courseCode):
                 res = getCoursesByCode(courses, courseCode)
-                #search course code
+            else:
+                continue 
         elif (usrInput == "3"):
             #search semesters
             courseSemester = input("Please enter the semester you are looking for: ")
@@ -295,22 +314,18 @@ def main():
         elif (usrInput == "4"):
             #search credit weights
             courseCredit = input("Please enter the credit weight you are looking for: ")
-            #error checking the user input (must be of the format "0.25")
-            count = 0
-            for char in courseCredit:
-                if(count == 1):
-                    if(char != '.'):
-                        print("Incorrect format for course credit\nEx: 0.25\n")
-                        flagError = 1
-                elif(not(char >= '0' and char <= '9')):
-                    print("Incorrect format for course credit\nEx: 0.25\n")
-                    flagError = 1
-                count = count + 1
-            res = getCoursesByCredit(courses, courseCredit)
+            #error checking the user input
+            if validateCourseCreditWeight(courseCredit):
+                res = getCoursesByCredit(courses, courseCredit)
+            else: 
+                continue
         elif (usrInput == "5"):
             #search credit weights + semesters
             courseCredit = input("Please enter the credit weight you are looking for: ")
+            if not validateCourseCreditWeight(courseCredit):
+                continue
             courseSemester = input("Please enter the semester you are looking for: ")
+            print(courseCredit, ' ', courseSemester)
             res = getCoursesByCreditSemesters(courses, courseCredit, courseSemester)
         elif (usrInput == "6"):
             #search course name + semesters
@@ -320,12 +335,18 @@ def main():
         elif (usrInput == "7"):
             #search by course name + credits
             courseCredit = input("Please enter the credit weight you are looking for: ")
+            if not validateCourseCreditWeight(courseCredit):
+                continue
             courseName = input("Please enter the name of the course you are looking for: ")
             res = getCoursesByCourseNameCreditWeights(courses, courseName, courseCredit)
         elif (usrInput == "8"):
             #search course level
             courseLevel = input("Please enter the course level you are looking for: ")
-            res = getCoursesByLevel(courses, courseLevel)
+            #error checking the user input
+            if validateCourseLevel(courseLevel):
+                res = getCoursesByLevel(courses, courseLevel)
+            else:
+                continue
         elif (usrInput == "9"):
             #search Distance Education
             res = getCourseByDE(courses)
@@ -335,10 +356,7 @@ def main():
             print ("Incorrect Input, Please try again. \n")
             continue
 
-        if(flagError != 1): 
-            printCourses(res)
-
-        flagError = 0;
+        printCourses(res)
 
     print('--x Bye!')
 
