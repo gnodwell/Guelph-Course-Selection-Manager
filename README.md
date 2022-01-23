@@ -8,9 +8,22 @@ It then required us to create a CLI (command line interface) to search and view 
 
 The webscraper we created scrapes data from the University of Guelph course descriptions website (https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/)
 and saves the data of all courses at UofG into a JSON file. The data is in the format: course code, course name, course description, semesters offered, lecture times, 
-restrictions, offerings, credit weight, department, location, prerequesites and equates.
+restrictions, offerings, credit weight, department, location, prerequesites and equates. We created the webscraper using NodeJS.
 
-The CLI we created allows the user to search courses by
+The CLI we created allows the user to search and filter courses by:
+-Name
+-Course Code
+-Semester's Available
+-Credit Weights
+-Credit Weights + Semesters Available
+-Course Name + Semesters Available
+-Course Name + Credit Weights
+-Course Level
+-Courses in Distance Education
+
+We created the CLI tool using Python 3.
+
+
 
 ### Prerequisites
 
@@ -42,6 +55,7 @@ To use the CLI tool:
 2. Navigate to root project folder.
 3. Type "python3 dataReader.py"
 4. Use the numbered menu to operate the CLI tool and follow the prompts to perform searchs.
+
 
 
 
