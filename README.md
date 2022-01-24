@@ -36,7 +36,7 @@ To install project:
 2. Navigate to root folder of project. 
 3. Run the "setup.sh" shell script by typing "./setup" in shell or terminal.
 
-Note: if an error occurs during step 2 ensure the script is executable by typing the command:
+Note: if an error occurs during step 3 ensure the script is executable by typing the command:
 "chmod +x setup.sh".
 
 
