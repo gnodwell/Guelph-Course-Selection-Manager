@@ -39,8 +39,6 @@ To install project:
 Note: if an error occurs during step 3 ensure the script is executable by typing the command:
 "chmod +x setup.sh".
 
-
-
 Install PlayWright:
 1. "npx playwright install" in shell.
 
@@ -59,7 +57,7 @@ To use the CLI tool:
 
 1. Ensure the "data.json" file has been created and is in the "scaper" folder.
 2. Navigate to root project folder.
-3. Type "python3 dataReader.py"
+3. Type "python3 dataReader.py" to run program.
 4. Use the numbered menu to operate the CLI tool and follow the prompts to perform searchs.
 
 
