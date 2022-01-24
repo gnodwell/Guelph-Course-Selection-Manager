@@ -23,8 +23,6 @@ The CLI we created allows the user to search and filter courses by:
 
 We created the CLI tool using Python 3.
 
-
-
 ### Prerequisites
 
 -NodeJS (https://nodejs.dev/)
@@ -33,7 +31,15 @@ We created the CLI tool using Python 3.
 
 ### Installation
 
-To install project simply download the project folder to a compatible system.
+To install project:
+1. Download/clone the project folder to a compatible system.
+2. Navigate to root folder of project. 
+3. Run the "setup.sh" shell script by typing "./setup" in shell or terminal.
+
+Note: if an error occurs during step 2 ensure the script is executable by typing the command:
+"chmod +x setup.sh".
+
+
 
 Install PlayWright:
 1. "npx playwright install" in shell.
