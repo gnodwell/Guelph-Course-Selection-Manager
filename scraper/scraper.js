@@ -102,6 +102,7 @@ const getCoursesDataFromMajor = async (page) => {
             const department = getTextFromClassTag(elm, 'text detail-department_s_', 'span');
             const location = getTextFromClassTag(elm, 'text detail-location_s_', 'span');
             const prereqs = getTextFromClassTag(elm, 'text detail-prerequisite_s_', 'span');
+            const coreqs = getTextFromClassTag(elm, 'text detail-co_requisite_s_', 'span')
             const equates = getTextFromClassTag(elm, 'text detail-equate_s_', 'span');
             
             //make object
@@ -117,6 +118,7 @@ const getCoursesDataFromMajor = async (page) => {
                 department: department,
                 location: location,
                 prereqs: prereqs,
+                coreqs: coreqs,
                 equates: equates
             }
             
