@@ -1,6 +1,6 @@
 import json
 
-def readJSON(file="scraper/data.json"):
+def readJSON(file="../scraper/data.json"):
     """open file and load json data into 'data'
 
     Args:
@@ -50,7 +50,7 @@ def main():
     data = readJSON()
     majorDict = mapMajorCourses(data)
     
-    with open("course_graphs/prereqs.json", "w") as f:
+    with open("prereqs.json", "w") as f:
         json.dump(majorDict, f)
 
 if __name__ == '__main__':
