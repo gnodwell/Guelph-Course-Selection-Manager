@@ -1,33 +1,16 @@
-# W22_CIS3760_Team4 - Sprint 1
+# W22_CIS3760_Team4 - Sprint 2
 
 <!-- ABOUT SECTION -->
 ## About 
 
-Sprint 1 required us to create a web scraper using PlayWright (https://playwright.dev/) and either Node.JS or Python. 
-It then required us to create a CLI (command line interface) to search and view the data provided by the scraper.
-
-The webscraper we created scrapes data from the University of Guelph course descriptions website (https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/)
-and saves the data of all courses at UofG into a JSON file. The data is in the format: course code, course name, course description, semesters offered, lecture times, 
-restrictions, offerings, credit weight, department, location, prerequesites and equates. We created the webscraper using NodeJS.
-
-The CLI we created allows the user to search and filter courses by:
--Name
--Course Code
--Semester's Available
--Credit Weights
--Credit Weights + Semesters Available
--Course Name + Semesters Available
--Course Name + Credit Weights
--Course Level
--Courses in Distance Education
-
-We created the CLI tool using Python 3.
+Sprint 2... 
 
 ### Prerequisites
 
 -NodeJS (https://nodejs.dev/)
 -Python 3 (https://www.python.org/downloads/)
 -PlayWright (https://playwright.dev/)
+-PyGraphiz (https://pypi.org/project/pygraphviz/)
 
 ### Installation
 
@@ -41,6 +24,12 @@ Note: if an error occurs during step 3 ensure the script is executable by typing
 
 Install PlayWright:
 1. "npx playwright install" in shell.
+
+Install PyGraphiz:
+Ubuntu/Debian:
+1. "sudo apt-get install graphviz graphviz-dev" in shell.
+2. "pip install pygraphviz"
+
 
 
 ## Usage
@@ -60,11 +49,6 @@ To use the CLI tool:
 3. Type "python3 dataReader.py" to run program.
 4. Use the numbered menu to operate the CLI tool and follow the prompts to perform searchs.
 
+To use the graph generator:
 
-
-
-
-
-
-
-
+1. 
