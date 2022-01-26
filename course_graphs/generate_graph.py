@@ -23,17 +23,25 @@ def getMajorCode(major):
     """
     return major[major.find('(')+1:-1]
 
-def mapCoursesPrereqs(courses):
-    """map each course in given major to prerequisites of the course
+def mapCoursesInfo(courses):
+    """map each course in given major to prerequisites, corequisites, and equates of the course
 
     Args:
         courses ([List]): [json dicts of all courses in major]
 
     Returns:
-        [Dictionary]: [course code mapped to prerequisites]
+        [Dictionary]: [course code mapped to prerequisites, corequisites, and equates]
     """
-    prereqDict = {course['cCode'] : course['prereqs'] for course in courses}
-    return prereqDict
+
+    relations = {}
+    for course in courses:
+        relations[course['cCode']] = {
+            "prereqs": course['prereqs'],
+            "coreqs": course['coreqs'],
+            "equates": course['equates']
+        }
+
+    return relations
 
 def mapMajorCourses(majors):
     """map major's code to courses (with prereqs mapped) supplied in major
@@ -44,14 +52,14 @@ def mapMajorCourses(majors):
     Returns:
         [Dictionary]: [major's code mapped to courses]
     """
-    majorDict = {getMajorCode(major['major']) : mapCoursesPrereqs(major['title']) for major in majors}        
+    majorDict = {getMajorCode(major['major']) : mapCoursesInfo(major['title']) for major in majors}        
     return majorDict
 
 def main():
     data = readJSON()
     majorDict = mapMajorCourses(data)
     
-    with open("prereqs.json", "w") as f:
+    with open("relations.json", "w") as f:
         json.dump(majorDict, f)
 
     #testing pygraphviz
