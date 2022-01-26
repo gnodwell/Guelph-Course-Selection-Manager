@@ -69,5 +69,6 @@ def main():
     G.add_edge("a", "b")
     G.layout()
     G.draw("test.png")
+    
 if __name__ == '__main__':
     main()  
