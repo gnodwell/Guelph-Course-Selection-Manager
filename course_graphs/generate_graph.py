@@ -67,6 +67,7 @@ def main():
     G.add_node("a")
     G.add_node("b")
     G.add_edge("a", "b")
+    G.layout()
     G.draw("test.png")
 if __name__ == '__main__':
     main()  
