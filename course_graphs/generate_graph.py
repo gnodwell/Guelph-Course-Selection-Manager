@@ -1,4 +1,5 @@
 import json
+import pygraphviz as pgv
 
 def readJSON(file="../scraper/data.json"):
     """open file and load json data into 'data'
@@ -53,5 +54,11 @@ def main():
     with open("prereqs.json", "w") as f:
         json.dump(majorDict, f)
 
+    #testing pygraphviz
+    G = pgv.AGraph()
+    G.add_node("a")
+    G.add_node("b")
+    G.add_edge("a", "b")
+    G.draw("test.png")
 if __name__ == '__main__':
     main()  
