@@ -3,7 +3,7 @@
 <!-- ABOUT SECTION -->
 ## About 
 
-Sprint 2... 
+Sprint 2.....
 
 ### Prerequisites
 
