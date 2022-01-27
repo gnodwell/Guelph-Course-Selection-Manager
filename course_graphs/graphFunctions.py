@@ -11,13 +11,53 @@ elif(platform.system() == 'Darwin'):
 
 from courseGraph import readJSON
 
-def parsePrereqs(courses):
+def parseReqs(courses, majorName):
+    """parses coreqs and prereqs, returning the reqs in a list.
+
+    Args:
+        courses ([string]): [string of course reqs]
+
+    Returns:
+        [List]: [List of course reqs]
+    """
     if courses == None:
         return []
 
-    pattern = re.compile(r"[a-zA-Z]+\*[0-9]+")
-    prereqsList = re.findall(pattern, courses)
-    return prereqsList
+    #regex searching for course codes or credit requirements
+    regex = re.escape(majorName) + r"[*][0-9]+|\d{1,2}[.]\d\d\scredits"
+    pattern = re.compile(regex)
+    reqsList = re.findall(pattern, courses)
+    return reqsList
+
+def generateGraphByMajor(graph, all_courses, majorName):
+    """Generates a graph for a specified major.
+
+    Args:
+        graph ([graph]): [empty graph to be generated]
+        all_courses ([dict]): [json data of all courses]
+        majorName ([string]): [string of specified major]
+    """
+    #return if major is not in json
+    if majorName not in all_courses: 
+        print('Major: "' + majorName + '" does not exists')
+        return 
+
+
+    #loop through courses in specified major
+    for k, v in all_courses[majorName].items():
+        #add node for course 
+        graph.add_node(k)
+
+        #add edges between prereqs and course
+        prereqsList = parseReqs(v["prereqs"], majorName)
+        for prereq in prereqsList:
+            graph.add_edge(prereq, k)
+
+        #add edges in both directions between coreqs and course
+        coreqsList = parseReqs(v["coreqs"], majorName)
+        for coreq in coreqsList:
+            graph.add_edge(coreq, k)
+            graph.add_edge(k, coreq)
 
 def generateGraphByCourse(course_graph, all_courses, course):
     """Recursivevly generates a graph for a specified course.
@@ -53,7 +93,6 @@ def generateGraphByCourse(course_graph, all_courses, course):
                         print("NO PREREQS")
 
 def main():
-    cis = readJSON("cis.json")
     all_courses = readJSON("relations.json")
 
     graph = pgv.AGraph(directed=True)
@@ -64,23 +103,20 @@ def main():
     generateGraphByCourse(course_graph, all_courses, "CIS*2520")
 
 
-    for k, v in cis.items():
-        prereqsList = parsePrereqs(v["prereqs"])
-        for prereq in prereqsList:
-            graph.add_edge(prereq, k)
+    generateGraphByMajor(graph, all_courses, "ENGG")
 
     graph.layout(prog='dot')
-    # graph.write('cis.dot')
-    graph.draw("cis.png")
+    # graph.write('major.dot')
+    graph.draw("major.png")
 
     #code to display the image using a bash command depending on the OS
     if(platform.system() == 'Linux'):
-        bshCmd = "xdg-open cis.png"
+        bshCmd = "xdg-open major.png"
         process = subprocess.run(bshCmd, shell=True)
     elif(platform.system() == 'Windows'):
-        os.system('cmd /k "cis.png"')
+        os.system('cmd /k "major.png"')
     elif(platform.system() == 'Darwin'):
-        commands.getstatusoutput("open cis.png")
+        commands.getstatusoutput("open major.png")
 
     course_graph.layout(prog='dot')
     course_graph.write('course.dot')
