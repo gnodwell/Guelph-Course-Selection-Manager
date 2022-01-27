@@ -59,7 +59,7 @@ def generateGraphByMajor(graph, all_courses, majorName):
             graph.add_edge(coreq, k)
             graph.add_edge(k, coreq)
 
-def generateGraphByCourse(course_graph, all_courses, course):
+def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     """Recursivevly generates a graph for a specified course.
 
     Args:
@@ -80,6 +80,7 @@ def generateGraphByCourse(course_graph, all_courses, course):
             for b, n in v.items():
 
                 if (b == course):
+                    print(level_counter)
                     print(b)
 
                     if n["prereqs"]:
@@ -87,8 +88,21 @@ def generateGraphByCourse(course_graph, all_courses, course):
                         prereqsList = re.findall(pattern, n["prereqs"])
 
                         for prereq in prereqsList:
-                            course_graph.add_edge(prereq, b)
-                            generateGraphByCourse(course_graph, all_courses, prereq)
+                            if(level_counter == 0):
+                                course_graph.add_node(b, shape="box")
+                                course_graph.add_edge(prereq, b, color="red", shape="box")
+                            if(level_counter == 1):
+                                course_graph.add_edge(prereq, b, color="orange")
+                            if(level_counter == 2):
+                                course_graph.add_edge(prereq, b, color="green")
+                            if(level_counter == 3):
+                                course_graph.add_edge(prereq, b, color="purple")
+                            if(level_counter == 4):
+                                course_graph.add_edge(prereq, b, color="blue")
+                            else:
+                                course_graph.add_edge(prereq, b)
+
+                            generateGraphByCourse(course_graph, all_courses, prereq, level_counter + 1)
                     else:
                         print("NO PREREQS")
 
@@ -100,7 +114,7 @@ def main():
 
     
     #recursively generate graph for specified course
-    generateGraphByCourse(course_graph, all_courses, "CIS*2520")
+    generateGraphByCourse(course_graph, all_courses, "CIS*2520", 0)
 
 
     generateGraphByMajor(graph, all_courses, "ENGG")
