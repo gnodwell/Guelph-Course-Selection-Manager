@@ -23,7 +23,7 @@ Note: if an error occurs during step 3 ensure the script is executable by typing
 "chmod +x setup.sh".
 
 Install PlayWright:
-1. "npx playwright install" in shell.
+1. "npm install" in shell.
 
 Install PyGraphiz:
 Ubuntu/Debian:
@@ -37,7 +37,7 @@ Ubuntu/Debian:
 To use the webscraper:
 
 1. Navigate to "scraper" folder.
-2. Type "npx run scraper.js"
+2. Type "node scraper.js"
 
 The scraper will then create a file named "data.json" containing all the 
 course data form the UofG course descriptions website.
