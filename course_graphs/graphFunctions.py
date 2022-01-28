@@ -24,9 +24,15 @@ def parseReqs(courses, majorName):
         return []
 
     #regex searching for course codes or credit requirements
-    regex = re.escape(majorName) + r"[*][0-9]+|\d{1,2}[.]\d\d\scredits"
+    regex = re.escape(majorName) + r"[*][0-9]+|\d{1,2}[.]\d\d\scredits|work\sexperience|Phase\s\d"
     pattern = re.compile(regex)
     reqsList = re.findall(pattern, courses)
+
+    if(len(reqsList) != 0):
+        if(reqsList[-1] == "work experience"):
+            reqsList[-1] = "EXP"
+
+    
     return reqsList
 
 def generateGraphByMajor(graph, all_courses, majorName):
@@ -84,8 +90,12 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                     print(b)
 
                     if n["prereqs"]:
-                        pattern = re.compile(r"[a-zA-Z]+\*[0-9]+")
+                        pattern = re.compile(r"[a-zA-Z]+\*[0-9]+|work\sexperience")
                         prereqsList = re.findall(pattern, n["prereqs"])
+                        
+                        if(len(prereqsList) != 0):
+                            if(prereqsList[-1] == "work experience"):
+                                prereqsList[-1] = "EXP"
 
                         for prereq in prereqsList:
                             if(level_counter == 0):
@@ -114,7 +124,7 @@ def main():
 
     
     #recursively generate graph for specified course
-    generateGraphByCourse(course_graph, all_courses, "CIS*2520", 0)
+    generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
 
 
     generateGraphByMajor(graph, all_courses, "ENGG")
