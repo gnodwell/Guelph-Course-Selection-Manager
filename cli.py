@@ -16,6 +16,9 @@ from course_graphs import graphFunctions as gf
 
 
 def courseSearch():
+    """CLI functionality for courseSearch program using dataReader/dataReader.py
+
+    """
     #open file and load json data into 'data'
     with open("scraper/data.json", "r") as f:
         data = json.load(f)
@@ -43,7 +46,7 @@ def courseSearch():
         print("7: Course Name + Credit Weights")
         print("8: Course Level")
         print("9: Courses in Distance Education")
-        print("10: Exit Program")
+        print("10: Return")
         usrInput = input('\n--> ')
         usrInput = usrInput.strip()
 
@@ -112,46 +115,63 @@ def courseSearch():
 
         dr.printCourses(res)
 
-    print('--x Bye!')
-
-
-def makeRelations():
-    data = cg.readJSON()
-    majorDict = cg.mapMajorCourses(data)
-
-    with open("course_graphs/relations.json", "w") as f:
-        json.dump(majorDict, f)
-
 
 def makeGraph():
-    all_courses = cg.readJSON("course_graphs/relations.json")
-    graph = pgv.AGraph(directed=True)
-    course_graph = pgv.AGraph(directed=True)
+    """ Creates a graph using the course_graphs/courseGraph.py and course_graphs/graphFunctions.py
+    """
+    try:
+        all_courses = cg.readJSON("course_graphs/relations.json")
+    except:
+        data = cg.readJSON("scraper/data.json")
+        majorDict = cg.mapMajorCourses(data)
+
+        with open("course_graphs/relations.json", "w") as f:
+            json.dump(majorDict, f)
+        all_courses = cg.readJSON("course_graphs/relations.json")
+
 
     #recursively generate graph for specified course
-    gf.generateGraphByCourse(course_graph, all_courses, "CIS*2520", 0)
+    while True:
+        print("Please select the type of graph you would like to create.")
+        print("1: Graph by Course")
+        print("2: Graph by Major")
+        print("3: Return")
+        usrInput = input("\n--> ")
+        usrInput = usrInput.strip()
+        if (usrInput == "1"):
+            print("Please enter what course you would like to graph.")
+            courseToGraph = input("\n--> ")
+            #create function to test validty
+            course_graph = pgv.AGraph(directed=True)
 
-    gf.generateGraphByMajor(graph, all_courses, "ENGG")
+            gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
 
-    graph.layout(prog='dot')
+            course_graph.layout(prog='dot')
+            course_graph.write('course.dot')
+            course_graph.draw("course.png")
+        elif (usrInput == "2"):
+            print("Please enter the major's course code you would like to graph.")
+            majorToGraph = input("\n--> ")
+            #create function to test validity
+            graph = pgv.AGraph(directed=True)
 
-    graph.draw("major.png")
+            gf.generateGraphByMajor(graph, all_courses, majorToGraph)
 
-    if (platform.system() == 'Linux'):
-        bshCmd = "xdg-open major.png"
-        process = subprocess.run(bshCmd, shell=True)
-    elif (platform.system() ==  'Windows'):
-        os.system('cmd /k "major.png"')
-    elif (platform.system() == 'Darwin'):
-        commands.getstatusoutput("open major.png")
+            graph.layout(prog='dot')
+            graph.draw("major.png")
 
-    course_graph.layout(prog='dot')
-    course_graph.write('course.dot')
-    course_graph.draw("course.png")
-
-
-
-
+            if (platform.system() == 'Linux'):
+                bshCmd = "xdg-open major.png"
+                process = subprocess.run(bshCmd, shell=True)
+            elif (platform.system() ==  'Windows'):
+                os.system('cmd /k "major.png"')
+            elif (platform.system() == 'Darwin'):
+                commands.getstatusoutput("open major.png")
+        elif (usrInput == "3"):
+            break
+        else:
+            print ("Incorrect Input, Please try again. \n")
+            continue
 
 
 def main():
@@ -161,19 +181,16 @@ def main():
     while True:
         print("Please choose an option of how to proceed.")
         print("1: Course Search")
-        print("2: Make Relations")
-        print("3: Make Graph")
-        print("4: Exit")
+        print("2: Make Graph")
+        print("3: Exit")
         usrInput = input("\n--> ")
         usrInput = usrInput.strip()
 
         if (usrInput == "1"):
             courseSearch()
         elif (usrInput == "2"):
-            makeRelations()
-        elif (usrInput == "3"):
             makeGraph()
-        elif (usrInput == "4"):
+        elif (usrInput == "3"):
             break
         else:
             print ("Incorrect Input, Please try again. \n")
