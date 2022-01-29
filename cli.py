@@ -46,7 +46,7 @@ def courseSearch():
         print("7: Course Name + Credit Weights")
         print("8: Course Level")
         print("9: Courses in Distance Education")
-        print("10: Exit Program")
+        print("10: Return")
         usrInput = input('\n--> ')
         usrInput = usrInput.strip()
 
@@ -115,8 +115,6 @@ def courseSearch():
 
         dr.printCourses(res)
 
-    print('--x Bye!')
-
 
 def makeGraph():
     """ Creates a graph using the course_graphs/courseGraph.py and course_graphs/graphFunctions.py
@@ -137,7 +135,7 @@ def makeGraph():
         print("Please select the type of graph you would like to create.")
         print("1: Graph by Course")
         print("2: Graph by Major")
-        print("3: Exit")
+        print("3: Return")
         usrInput = input("\n--> ")
         usrInput = usrInput.strip()
         if (usrInput == "1"):
@@ -174,9 +172,6 @@ def makeGraph():
         else:
             print ("Incorrect Input, Please try again. \n")
             continue
-
-    print('--x Bye!')
-
 
 
 def main():
