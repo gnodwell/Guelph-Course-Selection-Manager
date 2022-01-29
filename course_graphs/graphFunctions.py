@@ -86,7 +86,6 @@ def generateGraphByMajor(graph, all_courses, majorName):
         prereqsList = parseReqs(v["prereqs"], majorName)
         for prereq in prereqsList:
             #graph.add_edge(prereq, k)
-            #print(level_counter)
             if(prereq[len(prereq) - 4] == '1'):
                 graph.add_node(prereq, color="red")
                 graph.add_edge(prereq, k, color="red", shape="box")
@@ -179,26 +178,25 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                     else:
                         #do nothing
                         dummy = 1
-                        # print("NO PREREQS")
 
 def main():
-    all_courses = readJSON("relations.json")
+    # all_courses = readJSON("relations.json")
 
-    graph = pgv.AGraph(directed=True)
-    course_graph = pgv.AGraph(directed=True)
+    # graph = pgv.AGraph(directed=True)
+    # course_graph = pgv.AGraph(directed=True)
 
     
-    #recursively generate graph for specified course
-    generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
+    # #recursively generate graph for specified course
+    # generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
 
 
-    generateGraphByMajor(graph, all_courses, "ENGG")
+    # generateGraphByMajor(graph, all_courses, "ENGG")
 
-    drawGraph(course_graph, "CIS*3190")
+    # drawGraph(course_graph, "CIS*3190")
 
-    drawGraph(graph, "ENGG")
+    # drawGraph(graph, "ENGG")
     
-    displayGraph("CIS*3190.png")
+    # displayGraph("CIS*3190.png")
 
     
 
