@@ -145,10 +145,13 @@ def makeGraph():
             course_graph = pgv.AGraph(directed=True)
 
             gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
+            gf.drawGraph(course_graph, courseToGraph)
+            gf.displayGraph(courseToGraph)
+            
 
-            course_graph.layout(prog='dot')
-            course_graph.write('course.dot')
-            course_graph.draw("course.png")
+            # course_graph.layout(prog='dot')
+            # course_graph.write('course.dot')
+            # course_graph.draw("course.png")
         elif (usrInput == "2"):
             print("Please enter the major's course code you would like to graph.")
             majorToGraph = input("\n--> ")
@@ -156,17 +159,20 @@ def makeGraph():
             graph = pgv.AGraph(directed=True)
 
             gf.generateGraphByMajor(graph, all_courses, majorToGraph)
+            gf.drawGraph(graph, majorToGraph)
+            gf.displayGraph(majorToGraph)
 
-            graph.layout(prog='dot')
-            graph.draw("major.png")
 
-            if (platform.system() == 'Linux'):
-                bshCmd = "xdg-open major.png"
-                process = subprocess.run(bshCmd, shell=True)
-            elif (platform.system() ==  'Windows'):
-                os.system('cmd /k "major.png"')
-            elif (platform.system() == 'Darwin'):
-                commands.getstatusoutput("open major.png")
+            # graph.layout(prog='dot')
+            # graph.draw("major.png")
+
+            # if (platform.system() == 'Linux'):
+            #     bshCmd = "xdg-open major.png"
+            #     process = subprocess.run(bshCmd, shell=True)
+            # elif (platform.system() ==  'Windows'):
+            #     os.system('cmd /k "major.png"')
+            # elif (platform.system() == 'Darwin'):
+            #     commands.getstatusoutput("open major.png")
         elif (usrInput == "3"):
             break
         else:

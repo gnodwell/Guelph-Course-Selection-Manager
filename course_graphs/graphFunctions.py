@@ -14,6 +14,20 @@ try:
 except Exception as e:
     flag = 1
 
+def displayGraph(graphName):
+    #code to display the image using a bash command depending on the OS
+    if(platform.system() == 'Linux'):
+        bshCmd = "xdg-open " + graphName + ".png"
+        process = subprocess.run(bshCmd, shell=True)
+    elif(platform.system() == 'Windows'):
+        os.system('cmd /k ' + graphName + ".png")
+    elif(platform.system() == 'Darwin'):
+        commands.getstatusoutput("open " + graphName +".png")
+
+def drawGraph(graph, graphName):
+    graph.layout(prog='dot')
+    graph.write(graphName + '.dot')
+    graph.draw(graphName + '.png')
 
 def parseReqs(courses, majorName):
     """parses coreqs and prereqs, returning the reqs in a list.
@@ -72,7 +86,7 @@ def generateGraphByMajor(graph, all_courses, majorName):
         prereqsList = parseReqs(v["prereqs"], majorName)
         for prereq in prereqsList:
             #graph.add_edge(prereq, k)
-            print(level_counter)
+            #print(level_counter)
             if(prereq[len(prereq) - 4] == '1'):
                 graph.add_node(prereq, color="red")
                 graph.add_edge(prereq, k, color="red", shape="box")
@@ -163,7 +177,9 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 
                             generateGraphByCourse(course_graph, all_courses, prereq, level_counter + 1)
                     else:
-                        print("NO PREREQS")
+                        #do nothing
+                        dummy = 1
+                        # print("NO PREREQS")
 
 def main():
     all_courses = readJSON("relations.json")
@@ -178,22 +194,17 @@ def main():
 
     generateGraphByMajor(graph, all_courses, "ENGG")
 
-    graph.layout(prog='dot')
-    # graph.write('major.dot')
-    graph.draw("major.png")
+    drawGraph(course_graph, "CIS*3190")
 
-    #code to display the image using a bash command depending on the OS
-    if(platform.system() == 'Linux'):
-        bshCmd = "xdg-open major.png"
-        process = subprocess.run(bshCmd, shell=True)
-    elif(platform.system() == 'Windows'):
-        os.system('cmd /k "major.png"')
-    elif(platform.system() == 'Darwin'):
-        commands.getstatusoutput("open major.png")
+    drawGraph(graph, "ENGG")
+    
+    displayGraph("CIS*3190.png")
 
-    course_graph.layout(prog='dot')
-    course_graph.write('course.dot')
-    course_graph.draw("course.png")
+    
+
+    # course_graph.layout(prog='dot')
+    # course_graph.write('course.dot')
+    # course_graph.draw("course.png")
     
     
 
