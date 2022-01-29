@@ -9,7 +9,11 @@ elif(platform.system() == 'Windows'):
 elif(platform.system() == 'Darwin'):
     import commands
 
-from courseGraph import readJSON
+try:
+    from courseGraph import readJSON
+except Exception as e:
+    flag = 1
+
 
 def parseReqs(courses, majorName):
     """parses coreqs and prereqs, returning the reqs in a list.
