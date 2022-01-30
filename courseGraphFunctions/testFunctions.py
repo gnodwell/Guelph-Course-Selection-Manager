@@ -159,13 +159,10 @@ class testCLI(unittest.TestCase):
 
 
     def test_mapMajorCourses(self):
-        #print(sampleData[0])
-        
-        expected = {'ACCT': {'prereqs': None, 'coreqs': None, 'equates': None},
+        expected = {'ACCT': {'ACCT*1220': {'prereqs': None, 'coreqs': None, 'equates': None}, 'ACCT*1240': {'prereqs': 'ACCT*1220 or ACCT*2220', 'coreqs': None, 'equates': None}, 'ACCT*2230': {'prereqs': 'ACCT*1220 or ACCT*2220', 'coreqs': None, 'equates': 'AGEC*2230, BUS*2230'}, 'ACCT*3230': {'prereqs': 'ACCT*2230', 'coreqs': None, 'equates': 'BUS*3230'}}, 'CHEM': {'CHEM*1040': {'prereqs': '4U Chemistry (or equivalent) or CHEM*1060', 'coreqs': None, 'equates': None}, 'CHEM*1050': {'prereqs': 'CHEM*1040', 'coreqs': None, 'equates': None}, 'CHEM*2060': {'prereqs': 'CHEM*1050, [IPS*1510 or (MATH*1210, (1 of PHYS*1010, PHYS*1070, PHYS*1300))]', 'coreqs': None, 'equates': None}, 'CHEM*2070': {'prereqs': 'CHEM*2060', 'coreqs': None, 'equates': None}}}
 
-                }
-
-        print(cg.mapMajorCourses(sampleData))
+        res = cg.mapMajorCourses(sampleData)
+        self.assertEqual(res, expected, "Failed courseGraph.<mapMajorCourses>")
 
     def test_displayGraph(self):
         flag = 1
