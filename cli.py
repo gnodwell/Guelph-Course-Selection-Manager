@@ -161,11 +161,8 @@ def makeGraph():
 
 
 def main():
-<<<<<<< HEAD
     """The main menu for either searching for a course or drawing a Graph for a course or Major
     """
-=======
->>>>>>> 3f9487a949ea02f15277e12f55ae5b48238aa1d5
 
     print("Welcome to our program.")
     while True:
