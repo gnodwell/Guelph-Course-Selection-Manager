@@ -1,9 +1,9 @@
 strict digraph "" {
 	graph [bb="0,0,1986.1,491",
-		label="Graph of Requisites for CIS",
+		label="Graph of Requisites for CIS (26)",
 		lheight=0.21,
 		lp="993.04,11.5",
-		lwidth=2.76
+		lwidth=3.22
 	];
 	node [label="\N"];
 	"CIS*1000"	 [color=red,

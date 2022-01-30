@@ -150,7 +150,6 @@ def makeGraph():
             majorToGraph = input("\n--> ")
             
             graph = pgv.AGraph(directed=True)
-            graph.graph_attr.update(label="Graph of Requisites for {}".format(majorToGraph))
 
             gf.generateGraphByMajor(graph, all_courses, majorToGraph)
             gf.drawGraph(graph, majorToGraph)
