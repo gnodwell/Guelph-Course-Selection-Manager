@@ -174,7 +174,12 @@ class testCLI(unittest.TestCase):
         flag = 1
 
     def test_parseReqs(self):
-        flag = 1
+        courses = '15.00 credits including ACCT*3280, ACCT*3340, ACCT*3350'
+        majorName = 'ACCT'
+        res = gp.parseReqs(courses, majorName)
+        expected = ['15.00 credits', 'ACCT*3280', 'ACCT*3340', 'ACCT*3350']
+
+        self.assertEqual(res, expected, "Failed graphFunctions.<parseReqs>")
 
     def test_generateGraphByMajor(self):
         flag = 1

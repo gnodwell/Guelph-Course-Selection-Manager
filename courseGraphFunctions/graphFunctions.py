@@ -45,6 +45,7 @@ def parseReqs(courses, majorName):
 
     Args:
         courses ([string]): [string of course reqs]
+        majorName ([string]): [string of major]
 
     Returns:
         [List]: [List of course reqs]
