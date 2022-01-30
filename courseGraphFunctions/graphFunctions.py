@@ -4,8 +4,6 @@ import platform
 
 if(platform.system() == 'Linux'):
     import subprocess
-elif(platform.system() == 'Windows'):
-    import os
 elif(platform.system() == 'Darwin'):
     import commands
 
@@ -19,8 +17,6 @@ def displayGraph(graphName):
     if(platform.system() == 'Linux'):
         bshCmd = "xdg-open " + "graphs/" + graphName + ".pdf"
         process = subprocess.run(bshCmd, shell=True)
-    elif(platform.system() == 'Windows'):
-        os.system('cmd /k ' + "graphs/" + graphName + ".pdf")
     elif(platform.system() == 'Darwin'):
         commands.getstatusoutput("open " + "graphs/" + graphName +".pdf")
 

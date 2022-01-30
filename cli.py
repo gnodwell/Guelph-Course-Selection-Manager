@@ -3,13 +3,6 @@ import re
 import platform
 import json
 
-if (platform.system() == 'Linux'):
-    import subprocess
-elif (platform.system() == 'Windows'):
-    import os
-elif (platform.system() == 'Darwin'):
-    import commands
-
 from dataReader import dataReader as dr
 from courseGraphFunctions import courseGraph as cg
 from courseGraphFunctions import graphFunctions as gf
@@ -141,7 +134,7 @@ def makeGraph():
         if (usrInput == "1"):
             print("Please enter what course you would like to graph.")
             courseToGraph = input("\n--> ")
-            #create function to test validty
+            dr.validateCourseCode(courseToGraph)
             course_graph = pgv.AGraph(directed=True)
 
             gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
@@ -149,13 +142,11 @@ def makeGraph():
             gf.displayGraph(courseToGraph)
 
 
-            # course_graph.layout(prog='dot')
-            # course_graph.write('course.dot')
-            # course_graph.draw("course.png")
+            
         elif (usrInput == "2"):
             print("Please enter the major's course code you would like to graph.")
             majorToGraph = input("\n--> ")
-            #create function to test validity
+            
             graph = pgv.AGraph(directed=True)
 
             gf.generateGraphByMajor(graph, all_courses, majorToGraph)
@@ -163,16 +154,7 @@ def makeGraph():
             gf.displayGraph(majorToGraph)
 
 
-            # graph.layout(prog='dot')
-            # graph.draw("major.png")
-
-            # if (platform.system() == 'Linux'):
-            #     bshCmd = "xdg-open major.png"
-            #     process = subprocess.run(bshCmd, shell=True)
-            # elif (platform.system() ==  'Windows'):
-            #     os.system('cmd /k "major.png"')
-            # elif (platform.system() == 'Darwin'):
-            #     commands.getstatusoutput("open major.png")
+            
         elif (usrInput == "3"):
             break
         else:
@@ -181,7 +163,8 @@ def makeGraph():
 
 
 def main():
-
+    """The main menu for either searching for a course or drawing a Graph for a course or Major
+    """
 
     print("Welcome to our program.")
     while True:
