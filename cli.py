@@ -134,24 +134,19 @@ def makeGraph():
         if (usrInput == "1"):
             print("Please enter what course you would like to graph.")
             courseToGraph = input("\n--> ")
-<<<<<<< HEAD
-            dr.validateCourseCode(courseToGraph)
-=======
+
             #create function to test validty
             if not dr.validateCourseCode(courseToGraph):
                 continue
->>>>>>> 3f9487a949ea02f15277e12f55ae5b48238aa1d5
+
             course_graph = pgv.AGraph(directed=True)
 
             gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
             gf.drawGraph(course_graph, courseToGraph)
             gf.displayGraph(courseToGraph)
 
-<<<<<<< HEAD
 
-            
-=======
->>>>>>> 3f9487a949ea02f15277e12f55ae5b48238aa1d5
+
         elif (usrInput == "2"):
             print("Please enter the major's course code you would like to graph.")
             majorToGraph = input("\n--> ")
@@ -162,11 +157,7 @@ def makeGraph():
             gf.drawGraph(graph, majorToGraph)
             gf.displayGraph(majorToGraph)
 
-<<<<<<< HEAD
 
-            
-=======
->>>>>>> 3f9487a949ea02f15277e12f55ae5b48238aa1d5
         elif (usrInput == "3"):
             break
         else:
@@ -175,11 +166,8 @@ def makeGraph():
 
 
 def main():
-<<<<<<< HEAD
     """The main menu for either searching for a course or drawing a Graph for a course or Major
     """
-=======
->>>>>>> 3f9487a949ea02f15277e12f55ae5b48238aa1d5
 
     print("Welcome to our program.")
     while True:
