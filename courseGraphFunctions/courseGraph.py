@@ -55,11 +55,11 @@ def mapMajorCourses(majors):
     return majorDict
 
 def main():
-    # data = readJSON()
-    # majorDict = mapMajorCourses(data)
+    data = readJSON()
+    majorDict = mapMajorCourses(data)
     
-    # with open("relations.json", "w") as f:
-    #     json.dump(majorDict, f)
+    with open("relations.json", "w") as f:
+        json.dump(majorDict, f)
     
 if __name__ == '__main__':
     main()  

@@ -17,17 +17,17 @@ except Exception as e:
 def displayGraph(graphName):
     #code to display the image using a bash command depending on the OS
     if(platform.system() == 'Linux'):
-        bshCmd = "xdg-open " + graphName + ".png"
+        bshCmd = "xdg-open " + "graphs/" + graphName + ".png"
         process = subprocess.run(bshCmd, shell=True)
     elif(platform.system() == 'Windows'):
-        os.system('cmd /k ' + graphName + ".png")
+        os.system('cmd /k ' + "graphs/" + graphName + ".png")
     elif(platform.system() == 'Darwin'):
-        commands.getstatusoutput("open " + graphName +".png")
+        commands.getstatusoutput("open " + "graphs/" + graphName +".png")
 
 def drawGraph(graph, graphName):
     graph.layout(prog='dot')
-    graph.write(graphName + '.dot')
-    graph.draw(graphName + '.png')
+    graph.write('graphs/' + graphName + '.dot')
+    graph.draw('graphs/' + graphName + '.png')
 
 def parseReqs(courses, majorName):
     """parses coreqs and prereqs, returning the reqs in a list.
@@ -180,23 +180,23 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                         dummy = 1
 
 def main():
-    # all_courses = readJSON("relations.json")
+    all_courses = readJSON("relations.json")
 
-    # graph = pgv.AGraph(directed=True)
-    # course_graph = pgv.AGraph(directed=True)
+    graph = pgv.AGraph(directed=True)
+    course_graph = pgv.AGraph(directed=True)
 
     
-    # #recursively generate graph for specified course
-    # generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
+    #recursively generate graph for specified course
+    generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
 
 
-    # generateGraphByMajor(graph, all_courses, "ENGG")
+    generateGraphByMajor(graph, all_courses, "ENGG")
 
-    # drawGraph(course_graph, "CIS*3190")
+    drawGraph(course_graph, "CIS*3190")
 
-    # drawGraph(graph, "ENGG")
+    drawGraph(graph, "ENGG")
     
-    # displayGraph("CIS*3190.png")
+    displayGraph("CIS*3190.png")
 
     
 

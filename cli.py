@@ -11,8 +11,8 @@ elif (platform.system() == 'Darwin'):
     import commands
 
 from dataReader import dataReader as dr
-from course_graphs import courseGraph as cg
-from course_graphs import graphFunctions as gf
+from courseGraphFunctions import courseGraph as cg
+from courseGraphFunctions import graphFunctions as gf
 
 
 def courseSearch():
@@ -120,14 +120,14 @@ def makeGraph():
     """ Creates a graph using the course_graphs/courseGraph.py and course_graphs/graphFunctions.py
     """
     try:
-        all_courses = cg.readJSON("course_graphs/relations.json")
+        all_courses = cg.readJSON("courseGraphFunctions/relations.json")
     except:
         data = cg.readJSON("scraper/data.json")
         majorDict = cg.mapMajorCourses(data)
 
-        with open("course_graphs/relations.json", "w") as f:
+        with open("courseGraphFunctions/relations.json", "w") as f:
             json.dump(majorDict, f)
-        all_courses = cg.readJSON("course_graphs/relations.json")
+        all_courses = cg.readJSON("courseGraphFunctions/relations.json")
 
 
     #recursively generate graph for specified course
@@ -147,7 +147,7 @@ def makeGraph():
             gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
             gf.drawGraph(course_graph, courseToGraph)
             gf.displayGraph(courseToGraph)
-            
+
 
             # course_graph.layout(prog='dot')
             # course_graph.write('course.dot')
