@@ -1,3 +1,4 @@
+from cProfile import label
 import pygraphviz as pgv
 import re
 import platform
@@ -60,7 +61,6 @@ def parseReqs(courses, majorName):
         if(reqsList[-1] == "work experience"):
             reqsList[-1] = "EXP"
 
-    
     return reqsList
 
 def addNodeAndEdge(graph, course1, course2, colour, shape=None):
@@ -148,6 +148,9 @@ def generateGraphByMajor(graph, all_courses, majorName):
         #add coreqs to the graph by adding edges in both directions between coreqs and course
         addCoreqsToGraph(coreqsList, graph, k)
 
+        graph.graph_attr.update(label="Prerequisites = ".format(len(prereqsList)))
+        graph.graph_attr.update(label="Corequisites = ".format(len(coreqsList)))
+
     return True
         
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
@@ -179,6 +182,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                             if(prereqsList[-1] == "work experience"):
                                 prereqsList[-1] = "EXP"
 
+                        #traverses according to how deep the prereq is for the course
                         for prereq in prereqsList:
                             if(level_counter == 0):
                                 course_graph.add_node(b, shape="box")
