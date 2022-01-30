@@ -173,9 +173,6 @@ def generateGraphByMajor(graph, all_courses, majorName):
         #add coreqs to the graph by adding edges in both directions between coreqs and course
         addCoreqsToGraph(graph, coreqsList, k)
 
-        graph.graph_attr.update(label="Prerequisites = ".format(len(prereqsList)))
-        graph.graph_attr.update(label="Corequisites = ".format(len(coreqsList)))
-
     return True
         
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
