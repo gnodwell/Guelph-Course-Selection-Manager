@@ -45,6 +45,7 @@ def parseReqs(courses, majorName):
 
     Args:
         courses ([string]): [string of course reqs]
+        majorName ([string]): [string of major]
 
     Returns:
         [List]: [List of course reqs]
@@ -151,6 +152,7 @@ def generateGraphByMajor(graph, all_courses, majorName):
         print('Major: "' + majorName + '" does not exists')
         return False
 
+    seenCourses = set()
     #loop through courses in specified major
     for k, v in all_courses[majorName].items():
         #add node for course 
@@ -170,12 +172,15 @@ def generateGraphByMajor(graph, all_courses, majorName):
         prereqsList = parseReqs(v["prereqs"], majorName)
         #add the prereqs to the graph by adding edges in a single direction from the prereq to the course
         addPrereqsToGraph(graph, prereqsList, k)
-            
+        seenCourses.update(prereqsList)
+        
         #parse coreqs from coreqs attribute
         coreqsList = parseReqs(v["coreqs"], majorName)
         #add coreqs to the graph by adding edges in both directions between coreqs and course
         addCoreqsToGraph(graph, coreqsList, k)
+        seenCourses.update(coreqsList)
 
+    graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(majorName, len(seenCourses)))
     return True
         
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
@@ -258,4 +263,4 @@ def main():
     displayGraph("CIS*3190.pdf")   
     
 if __name__ == '__main__':
-    main()
+    main()   

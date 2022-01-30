@@ -1,4 +1,3 @@
-from cProfile import label
 import pygraphviz as pgv
 import re
 import platform
@@ -154,7 +153,6 @@ def makeGraph():
             majorToGraph = input("\n--> ")
             
             graph = pgv.AGraph(directed=True)
-            graph.graph_attr.update(label="Graph of Requisites for {}".format(majorToGraph))
 
             created = gf.generateGraphByMajor(graph, all_courses, majorToGraph)
             #only draw graphs if a graph was made successfully
