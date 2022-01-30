@@ -190,7 +190,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     majorName = course[:course.find('*')]
     if majorName not in all_courses: 
         print('Course: "' + course + '" does not exists')
-        return 
+        return False
 
     if isinstance(all_courses, dict):           #check if all_courses is dict
         for v in all_courses.values():          #traverse first layer of json data (ex. "ACCT", "AGR", "ANSC", etc...)
@@ -220,6 +220,8 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                                 course_graph.add_edge(prereq, b)
 
                             generateGraphByCourse(course_graph, all_courses, prereq, level_counter + 1)
+
+    return True
 
 def main():
     all_courses = readJSON("relations.json")
