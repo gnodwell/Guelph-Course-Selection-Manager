@@ -67,6 +67,53 @@ def parseReqs(courses, majorName):
     
     return reqsList
 
+def addNodeAndEdge(graph, course1, course2, colour, shape=None):
+    if shape == None:
+        graph.add_node(course1, color=colour)
+    else:
+        graph.add_node(course1, color=colour, shape=shape)
+
+    graph.add_edge(course1, course2, color=colour)
+
+
+def addPrereqsToGraph(prereqsList, graph, course):
+
+
+    for prereq in prereqsList:
+        
+        if(prereq[len(prereq) - 4] == '1'):
+            addNodeAndEdge(graph, prereq, course, "red")
+        elif(prereq[len(prereq) - 4] == '2'):
+            addNodeAndEdge(graph, prereq, course, "orange")
+        elif(prereq[len(prereq) - 4] == '3'):
+            addNodeAndEdge(graph, prereq, course, "green")
+        elif(prereq[len(prereq) - 4] == '4'):
+            addNodeAndEdge(graph, prereq, course, "purple")
+        else:
+            graph.add_edge(prereq, course)
+
+    
+def addCoreqsToGraph(coreqsList, graph, course):
+    for coreq in coreqsList:
+
+
+        if(coreq[len(coreq) - 4] == '1'):   #1000 level course format
+            addNodeAndEdge(graph, coreq, course, "red", "box")
+            addNodeAndEdge(graph, course, coreq, "red")
+        elif(coreq[len(coreq) - 4] == '2'):
+            addNodeAndEdge(graph, coreq, course, "orange", "box")
+            addNodeAndEdge(graph, course, coreq, "orange")
+        elif(coreq[len(coreq) - 4] == '3'):
+            addNodeAndEdge(graph, coreq, course, "green", "box")
+            addNodeAndEdge(graph, course, coreq, "green")
+        elif(coreq[len(coreq) - 4] == '4'):
+            addNodeAndEdge(graph, coreq, course, "purple", "box")
+            addNodeAndEdge(graph, course, coreq, "purple")
+        else:
+            graph.add_edge(coreq, course)
+            graph.add_edge(course, coreq)
+
+
 def generateGraphByMajor(graph, all_courses, majorName):
     """Generates a graph for a specified major.
 
@@ -76,15 +123,14 @@ def generateGraphByMajor(graph, all_courses, majorName):
         majorName ([string]): [string of specified major]
     """
     #return if major is not in json
-    if majorName not in all_courses: 
+    if majorName.upper() not in all_courses: 
         print('Major: "' + majorName + '" does not exists')
-        return 
-
+        return False
 
     #loop through courses in specified major
     for k, v in all_courses[majorName].items():
         #add node for course 
-        #graph.add_node(k)
+        
         if(k[len(k) - 4] == '1'):
             graph.add_node(k, color="red")
         elif(k[len(k) - 4] == '2'):
@@ -96,57 +142,17 @@ def generateGraphByMajor(graph, all_courses, majorName):
         else:
             graph.add_node(k)
 
-        #add edges between prereqs and course
+        #parse prereqs from prereqs attribute
         prereqsList = parseReqs(v["prereqs"], majorName)
-        for prereq in prereqsList:
-            #graph.add_edge(prereq, k)
-            if(prereq[len(prereq) - 4] == '1'):
-                graph.add_node(prereq, color="red")
-                graph.add_edge(prereq, k, color="red", shape="box")
-            elif(prereq[len(prereq) - 4] == '2'):
-                graph.add_node(prereq, color="orange")
-                graph.add_edge(prereq, k, color="orange")
-            elif(prereq[len(prereq) - 4] == '3'):
-                graph.add_node(prereq, color="green")
-                graph.add_edge(prereq, k, color="green")
-            elif(prereq[len(prereq) - 4] == '4'):
-                graph.add_node(prereq, color="purple")
-                graph.add_edge(prereq, k, color="purple")
-            else:
-                graph.add_edge(prereq, k)
+        #add the prereqs to the graph by adding edges in a single direction from the prereq to the course
+        addPrereqsToGraph(prereqsList, graph, k)
             
-            level_counter = level_counter + 1
-            
-
-        #add edges in both directions between coreqs and course
+        #parse coreqs from coreqs attribute
         coreqsList = parseReqs(v["coreqs"], majorName)
-        for coreq in coreqsList:
-            if(coreq[len(coreq) - 4] == '1'):
-                graph.add_node(coreq, color="red", shape="box3d")
-                graph.add_edge(coreq, k, color="red")
-                graph.add_node(k, color="red")
-                graph.add_edge(k, coreq, color="red")
-            elif(coreq[len(coreq) - 4] == '2'):
-                graph.add_node(coreq, color="orange", shape="box3d")
-                graph.add_edge(coreq, k, color="orange")
-                graph.add_node(k, color="orange")
-                graph.add_edge(k, coreq, color="orange")
-            elif(coreq[len(coreq) - 4] == '3'):
-                graph.add_node(coreq, color="green", shape="box3d")
-                graph.add_edge(coreq, k, color="green")
-                graph.add_node(k, color="green")
-                graph.add_edge(k, coreq, color="green")
-            elif(coreq[len(coreq) - 4] == '4'):
-                graph.add_node(coreq, color="purple", shape="box3d")
-                graph.add_edge(coreq, k, color="purple")
-                graph.add_node(k, color="purple")
-                graph.add_edge(k, coreq, color="purple")
-            else:
-                graph.add_edge(coreq, k)
-                graph.add_edge(k, coreq)
-                
+        #add coreqs to the graph by adding edges in both directions between coreqs and course
+        addCoreqsToGraph(coreqsList, graph, k)
 
-        level_counter = 0
+    return True
         
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     """Recursivevly generates a graph for a specified course.
