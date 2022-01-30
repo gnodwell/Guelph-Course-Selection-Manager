@@ -143,8 +143,11 @@ def generateGraphByMajor(graph, all_courses, majorName):
         all_courses ([dict]): [json data of all courses]
         majorName ([string]): [string of specified major]
     """
+    #make sure major name is in upper case
+    majorName = majorName.upper()
+
     #return if major is not in json
-    if majorName.upper() not in all_courses: 
+    if majorName not in all_courses: 
         print('Major: "' + majorName + '" does not exists')
         return False
 
@@ -186,6 +189,9 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     Returns:
         [course_graph]: [graph of specified course]
     """
+    #make sure course name is in upper case
+    course = course.upper()
+
     #return if course code is not in json
     majorName = course[:course.find('*')]
     if majorName not in all_courses: 
