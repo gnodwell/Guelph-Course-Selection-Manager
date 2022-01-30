@@ -135,15 +135,19 @@ def makeGraph():
         if (usrInput == "1"):
             print("Please enter what course you would like to graph.")
             courseToGraph = input("\n--> ")
+
             #create function to test validty
             if not dr.validateCourseCode(courseToGraph):
                 continue
+
             course_graph = pgv.AGraph(directed=True)
             course_graph.graph_attr.update(label="Graph of Requisites for {}".format(courseToGraph))
 
-            gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
-            gf.drawGraph(course_graph, courseToGraph)
-            gf.displayGraph(courseToGraph)
+            created = gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
+            #only draw graphs if a graph was made successfully
+            if created:
+                gf.drawGraph(course_graph, courseToGraph)
+                gf.displayGraph(courseToGraph)
 
         elif (usrInput == "2"):
             print("Please enter the major's course code you would like to graph.")
@@ -151,9 +155,11 @@ def makeGraph():
             
             graph = pgv.AGraph(directed=True)
 
-            gf.generateGraphByMajor(graph, all_courses, majorToGraph)
-            gf.drawGraph(graph, majorToGraph)
-            gf.displayGraph(majorToGraph)
+            created = gf.generateGraphByMajor(graph, all_courses, majorToGraph)
+            #only draw graphs if a graph was made successfully
+            if created:
+                gf.drawGraph(graph, majorToGraph)
+                gf.displayGraph(majorToGraph)
 
         elif (usrInput == "3"):
             break

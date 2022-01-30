@@ -143,8 +143,11 @@ def generateGraphByMajor(graph, all_courses, majorName):
         all_courses ([dict]): [json data of all courses]
         majorName ([string]): [string of specified major]
     """
+    #make sure major name is in upper case
+    majorName = majorName.upper()
+
     #return if major is not in json
-    if majorName.upper() not in all_courses: 
+    if majorName not in all_courses: 
         print('Major: "' + majorName + '" does not exists')
         return False
 
@@ -190,6 +193,9 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     Returns:
         [course_graph]: [graph of specified course]
     """
+    #make sure course name is in upper case
+    course = course.upper()
+
     #return if course code is not in json
     majorName = course[:course.find('*')]
     if majorName not in all_courses: 
@@ -200,27 +206,35 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         for v in all_courses.values():          #traverse first layer of json data (ex. "ACCT", "AGR", "ANSC", etc...)
             for b, n in v.items():              #traverse second layer of json data (course codes)
                 if (b == course):
+
+                    #add first node in case of course having no prerequisites
+                    if(level_counter == 0):
+                        course_graph.add_node(course, shape="box")
+
+                    #if prereqs exist
                     if n["prereqs"]:
+                        #regex for parsing prereqs
                         pattern = re.compile(r"[a-zA-Z]+\*[0-9]+|work\sexperience")
                         prereqsList = re.findall(pattern, n["prereqs"])
                         
+                        #shorten the work experience prerequisite to exp
                         if(len(prereqsList) != 0):
                             if(prereqsList[-1] == "work experience"):
                                 prereqsList[-1] = "EXP"
 
                         #traverses according to how deep the prereq is for the course
+                        #loop through prereqs and add nodes and edges
                         for prereq in prereqsList:
-                            if(level_counter == 0):
-                                course_graph.add_node(b, shape="box")
-                                course_graph.add_edge(prereq, b, color="red", shape="box")
-                            elif(level_counter == 1):
-                                course_graph.add_edge(prereq, b, color="orange")
-                            elif(level_counter == 2):
-                                course_graph.add_edge(prereq, b, color="green")
-                            elif(level_counter == 3):
-                                course_graph.add_edge(prereq, b, color="purple")
-                            elif(level_counter == 4):
-                                course_graph.add_edge(prereq, b, color="blue")
+                            if(level_counter == 0): #node format for first level
+                                addNodeAndEdge(course_graph, prereq, b, "red")
+                            elif(level_counter == 1): #node format for second level
+                                addNodeAndEdge(course_graph, prereq, b, "orange")
+                            elif(level_counter == 2): #node format for third level
+                                addNodeAndEdge(course_graph, prereq, b, "green")
+                            elif(level_counter == 3): #node format for fourth level
+                                addNodeAndEdge(course_graph, prereq, b, "purple")
+                            elif(level_counter == 4): #node format for fifth level
+                                addNodeAndEdge(course_graph, prereq, b, "blue")
                             else:
                                 course_graph.add_edge(prereq, b)
 
