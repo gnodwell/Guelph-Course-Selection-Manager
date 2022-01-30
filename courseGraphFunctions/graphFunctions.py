@@ -148,7 +148,6 @@ def generateGraphByMajor(graph, all_courses, majorName):
 
         level_counter = 0
         
-
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     """Recursivevly generates a graph for a specified course.
 
@@ -160,9 +159,14 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     Returns:
         [course_graph]: [graph of specified course]
     """
+    #return if course code is not in json
+    majorName = course[:course.find('*')]
+    if majorName not in all_courses: 
+        print('Course: "' + course + '" does not exists')
+        return 
 
     if isinstance(all_courses, dict):           #check if all_courses is dict
-        for k, v in all_courses.items():        #traverse first layer of json data (ex. "ACCT", "AGR", "ANSC", etc...)
+        for v in all_courses.values():          #traverse first layer of json data (ex. "ACCT", "AGR", "ANSC", etc...)
             for b, n in v.items():              #traverse second layer of json data (course codes)
                 if (b == course):
                     if n["prereqs"]:
@@ -189,9 +193,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                                 course_graph.add_edge(prereq, b)
 
                             generateGraphByCourse(course_graph, all_courses, prereq, level_counter + 1)
-                    else:
-                        #do nothing
-                        dummy = 1
 
 def main():
     all_courses = readJSON("relations.json")

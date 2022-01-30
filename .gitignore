@@ -3,8 +3,4 @@ scraper/package.json
 scraper/package-lock.json
 scraper/package.json
 __pycache__
-course_graphs/cis.png
-course_graphs/course.dot
-course_graphs/course.png
-course_graphs/cis.dot
-course_graphs/major.png
+.vscode
