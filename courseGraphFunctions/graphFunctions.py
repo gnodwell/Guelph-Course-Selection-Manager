@@ -1,3 +1,4 @@
+from cProfile import label
 import pygraphviz as pgv
 import re
 import platform
@@ -60,49 +61,73 @@ def parseReqs(courses, majorName):
         if(reqsList[-1] == "work experience"):
             reqsList[-1] = "EXP"
 
-    
     return reqsList
 
 def addNodeAndEdge(graph, course1, course2, colour, shape=None):
-    if shape == None:
+    """Add a node and edge pointing from course1 to course2 on the graph
+
+    Args:
+        graph ([graph]): [graph to make changes to]
+        course1 ([string]): [string of first course with arrow pointing to second course]
+        course2 ([string]): [string of second course with incoming arrow from first course]
+        colour ([string]): [string of colour for arrow and node]
+        shape ([string]): [string of shape of the node]
+    """
+
+    #add node
+    if shape == None: #if no shape input, then don't specify
         graph.add_node(course1, color=colour)
-    else:
+    else: #otherwise specify the shape
         graph.add_node(course1, color=colour, shape=shape)
 
+    #add the edge
     graph.add_edge(course1, course2, color=colour)
 
 
-def addPrereqsToGraph(prereqsList, graph, course):
+def addPrereqsToGraph(graph, prereqsList, course):
+    """Add prereqs to the graph by adding the appropriate nodes and edges
 
+    Args:
+        graph ([graph]): [graph to make changes to]
+        coreqsList ([list]): [list of corequisites for the course]
+        course ([string]): [string of specified course]
+    """
 
+    #loop through prereqs and add nodes and edges
     for prereq in prereqsList:
-        
-        if(prereq[len(prereq) - 4] == '1'):
+        if(prereq[len(prereq) - 4] == '1'): #1000 level node format
             addNodeAndEdge(graph, prereq, course, "red")
-        elif(prereq[len(prereq) - 4] == '2'):
+        elif(prereq[len(prereq) - 4] == '2'): #2000 level node format
             addNodeAndEdge(graph, prereq, course, "orange")
-        elif(prereq[len(prereq) - 4] == '3'):
+        elif(prereq[len(prereq) - 4] == '3'): #3000 level node format
             addNodeAndEdge(graph, prereq, course, "green")
-        elif(prereq[len(prereq) - 4] == '4'):
+        elif(prereq[len(prereq) - 4] == '4'): #4000 level node format
             addNodeAndEdge(graph, prereq, course, "purple")
         else:
             graph.add_edge(prereq, course)
 
     
-def addCoreqsToGraph(coreqsList, graph, course):
+def addCoreqsToGraph(graph, coreqsList, course):
+    """Add coreqs to the graph by adding the appropriate nodes and edges
+
+    Args:
+        graph ([graph]): [graph to make changes to]
+        coreqsList ([list]): [list of corequisites for the course]
+        course ([string]): [string of specified course]
+    """
+
+    #loop through coreqs and add nodes and edges in both directions
     for coreq in coreqsList:
-
-
-        if(coreq[len(coreq) - 4] == '1'):   #1000 level course format
+        if(coreq[len(coreq) - 4] == '1'): #1000 level node format
             addNodeAndEdge(graph, coreq, course, "red", "box")
             addNodeAndEdge(graph, course, coreq, "red")
-        elif(coreq[len(coreq) - 4] == '2'):
+        elif(coreq[len(coreq) - 4] == '2'): #2000 level node format
             addNodeAndEdge(graph, coreq, course, "orange", "box")
             addNodeAndEdge(graph, course, coreq, "orange")
-        elif(coreq[len(coreq) - 4] == '3'):
+        elif(coreq[len(coreq) - 4] == '3'): #3000 level node format
             addNodeAndEdge(graph, coreq, course, "green", "box")
             addNodeAndEdge(graph, course, coreq, "green")
-        elif(coreq[len(coreq) - 4] == '4'):
+        elif(coreq[len(coreq) - 4] == '4'): #4000 level node format
             addNodeAndEdge(graph, coreq, course, "purple", "box")
             addNodeAndEdge(graph, course, coreq, "purple")
         else:
@@ -141,12 +166,12 @@ def generateGraphByMajor(graph, all_courses, majorName):
         #parse prereqs from prereqs attribute
         prereqsList = parseReqs(v["prereqs"], majorName)
         #add the prereqs to the graph by adding edges in a single direction from the prereq to the course
-        addPrereqsToGraph(prereqsList, graph, k)
+        addPrereqsToGraph(graph, prereqsList, k)
             
         #parse coreqs from coreqs attribute
         coreqsList = parseReqs(v["coreqs"], majorName)
         #add coreqs to the graph by adding edges in both directions between coreqs and course
-        addCoreqsToGraph(coreqsList, graph, k)
+        addCoreqsToGraph(graph, coreqsList, k)
 
     return True
         
@@ -165,7 +190,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     majorName = course[:course.find('*')]
     if majorName not in all_courses: 
         print('Course: "' + course + '" does not exists')
-        return 
+        return False
 
     if isinstance(all_courses, dict):           #check if all_courses is dict
         for v in all_courses.values():          #traverse first layer of json data (ex. "ACCT", "AGR", "ANSC", etc...)
@@ -179,6 +204,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                             if(prereqsList[-1] == "work experience"):
                                 prereqsList[-1] = "EXP"
 
+                        #traverses according to how deep the prereq is for the course
                         for prereq in prereqsList:
                             if(level_counter == 0):
                                 course_graph.add_node(b, shape="box")
@@ -195,6 +221,8 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                                 course_graph.add_edge(prereq, b)
 
                             generateGraphByCourse(course_graph, all_courses, prereq, level_counter + 1)
+
+    return True
 
 def main():
     all_courses = readJSON("relations.json")

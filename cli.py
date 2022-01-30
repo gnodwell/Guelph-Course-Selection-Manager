@@ -1,3 +1,4 @@
+from cProfile import label
 import pygraphviz as pgv
 import re
 import platform
@@ -140,23 +141,22 @@ def makeGraph():
                 continue
 
             course_graph = pgv.AGraph(directed=True)
+            course_graph.graph_attr.update(label="Graph of Requisites for {}".format(courseToGraph))
 
             gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
             gf.drawGraph(course_graph, courseToGraph)
             gf.displayGraph(courseToGraph)
-
-
 
         elif (usrInput == "2"):
             print("Please enter the major's course code you would like to graph.")
             majorToGraph = input("\n--> ")
             
             graph = pgv.AGraph(directed=True)
+            graph.graph_attr.update(label="Graph of Requisites for {}".format(majorToGraph))
 
             gf.generateGraphByMajor(graph, all_courses, majorToGraph)
             gf.drawGraph(graph, majorToGraph)
             gf.displayGraph(majorToGraph)
-
 
         elif (usrInput == "3"):
             break
