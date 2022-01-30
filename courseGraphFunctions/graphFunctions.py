@@ -15,7 +15,13 @@ except Exception as e:
     flag = 1
 
 def displayGraph(graphName):
-    #code to display the image using a bash command depending on the OS
+    """display the image using a bash command depending on the OS
+
+    Args:
+        graphName ([String]): [name of graph]
+    """
+    graphName = graphName.replace('*', '')
+
     if(platform.system() == 'Linux'):
         bshCmd = "xdg-open " + "graphs/" + graphName + ".pdf"
         process = subprocess.run(bshCmd, shell=True)
@@ -25,6 +31,14 @@ def displayGraph(graphName):
         commands.getstatusoutput("open " + "graphs/" + graphName +".pdf")
 
 def drawGraph(graph, graphName):
+    """write out graph to file formats
+
+    Args:
+        graph ([AGraph]): [graph to be written out to file]
+        graphName ([String]): [name of file that graph is written out to]
+    """
+    graphName = graphName.replace('*', '')
+
     graph.layout(prog='dot')
     graph.write('graphs/' + graphName + '.dot')
     graph.draw('graphs/' + graphName + '.pdf')
