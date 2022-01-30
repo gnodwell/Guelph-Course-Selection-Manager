@@ -17,17 +17,17 @@ except Exception as e:
 def displayGraph(graphName):
     #code to display the image using a bash command depending on the OS
     if(platform.system() == 'Linux'):
-        bshCmd = "xdg-open " + "graphs/" + graphName + ".png"
+        bshCmd = "xdg-open " + "graphs/" + graphName + ".pdf"
         process = subprocess.run(bshCmd, shell=True)
     elif(platform.system() == 'Windows'):
-        os.system('cmd /k ' + "graphs/" + graphName + ".png")
+        os.system('cmd /k ' + "graphs/" + graphName + ".pdf")
     elif(platform.system() == 'Darwin'):
-        commands.getstatusoutput("open " + "graphs/" + graphName +".png")
+        commands.getstatusoutput("open " + "graphs/" + graphName +".pdf")
 
 def drawGraph(graph, graphName):
     graph.layout(prog='dot')
     graph.write('graphs/' + graphName + '.dot')
-    graph.draw('graphs/' + graphName + '.png')
+    graph.draw('graphs/' + graphName + '.pdf')
 
 def parseReqs(courses, majorName):
     """parses coreqs and prereqs, returning the reqs in a list.
@@ -196,15 +196,7 @@ def main():
 
     drawGraph(graph, "ENGG")
     
-    displayGraph("CIS*3190.png")
-
+    displayGraph("CIS*3190.pdf")   
     
-
-    # course_graph.layout(prog='dot')
-    # course_graph.write('course.dot')
-    # course_graph.draw("course.png")
-    
-    
-
 if __name__ == '__main__':
     main()
