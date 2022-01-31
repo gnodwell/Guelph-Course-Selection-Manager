@@ -1,4 +1,3 @@
-from cProfile import label
 import pygraphviz as pgv
 import re
 import platform
