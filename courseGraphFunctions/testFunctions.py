@@ -10,7 +10,21 @@ try:
     from courseGraph import readJSON
 except Exception as e:
     flag = 1
-    
+
+sampleData2 = [
+    {
+        "ACCT": {
+            "ACCT*1220": {
+            },
+            "ACCT*1240": {
+            },
+            "ACCT*2230": {
+            },
+            "ACCT*3230": {
+            }
+        }
+    }
+]
 sampleData = [
     {
         "major": "Accounting (ACCT)",
@@ -184,7 +198,18 @@ class testCLI(unittest.TestCase):
         self.assertEqual(res, expected, "Failed graphFunctions.<parseReqs>")
 
     def test_generateGraphByMajor(self):
-        flag = 1
+        all_courses = readJSON("testData.json")
+        testGraph = pgv.AGraph(directed=True)
+        sampleGraph = pgv.AGraph(directed=True)
+
+        sampleGraph.add_node("ACCT*1220", color="red")
+        sampleGraph.add_node("ACCT*1240", color="red")
+        sampleGraph.add_node("ACCT*2230", color="orange")
+        sampleGraph.add_node("ACCT*3230", color="green")
+
+        gp.generateGraphByMajor(testGraph, all_courses, "ACCT")
+
+        self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByMajor")
 
     def test_generateGraphByCourse(self):
         all_courses = readJSON("relations.json")
@@ -196,7 +221,7 @@ class testCLI(unittest.TestCase):
 
         gp.generateGraphByCourse(testGraph, all_courses, "ACCT*1220", 0)
 
-        self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByMajor")
+        self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByCourse")
 
 
 

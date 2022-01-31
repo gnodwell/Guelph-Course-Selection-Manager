@@ -1,0 +1,24 @@
+{
+    "ACCT": {
+        "ACCT*1220": {
+            "prereqs": null,
+            "coreqs": null,
+            "equates": null
+        },
+        "ACCT*1240": {
+            "prereqs": null,
+            "coreqs": null,
+            "equates": null
+        },
+        "ACCT*2230": {
+            "prereqs": null,
+            "coreqs": null,
+            "equates": null
+        },
+        "ACCT*3230": {
+            "prereqs": null,
+            "coreqs": null,
+            "equates": null
+        }
+    }
+}
