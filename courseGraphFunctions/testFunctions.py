@@ -4,8 +4,13 @@ import json
 
 import courseGraph as cg
 import graphFunctions as gp
+import pygraphviz as pgv
 
-
+try:
+    from courseGraph import readJSON
+except Exception as e:
+    flag = 1
+    
 sampleData = [
     {
         "major": "Accounting (ACCT)",
@@ -182,7 +187,16 @@ class testCLI(unittest.TestCase):
         flag = 1
 
     def test_generateGraphByCourse(self):
-        flag = 1
+        all_courses = readJSON("relations.json")
+
+        testGraph = pgv.AGraph(directed=True)
+        sampleGraph = pgv.AGraph(directed=True)
+        
+        sampleGraph.add_node("ACCT*1220", shape="box")
+
+        gp.generateGraphByCourse(testGraph, all_courses, "ACCT*1220", 0)
+
+        self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByMajor")
 
 
 
