@@ -66,10 +66,8 @@ const getCoursesDataFromMajor = async (page) => {
             try {
                 const elmWithClass = elm.getElementsByClassName(className)[0];
                 const text = elmWithClass.getElementsByTagName(tag)[0].innerText;
-                // console.log(text);
                 return text;
             } catch (err) {
-                // console.log(err);
                 return null;
             }
         }
@@ -77,10 +75,8 @@ const getCoursesDataFromMajor = async (page) => {
         const getTextFromClass = (elm, className) => {
             try {
                 text = elm.getElementsByClassName(className)[0].innerText;
-                // console.log(text);
                 return text;
             } catch (err) {
-                // console.log(err);
                 return null;
             }
         }
