@@ -1,18 +1,33 @@
 const { initBrowser, writeFile } = require("../scraper");
 
 const getRequirements = async(page) => {
-    const tableData = await page.$$eval('//*[@id="requirementstextcontainer"]/table/tbody/tr/td[1]/a', rows => {
-        //*[@id="requirementstextcontainer"]/table[1]/tbody/tr[2]/td[1]/a
+    
+    const data = await page.$$eval('//*[@id="requirementstextcontainer"]/table/tbody/tr/td[1]/a', rows => {
         const courses = []
+        let credits = 0.0
+
         rows.forEach(course => {
-            console.log(course.innerText)
-            courses.push(course.innerText)
+            text = course.innerText;
+
+            if (text.match('^[0-9]*\.[0-9]+') != null) {
+                console.log('not null');
+                credits += parseFloat(text.match('[0-9]*\.[0-9]+')[0]);
+            } else if (text.includes('or')) {
+                courses[courses.length - 1] += ' ' + text;
+            } else if (!text.includes('Semester')) {
+                courses.push(text)
+            }
+
+            console.log(text)
         });
 
-        return courses;
+        return {
+            courses: courses,
+            credits: credits
+        };
     });
 
-    return tableData;
+    return data;
 }
 
 const csMain = async() => {
@@ -33,4 +48,10 @@ const csMain = async() => {
     await browser.close();
 }
 
-csMain();
+if (require.main === module) {
+    csMain();
+} else {
+    module.exports = {
+        getRequirements
+    }
+}

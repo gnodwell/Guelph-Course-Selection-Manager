@@ -1,0 +1,34 @@
+{
+    "CSTU": {
+        "courses": [
+            "FRHD*1010",
+            "NUTR*1010",
+            "PSYC*1000",
+            "FRHD*1020",
+            "MBG*1000",
+            "ANTH*1150 or SOC*1100",
+            "POLS*2230",
+            "STAT*2080",
+            "FRHD*2060 or FRHD*2280",
+            "FRHD*2100",
+            "FRHD*2400",
+            "STAT*2090",
+            "FRHD*3070",
+            "FRHD*3090",
+            "FRHD*3400",
+            "FRHD*3250 or FRHD*3290",
+            "FRHD*3040",
+            "FRHD*4020",
+            "FRHD*4310",
+            "FRHD*4260",
+            "Select 0.5 credits from the following:",
+            "FRHD*4200",
+            "FRHD*4250",
+            "FRHD*4400"
+        ],
+        "credits": 9,
+        "footnotes": [
+            "Note: FRHD*3250 Practicum I: Youth, FRHD*3290 Practicum I: Adult may be taken in either Semester 5 or Semester 6"
+        ]
+    }
+}
