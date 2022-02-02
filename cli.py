@@ -127,7 +127,7 @@ def makeGraph():
     while True:
         print("Please select the type of graph you would like to create.")
         print("1: Graph by Course")
-        print("2: Graph by Major")
+        print("2: Graph by Department")
         print("3: Return")
         usrInput = input("\n--> ")
         usrInput = usrInput.strip()

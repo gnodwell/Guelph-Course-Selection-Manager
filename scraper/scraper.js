@@ -12,7 +12,7 @@ const writeFile = (fileName, contents) => {
         if (err)
             console.log(err);
         else {
-            console.log("File written successfully\n");
+            console.log("File written successfully");
         }
     });
 }
@@ -41,7 +41,7 @@ const getUrls = async (page) => {
  * opens the browser and goes to the first url
  * @returns playwright browser and page
  */
-const initBrowser = async () => {
+const initBrowser = async (url) => {
     //open browser
     const browser = await playwright.firefox.launch({
         headless: true
@@ -49,7 +49,7 @@ const initBrowser = async () => {
 
     //open page
     const page = await browser.newPage();
-    await page.goto('https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/');
+    await page.goto(url);
     return [browser, page];
 }
 
@@ -131,7 +131,7 @@ const getCoursesDataFromMajor = async (page) => {
  */
 const main = async () => {
     //init
-    const [browser, page] = await initBrowser();
+    const [browser, page] = await initBrowser('https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/');
 
     console.log('loading data from https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/');
 
@@ -170,5 +170,10 @@ const main = async () => {
     await browser.close();
 }
 
-main();
-
+if (require.main === module) {
+    main();
+} else {
+    module.exports = {
+        initBrowser, writeFile
+    }
+}
