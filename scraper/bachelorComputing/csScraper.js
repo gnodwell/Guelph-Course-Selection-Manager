@@ -31,17 +31,13 @@ const getRequirements = async(page) => {
 }
 
 const csMain = async() => {
-    const reqs = {}
+    let reqs = {}
 
     const [browser, page] = await initBrowser('https://calendar.uoguelph.ca/undergraduate-calendar/programs-majors-minors/computer-science-cs/#requirementstext');
     console.log('Loading requirements of CS major');
-    reqs['CS'] = await getRequirements(page);
+    reqs = await getRequirements(page);
 
-    await page.goto('https://calendar.uoguelph.ca/undergraduate-calendar/programs-majors-minors/software-engineering-seng/#requirementstext');
-    console.log('Loading requirements of SENG major');
-    reqs['SENG'] = await getRequirements(page);
-
-    writeFile('comp.json', JSON.stringify(reqs));
+    writeFile('cs.json', JSON.stringify(reqs));
 
     await page.waitForTimeout(1000);
     console.log('Done! Closing browser.');

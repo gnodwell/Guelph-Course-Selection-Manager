@@ -33,15 +33,15 @@ const getRestrictedElectives = async(page) => {
     return restricted;    
 }
 
-const fhsdMain = async () => {
-    const reqs = {}
+const fshdMain = async () => {
+    let reqs = {}
 
     const [browser, page] = await initBrowser('https://calendar.uoguelph.ca/undergraduate-calendar/programs-majors-minors/family-studies-human-development-fshd/#requirementstext');
-    console.log('Loading requirements of FHSD major');
-    reqs['FHSD'] = await getRequirementsAndFootnotes(page);
-    reqs['FHSD']['RE'] = await getRestrictedElectives(page);
+    console.log('Loading requirements of FSHD major');
+    reqs = await getRequirementsAndFootnotes(page);
+    reqs['RE'] = await getRestrictedElectives(page);
 
-    writeFile('fhsd.json', JSON.stringify(reqs));
+    writeFile('fshd.json', JSON.stringify(reqs));
 
     await page.waitForTimeout(1000);
     console.log('Done! Closing browser.');
@@ -49,7 +49,7 @@ const fhsdMain = async () => {
 }
 
 if (require.main === module) {
-    fhsdMain();
+    fshdMain();
 } else {
     module.exports = {
         getRestrictedElectives

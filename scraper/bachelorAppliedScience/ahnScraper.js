@@ -76,14 +76,14 @@ const getAreaOfEmphasis = async(page) => {
 }
 
 const ahnMain = async() => {
-    const reqs = {}
+    let reqs = {}
 
     const [browser, page] = await initBrowser('https://calendar.uoguelph.ca/undergraduate-calendar/programs-majors-minors/applied-human-nutrition-ahn/#requirementstext');
     console.log('Loading requirements of AHN major');
-    reqs['AHN'] = await getRequirementsAndFootnotes(page);
-    reqs['AHN']['AOE'] = await getAreaOfEmphasis(page);
+    reqs = await getRequirementsAndFootnotes(page);
+    reqs['AOE'] = await getAreaOfEmphasis(page);
 
-    writeFile('asc.json', JSON.stringify(reqs));
+    writeFile('ahn.json', JSON.stringify(reqs));
 
     await page.waitForTimeout(1000);
     console.log('Done! Closing browser.');
