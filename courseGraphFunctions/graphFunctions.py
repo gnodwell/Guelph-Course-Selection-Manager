@@ -39,6 +39,25 @@ def drawGraph(graph, graphName):
     graph.write('graphs/' + graphName + '.dot')
     graph.draw('graphs/' + graphName + '.pdf')
 
+def getTheOfRequisites(courses, subStr):
+    if courses:
+        print(courses)
+        string = courses[courses.find(subStr) : -1]
+        #print(string)
+        regex = r"[a-zA-Z]+\*[0-9]+"
+        pattern = re.compile(regex)
+        ofList = re.findall(pattern, string)
+        #print(ofList)
+        return ofList
+
+
+    # newString = ''
+    # if(string.find('1 of') != -1):
+    #     newString = string[string.index('1 of'):-1]
+    #     print(newString)
+
+    return []
+
 def parseReqs(courses, majorName):
     """parses coreqs and prereqs, returning the reqs in a list.
 
@@ -63,7 +82,7 @@ def parseReqs(courses, majorName):
 
     return reqsList
 
-def addNodeAndEdge(graph, course1, course2, colour, shape=None):
+def addNodeAndEdge(graph, course1, course2, colour, oneOfList, twoOfList, shape=None):
     """Add a node and edge pointing from course1 to course2 on the graph
 
     Args:
@@ -81,10 +100,17 @@ def addNodeAndEdge(graph, course1, course2, colour, shape=None):
         graph.add_node(course1, color=colour, shape=shape)
 
     #add the edge
-    graph.add_edge(course1, course2, color=colour)
+    if(course1 in oneOfList):
+        graph.add_edge(course1, course2, color=colour, style='dashed', label='1 of')
+    elif(course1 in twoOfList):
+        graph.add_edge(course1, course2, color=colour, style='dotted', label='2 of')
+    elif(course1 == 'EXP'):
+        graph.add_edge(course1, course2, color=colour, style='dashed')
+    else:
+        graph.add_edge(course1, course2, color=colour)
 
 
-def addPrereqsToGraph(graph, prereqsList, course):
+def addPrereqsToGraph(graph, prereqsList, oneOfList, twoOfList, course):
     """Add prereqs to the graph by adding the appropriate nodes and edges
 
     Args:
@@ -96,18 +122,18 @@ def addPrereqsToGraph(graph, prereqsList, course):
     #loop through prereqs and add nodes and edges
     for prereq in prereqsList:
         if(prereq[len(prereq) - 4] == '1'): #1000 level node format
-            addNodeAndEdge(graph, prereq, course, "red")
+            addNodeAndEdge(graph, prereq, course, "red", oneOfList, twoOfList)
         elif(prereq[len(prereq) - 4] == '2'): #2000 level node format
-            addNodeAndEdge(graph, prereq, course, "orange")
+            addNodeAndEdge(graph, prereq, course, "orange", oneOfList, twoOfList)
         elif(prereq[len(prereq) - 4] == '3'): #3000 level node format
-            addNodeAndEdge(graph, prereq, course, "green")
+            addNodeAndEdge(graph, prereq, course, "green", oneOfList, twoOfList)
         elif(prereq[len(prereq) - 4] == '4'): #4000 level node format
-            addNodeAndEdge(graph, prereq, course, "purple")
+            addNodeAndEdge(graph, prereq, course, "purple", oneOfList, twoOfList)
         else:
             graph.add_edge(prereq, course)
 
     
-def addCoreqsToGraph(graph, coreqsList, course):
+def addCoreqsToGraph(graph, coreqsList, oneOfList, twoOfList, course):
     """Add coreqs to the graph by adding the appropriate nodes and edges
 
     Args:
@@ -119,17 +145,17 @@ def addCoreqsToGraph(graph, coreqsList, course):
     #loop through coreqs and add nodes and edges in both directions
     for coreq in coreqsList:
         if(coreq[len(coreq) - 4] == '1'): #1000 level node format
-            addNodeAndEdge(graph, coreq, course, "red", "box")
-            addNodeAndEdge(graph, course, coreq, "red")
+            addNodeAndEdge(graph, coreq, course, "red", oneOfList, twoOfList, "box")
+            addNodeAndEdge(graph, course, coreq, "red", oneOfList, twoOfList)
         elif(coreq[len(coreq) - 4] == '2'): #2000 level node format
-            addNodeAndEdge(graph, coreq, course, "orange", "box")
-            addNodeAndEdge(graph, course, coreq, "orange")
+            addNodeAndEdge(graph, coreq, course, "orange", oneOfList, twoOfList, "box")
+            addNodeAndEdge(graph, course, coreq, "orange", oneOfList, twoOfList)
         elif(coreq[len(coreq) - 4] == '3'): #3000 level node format
-            addNodeAndEdge(graph, coreq, course, "green", "box")
-            addNodeAndEdge(graph, course, coreq, "green")
+            addNodeAndEdge(graph, coreq, course, "green", oneOfList, twoOfList, "box")
+            addNodeAndEdge(graph, course, coreq, "green", oneOfList, twoOfList)
         elif(coreq[len(coreq) - 4] == '4'): #4000 level node format
-            addNodeAndEdge(graph, coreq, course, "purple", "box")
-            addNodeAndEdge(graph, course, coreq, "purple")
+            addNodeAndEdge(graph, coreq, course, "purple", oneOfList, twoOfList, "box")
+            addNodeAndEdge(graph, course, coreq, "purple", oneOfList, twoOfList)
         else:
             graph.add_edge(coreq, course)
             graph.add_edge(course, coreq)
@@ -152,6 +178,7 @@ def generateGraphByMajor(graph, all_courses, majorName):
         return False
 
     seenCourses = set()
+    
     #loop through courses in specified major
     for k, v in all_courses[majorName].items():
         #add node for course 
@@ -169,14 +196,15 @@ def generateGraphByMajor(graph, all_courses, majorName):
 
         #parse prereqs from prereqs attribute
         prereqsList = parseReqs(v["prereqs"], majorName)
+        
         #add the prereqs to the graph by adding edges in a single direction from the prereq to the course
-        addPrereqsToGraph(graph, prereqsList, k)
+        addPrereqsToGraph(graph, prereqsList, oneOfList, twoOfList, k)
         seenCourses.update(prereqsList)
         
         #parse coreqs from coreqs attribute
         coreqsList = parseReqs(v["coreqs"], majorName)
         #add coreqs to the graph by adding edges in both directions between coreqs and course
-        addCoreqsToGraph(graph, coreqsList, k)
+        addCoreqsToGraph(graph, coreqsList, oneOfList, twoOfList, k)
         seenCourses.update(coreqsList)
 
     graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(majorName, len(seenCourses)))
@@ -207,6 +235,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
             for b, n in v.items():              #traverse second layer of json data (course codes)
                 if (b == course):
 
+
                     #add first node in case of course having no prerequisites
                     if(level_counter == 0):
                         course_graph.add_node(course, shape="box")
@@ -216,7 +245,9 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                         #regex for parsing prereqs
                         pattern = re.compile(r"[a-zA-Z]+\*[0-9]+|work\sexperience")
                         prereqsList = re.findall(pattern, n["prereqs"])
-                        
+                        oneOfList = getTheOfRequisites(n["prereqs"], "1 of")
+                        twoOfList = getTheOfRequisites(n["prereqs"], "2 of")
+
                         #shorten the work experience prerequisite to exp
                         if(len(prereqsList) != 0):
                             if(prereqsList[-1] == "work experience"):
@@ -226,15 +257,15 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                         #loop through prereqs and add nodes and edges
                         for prereq in prereqsList:
                             if(level_counter == 0): #node format for first level
-                                addNodeAndEdge(course_graph, prereq, b, "red")
+                                addNodeAndEdge(course_graph, prereq, b, "red", oneOfList, twoOfList)
                             elif(level_counter == 1): #node format for second level
-                                addNodeAndEdge(course_graph, prereq, b, "orange")
+                                addNodeAndEdge(course_graph, prereq, b, "orange", oneOfList, twoOfList)
                             elif(level_counter == 2): #node format for third level
-                                addNodeAndEdge(course_graph, prereq, b, "green")
+                                addNodeAndEdge(course_graph, prereq, b, "green", oneOfList, twoOfList)
                             elif(level_counter == 3): #node format for fourth level
-                                addNodeAndEdge(course_graph, prereq, b, "purple")
+                                addNodeAndEdge(course_graph, prereq, b, "purple", oneOfList, twoOfList)
                             elif(level_counter == 4): #node format for fifth level
-                                addNodeAndEdge(course_graph, prereq, b, "blue")
+                                addNodeAndEdge(course_graph, prereq, b, "blue", oneOfList, twoOfList)
                             else:
                                 course_graph.add_edge(prereq, b)
 
@@ -250,16 +281,16 @@ def main():
 
     
     #recursively generate graph for specified course
-    generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
+   # generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
 
 
     generateGraphByMajor(graph, all_courses, "ENGG")
 
-    drawGraph(course_graph, "CIS*3190")
+   # drawGraph(course_graph, "CIS*3190")
 
     drawGraph(graph, "ENGG")
     
-    displayGraph("CIS*3190.pdf")   
+    #displayGraph("CIS*3190.pdf")   
     
 if __name__ == '__main__':
     main()   
