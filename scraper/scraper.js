@@ -20,16 +20,19 @@ const writeFile = (fileName, contents) => {
 /**
  * get the urls for each major from the front page
  * @param {playwrite browser page} page 
- * @returns list of urls
+ * @returns list of url objects in the form {text: <name of link>, url: <url>}
  */
-const getUrls = async (page) => {
+const getLinks = async (page, selector) => {
     // get the urls for each majors
-    const urls = await page.$$eval('//div[contains(@class, "az_sitemap")]/ul/li/a', aElms => {
-        const urls = [];
+    const urls = await page.$$eval(selector, aElms => {
 
+        const urls = []
         //get urls from a elements
         aElms.forEach(a => {
-            urls.push(a.href);
+            urls.push({
+                text: a.innerText,
+                url: a.href
+            });
         });
         
         return urls;
@@ -136,13 +139,14 @@ const main = async () => {
     console.log('loading data from https://calendar.uoguelph.ca/undergraduate-calendar/course-descriptions/');
 
     // get the urls for each majors
-    const urls = await getUrls(page);
+    const urlsJson = await getLinks(page, '//div[contains(@class, "az_sitemap")]/ul/li/a');
 
     const allData = [];
 
     //go to each url
-    for (url of urls) {
+    for (urlJson of urlsJson) {
         try {
+            url = urlJson.url;
             //go to url
             await page.goto(url);
             
@@ -174,6 +178,6 @@ if (require.main === module) {
     main();
 } else {
     module.exports = {
-        initBrowser, writeFile
+        initBrowser, writeFile, getLinks
     }
 }
