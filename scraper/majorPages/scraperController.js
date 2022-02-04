@@ -1,11 +1,24 @@
 const fs = require('fs');
 const { initBrowser, writeFile } = require("../scraper");
 
-const findChildren = async (page, selector) => {
+/**
+ * uses html xpath string to find and parse elements on the given browser page, returning data
+ * @param {playwright browser page} page
+ * @param {string} selector 
+ * @return {array} 
+ */
+const parseElements = async (page, selector) => {
 
+    //using xpath to evaluate elements within the given html element
     const elements = await page.$$eval(selector, element => {
-        const data = []
+        //stores all data of the html element
+        const data = [] 
 
+        /**
+         * reads in course code data in given table, returning course codes + extra credits
+         * @param {HTML DOM Collection} rows 
+         * @returns {Dictionary} 
+         */
         const getTableData = (rows) => {
             let codes = []
             let credits = 0.0
@@ -13,8 +26,10 @@ const findChildren = async (page, selector) => {
             for (let j = 1; j < rows.length; j++) {
                 let cells = rows[j].cells;
                 for (let i = 0; i < cells.length; i += 3) {
+                    //get course code col per row
                     text = cells[i].innerText;
 
+                    //only read data if: is a credit, is a condition, is a course code
                     if (text.includes('Semester')) {
                         continue
                     } else if (cells[i].colSpan >= 2 && text.match('^[0-9]*\.[0-9]+') == null) {
@@ -23,10 +38,10 @@ const findChildren = async (page, selector) => {
                     } else if (text.match('^[0-9]*\.[0-9]+') != null) {
                         credits += parseFloat(text.match('[0-9]*\.[0-9]+')[0]);
                     } else if (text.includes('or')) {
-                        codes[codes.length - 1] += ' ' + text;
+                        codes[codes.length - 1] += ' ' + text; //tack on current course to previous to fit 'or' archetype
                     } else {
                         if (text.includes('\n&')) {
-                            text = text.replace(/\n&/g, ' and')
+                            text = text.replace(/\n&/g, ' and') //replace & with and
                         }
                         codes.push(text)
                     }
@@ -39,35 +54,44 @@ const findChildren = async (page, selector) => {
             };
         }
 
-        const getList = (rows) => {
+        /**
+         * iterate through list items 
+         * @param {HTML DOM Collection} items 
+         */
+        const getList = (items) => {
             let notes = []
-            for (let i = 1; i < rows.length; i += 2) {
-                notes.push(rows[i].innerText);
+            for (let i = 1; i < items.length; i += 2) {
+                notes.push(items[i].innerText);
             }
 
             return notes;
         }
-
+        
+        //apply Array Prototype to HTML DOM NodeList for easier parsing
         let children = [...element[0].children];
         children.forEach(child => {
-            // console.log(child)
 
             if (child.localName == "h2" || child.localName == "h3" || child.localName == "h4" || child.localName == "h5" || child.localName == "h6") {
+                //make new entry to data per header
                 let tempDict = { 'title': child.innerText, 'desc': [], 'table': [], 'lists': [], "footnotes": [] }
                 data.push(tempDict)
             } else if (data.length) {
                 if (child.localName == "p") {
+                    //descriptions of header, minus note content
                     text = child.innerText
                     if (text.slice(0, 5) != "Note:") {
                         data[data.length - 1]['desc'].push(text)
                     }
                 } else if (child.localName == "table") {
+                    //parse course table per header
                     let table = getTableData(child.rows);
                     data[data.length - 1]['table'].push(table)
                 } else if (child.localName == "dl") {
+                    //get footnotes per header
                     let footnotes = getList(child.children)
                     data[data.length - 1]['footnotes'].push(footnotes)
                 } else if (child.localName == "ul") {
+                    //add any existing list content
                     data[data.length - 1]['lists'].push(child.innerText)
                 }
             }
@@ -96,7 +120,7 @@ const main = async() => {
             selector = '//*[@id="scheduleofstudiestextcontainer"]'
         }
 
-        reqs = await findChildren(page, selector);
+        reqs = await parseElements(page, selector);
         writeFile('./includes/'+dict['text']+'.json', JSON.stringify(reqs));
     }
 
@@ -109,6 +133,6 @@ if (require.main === module) {
     main();
 } else {
     module.exports = {
-        findChildren
+        parseElements
     }
 }
