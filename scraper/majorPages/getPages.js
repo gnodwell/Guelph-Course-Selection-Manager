@@ -20,10 +20,16 @@ const getMajorPages = async () => {
         
         //check to see if there are more links
         let moreLinks = await getLinks(page, '.sitemap > ul > li > a');
-        
+
         if (moreLinks.length > 0) { //if there are more links, then add them to the list
-            majors = majors.concat(moreLinks);
-        } else { //otherwise, the original link was the major. Add it to the list
+            for (let i = 0; i < moreLinks.length; i++) {
+                let text = moreLinks[i];
+                if (!text['text'].includes('Co-op') ) {
+                    majors.push(text);
+                } 
+            }
+            // majors = majors.concat(moreLinks);
+        } else if (!link['text'].includes('Co-op')) { //otherwise, the original link was the major. Add it to the list
             majors.push(link);
         }
     }
