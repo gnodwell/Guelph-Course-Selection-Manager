@@ -322,41 +322,13 @@ def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOu
                                 isConnected = 1
                             i += 1       
 
-
-
-                    # for val in orDict[key]:
-                    #     if val == course1:
-                    #         isConnected = 1
-                    #         graph.add_edge(course1, 'or'+str(key), color=colour)
-
                 #otherwise, connect the prereq to the course's 'or' node
                 if not isConnected:
                     graph.add_edge(course1, course2, color=colour)
 
-            # #connect the course to the 'or' node
-            # if isOrOutside:
-            #     #find the correct orId for course2
-            #     for key in orDict:
-            #         if orDict[key] == course2:
-            #             graph.add_edge(course1, 'or'+str(key), color=colour, style='dashed')
-                
-            # #otherwise connect the course to its prereq
-            # else:
-            #     graph.add_edge(course1, course2, color=colour, style='dashed')
+            
         elif course1 == 'IDEV reg.':
-            #connect the course to the 'or' node
-            # print("here")
-            # if isOrOutside:
-            #     #find the correct orId for course2
-            #     for key in orDict:
-            #         if orDict[key] == course2:
-            #             graph.add_edge(course1, 'or'+str(key), color=colour, style='dashed')
-                
-            # #otherwise connect the course to its prereq
-            # else:
-            #     graph.add_edge(course1, course2, color=colour, style='dashed')
-
-
+            
             #otherwise connect the node
             if isOrOutside:
                 i = 0
@@ -390,13 +362,6 @@ def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOu
                                 isConnected = 1
                             i += 1       
 
-
-
-                    # for val in orDict[key]:
-                    #     if val == course1:
-                    #         isConnected = 1
-                    #         graph.add_edge(course1, 'or'+str(key), color=colour)
-                #otherwise, connect the prereq to the course's 'or' node
                 if not isConnected:
                     graph.add_edge(course1, course2, color=colour)
         else:
@@ -434,49 +399,9 @@ def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOu
                                 isConnected = 1
                             i += 1       
 
-
-
-                    # for val in orDict[key]:
-                    #     if val == course1:
-                    #         isConnected = 1
-                    #         graph.add_edge(course1, 'or'+str(key), color=colour)
-
                 #otherwise, connect the prereq to the course's 'or' node
                 if not isConnected:
                     graph.add_edge(course1, course2, color=colour)
-            
-
-
-
-            #connect the course to the 'or' node
-            # if isOrOutside:
-            #     #check if the course is already connected to it through an 'or'
-            #     #if so then don't connect
-            #     isConnected = 0
-            #     for key in orDict:
-            #         for val in orDict[key]:
-            #             if val == course1:
-            #                 isConnected = 1
-            #     if not isConnected:
-            #         #find the correct orId for course2
-            #         for key in orDict:
-            #             if orDict[key] == course2:
-            #                 graph.add_edge(course1, 'or'+str(key), color=colour)
-
-                
-            #     #graph.add_edge(course1, 'or'+str(orId), color=colour)
-            # #otherwise connect the course to its prereq
-            # else:
-            #     #check if the course is already connected to it through an 'or'
-            #     #if so then don't connect
-            #     isConnected = 0
-            #     for key in orDict:
-            #         for val in orDict[key]:
-            #             if val == course1:
-            #                 isConnected = 1
-            #     if not isConnected:
-            #         graph.add_edge(course1, course2, color=colour)
-    
 
 
 def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course):
@@ -530,7 +455,7 @@ def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course):
             graph.add_edge(course, coreq)
 
 
-def generateGraphByMajor(graph, all_courses, majorName):
+def generateGraphBySubject(graph, all_courses, majorName):
     """Generates a graph for a specified major.
 
     Args:

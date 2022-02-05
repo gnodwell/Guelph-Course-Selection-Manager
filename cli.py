@@ -154,7 +154,7 @@ def makeGraph():
             
             graph = pgv.AGraph(directed=True)
 
-            created = gf.generateGraphByMajor(graph, all_courses, majorToGraph)
+            created = gf.generateGraphBySubject(graph, all_courses, majorToGraph)
             #only draw graphs if a graph was made successfully
             if created:
                 gf.drawGraph(graph, majorToGraph)
