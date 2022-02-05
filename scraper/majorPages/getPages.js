@@ -25,10 +25,14 @@ const getMajorPages = async () => {
             for (let i = 0; i < moreLinks.length; i++) {
                 let text = moreLinks[i];
                 if (!text['text'].includes('Co-op') ) {
+                    let pattern = /\(.*\)|\[.*\]/;
+                    text['text'] += ' ' + link['text'].match(pattern);
+                    console.log(link['text']);
+                    console.log(link['text'].match(pattern));
                     majors.push(text);
                 } 
             }
-            // majors = majors.concat(moreLinks);
+            
         } else if (!link['text'].includes('Co-op')) { //otherwise, the original link was the major. Add it to the list
             majors.push(link);
         }
