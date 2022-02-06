@@ -106,22 +106,38 @@ const parseElements = async (page, selector) => {
 
 const main = async() => {
     let reqs = {}
+    let selector = ''
+    const userCode = process.argv[2]
+    let isFileWritten = false
     
-    let f = fs.readFileSync('./majorPages.json');
+    //read all majors urls
+    let f = fs.readFileSync('./w22_cis3760_team4/scraper/majorPages/majorPages.json');
     const json = JSON.parse(f)
 
+    //initialize browser to go through urls in json
     const [browser, page] = await initBrowser('https://calendar.uoguelph.ca/undergraduate-calendar/programs-majors-minors/');
     for (const dict of json) {
-        await page.goto(dict['url'])
-        console.log('Loading requirements of '+ dict['text'] +' major');
 
-        let selector = '//*[@id="requirementstextcontainer"]'
-        if (dict['text'].includes('(D.V.M.)')) {
-            selector = '//*[@id="scheduleofstudiestextcontainer"]'
+        //check if userCode is valid
+        if (dict['text'].includes(userCode)) {
+            await page.goto(dict['url'])
+            console.log('Loading requirements of '+ dict['text'] +' major');
+    
+            //depending on major, use given html xpath selector
+            selector = '//*[@id="requirementstextcontainer"]'
+            if (dict['text'].includes('(D.V.M.)')) {
+                selector = '//*[@id="scheduleofstudiestextcontainer"]'
+            }
+    
+            //parse element children of html xpath selector, write to major's json
+            reqs = await parseElements(page, selector);
+            writeFile('./w22_cis3760_team4/scraper/majorPages/includes/'+ dict['text'] +'.json', JSON.stringify(reqs));
+            isFileWritten = true
         }
+    }
 
-        reqs = await parseElements(page, selector);
-        writeFile('./includes/'+dict['text']+'.json', JSON.stringify(reqs));
+    if (!isFileWritten) {
+        console.log('Major does not exist.')
     }
 
     await page.waitForTimeout(1000);
