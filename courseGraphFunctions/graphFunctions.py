@@ -46,7 +46,14 @@ def drawGraph(graph, graphName):
     graph.draw('graphs/' + graphName + '.pdf')
 
 def cleanUpString(string):
+    """Corrects the format of the string in terms of ' 's and ','s.
 
+    Args:
+        string ([string]): [the string to be cleaned up]
+
+    Returns:
+        [string]: [the cleaned up string]
+    """
     #removing any incorrect formatting with ','s and spaces
     for i in range(len(string)):
         if(i >= len(string)):
@@ -58,6 +65,14 @@ def cleanUpString(string):
     return string
 
 def isOrOutsideBrackets(courses):
+    """Determines if the string has an 'or' outside of the brackets.
+
+    Args:
+        courses ([string]): [the string to be checked]
+
+    Returns:
+        [int]: [the integer to represent yes or no; 1: yes and 0: no]
+    """
     
     orList = [(i) for i in find_all(courses, 'or')]
 
@@ -82,6 +97,15 @@ def isOrOutsideBrackets(courses):
     return 0
         
 def getOrDict(graph, courses, course, isOut):
+    """Creates a dictionary for all other 'or's inside of brackets.
+
+    Args:
+        graph ([AGraph]): [the graph to be modified]
+        courses ([string]): [the string of prerequisites]
+        course ([string]): [the course with prerequisites]
+        isOut ([int]): [determines if the 'courses' string has an 'or' outside of brackets]
+    """
+
     # go through the string and get the 'or's
     idxList = [(i) for i in find_all(courses, 'or')]
 
@@ -145,6 +169,15 @@ def getOrDict(graph, courses, course, isOut):
         i += 1    
     
 def find_all(courses, sub):
+    """Finds all indexes of the substring found in the 'courses' string.
+
+    Args:
+        courses ([string]): [the string to be checked]
+        sub ([string]): [the substring to check for in the string]
+
+    Returns:
+        [int]: [the indexes of the substrings found]
+    """
 
     #add all found indexes of a sub string to a list
     i = courses.find(sub)
@@ -152,7 +185,19 @@ def find_all(courses, sub):
         yield i
         i = courses.find(sub, i+1)
 
-def getTheOfRequisites(graph, reqs, courses, subStr, course, isOrOutside):
+def getTheOfRequisites(graph, courses, subStr, course, isOrOutside):
+    """Gets the dictionary of '1 of' or '2 of' nodes in the prerequisites.
+
+    Args:
+        graph ([AGraph]): [the graph to be modified]
+        courses ([string]): [the string of the prerequisites]
+        subStr ([string]): [the substring '1 of' or '2 of']
+        course ([string]): [the course with prerequisites]
+        isOrOutside ([int]): [determines if the 'courses' string has an 'or' outside of brackets]
+
+    Returns:
+        [dict]: [the dictionary of '1 of' or '2 of' nodes]
+    """
     global ofId
 
     #if courses is not empty
@@ -572,8 +617,8 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                         
 
                         #creating the dictionaries for the format of '1 of ...' and '2 of ...'
-                        oneOfDict = getTheOfRequisites(course_graph, prereqsList, n["prereqs"], "1 of", b, isOut)
-                        twoOfDict = getTheOfRequisites(course_graph, prereqsList, n["prereqs"], "2 of", b, isOut)
+                        oneOfDict = getTheOfRequisites(course_graph, n["prereqs"], "1 of", b, isOut)
+                        twoOfDict = getTheOfRequisites(course_graph, n["prereqs"], "2 of", b, isOut)
 
                         #print("oneOfDict = ", oneOfDict)
                         #print("twoOfDict = ", twoOfDict)
@@ -609,6 +654,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
     return True
 
 def generateGraphByMajor(major_graph, all_courses, major_courses, majorName):
+    
     print(major_courses)
     return False
 
