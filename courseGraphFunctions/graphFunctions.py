@@ -608,7 +608,8 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         #print(checkedCourses)
     return True
 
-def generateGraphByMajor(major_graph, all_courses, majorName):
+def generateGraphByMajor(major_graph, all_courses, major_courses, majorName):
+    print(major_courses)
     return False
 
 def main():

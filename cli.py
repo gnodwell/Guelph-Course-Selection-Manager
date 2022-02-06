@@ -108,6 +108,30 @@ def courseSearch():
 
         dr.printCourses(res)
 
+def displayMajors(all_majors, majorToGraph):
+
+    majorToGraph = '(' + majorToGraph.upper() + ')'
+    print(majorToGraph)
+    majorList = []
+    count = 0
+
+    for item in all_majors:
+        if majorToGraph in item["text"]:
+            count += 1
+            print(count, ': ', item["text"])
+            majorList.append(item["text"])
+            
+
+
+    usrChoice = input("\n--> ")
+    usrChoice = int(usrChoice)
+
+    if usrChoice > count or usrChoice < 1:
+        print("Invalid input! Please enter from the selections.")
+        return ""
+    else:
+        return majorList[usrChoice-1]
+
 
 def makeGraph():
     """ Creates a graph using the course_graphs/courseGraph.py and course_graphs/graphFunctions.py
@@ -167,9 +191,20 @@ def makeGraph():
             print("Please enter the major's course code you would like to graph.")
             majorToGraph = input("\n--> ")
 
-            if not dr.validateMajorCode(majorToGraph, all_majors):
+            count = dr.validateMajorCode(majorToGraph, all_majors)
+            if count == 0:
                 print("The major (" + majorToGraph.upper() + ") does not exist.")
                 continue
+
+            elif count > 1:
+                tempName = majorToGraph
+                majorToGraph = ""
+
+                while majorToGraph == "":
+                    print("Please select the specific major.")
+                    majorToGraph = displayMajors(all_majors, tempName)
+
+             
 
             #call scraperController to create given major's json file(s)
             try:
@@ -181,9 +216,11 @@ def makeGraph():
                 print('{} major could not be parsed to file.\n'.format(majorToGraph))
                 continue
 
+            major_courses = cg.readJSON('./scraper/majorPages/includes/' + majorToGraph + '.json')
+
             major_graph = pgv.AGraph(directed=True)
 
-            created = gf.generateGraphByMajor(major_graph, all_courses, majorToGraph)
+            created = gf.generateGraphByMajor(major_graph, all_courses, major_courses, majorToGraph)
             #only draw graphs if a graph was made successfully
             if created:
                 gf.drawGraph(major_graph, majorToGraph)
