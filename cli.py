@@ -172,10 +172,14 @@ def makeGraph():
                 continue
 
             #call scraperController to create given major's json file(s)
-            js_file = os.getcwd() + '/scraper/majorPages/scraperController.js'
-            p = subprocess.Popen(["node", js_file, majorToGraph], stdout=subprocess.PIPE)
-            out = p.stdout.read()
-            # print(out)
+            try:
+                js_file = os.getcwd() + '/scraper/majorPages/scraperController.js'
+                p = subprocess.Popen(["node", js_file, majorToGraph], stdout=subprocess.PIPE)
+                out = p.stdout.readline()
+                print('{} major requirements written to file.\n'.format(majorToGraph))
+            except:
+                print('{} major could not be parsed to file.\n'.format(majorToGraph))
+                continue
 
             major_graph = pgv.AGraph(directed=True)
 
