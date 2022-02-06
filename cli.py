@@ -171,7 +171,6 @@ def makeGraph():
                 print("The major (" + majorToGraph.upper() + ") does not exist.")
                 continue
 
-            print(dr.validateMajorCode(majorToGraph, all_majors))
             #code to connect the scraper to the cli and created the json file
 
 
