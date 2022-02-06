@@ -1,6 +1,6 @@
 import pygraphviz as pgv
-import re
-import platform
+import os
+import subprocess
 import json
 
 from dataReader import dataReader as dr
@@ -171,9 +171,11 @@ def makeGraph():
                 print("The major (" + majorToGraph.upper() + ") does not exist.")
                 continue
 
-            #code to connect the scraper to the cli and created the json file
-
-
+            #call scraperController to create given major's json file(s)
+            js_file = os.getcwd() + '/scraper/majorPages/scraperController.js'
+            p = subprocess.Popen(["node", js_file, majorToGraph], stdout=subprocess.PIPE)
+            out = p.stdout.read()
+            # print(out)
 
             major_graph = pgv.AGraph(directed=True)
 

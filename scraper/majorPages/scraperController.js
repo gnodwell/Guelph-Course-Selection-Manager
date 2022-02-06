@@ -111,7 +111,7 @@ const main = async() => {
     let isFileWritten = false
     
     //read all majors urls
-    let f = fs.readFileSync('./w22_cis3760_team4/scraper/majorPages/majorPages.json');
+    let f = fs.readFileSync('./scraper/majorPages/majorPages.json');
     const json = JSON.parse(f)
 
     //initialize browser to go through urls in json
@@ -131,7 +131,7 @@ const main = async() => {
     
             //parse element children of html xpath selector, write to major's json
             reqs = await parseElements(page, selector);
-            writeFile('./w22_cis3760_team4/scraper/majorPages/includes/'+ dict['text'] +'.json', JSON.stringify(reqs));
+            writeFile('./scraper/majorPages/includes/'+ dict['text'] +'.json', JSON.stringify(reqs));
             isFileWritten = true
         }
     }
