@@ -283,10 +283,7 @@ def validateMajorCode(majorToGraph, all_majors):
 
     majorToGraph = '(' + majorToGraph.upper() + ')'
     for item in all_majors:
-        #print(item)
         if majorToGraph in item["text"]:
-            #print(majorToGraph)
-            #print(item["text"])
             return 1
 
     return 0
