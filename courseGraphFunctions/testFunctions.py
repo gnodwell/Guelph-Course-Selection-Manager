@@ -207,7 +207,7 @@ class testCLI(unittest.TestCase):
         sampleGraph.add_node("ACCT*2230", color="orange")
         sampleGraph.add_node("ACCT*3230", color="green")
 
-        gp.generateGraphByMajor(testGraph, all_courses, "ACCT")
+        gp.generateGraphBySubject(testGraph, all_courses, "ACCT")
 
         self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByMajor")
 
@@ -223,7 +223,18 @@ class testCLI(unittest.TestCase):
 
         self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByCourse")
 
+    def test_cleanUpString(self):
+        string = "1 of CIS*3760, CIS*3750 , CIS*3110 , CIS*3050"
+        string = gp.cleanUpString(string)
 
+        self.assertEqual(string, "1 of CIS*3760, CIS*3750, CIS*3110, CIS*3050", "Failed test_cleanUpString")
+
+    def test_isOrOutsideBrackets(self):
+        testString = "((CIS*3760 or CIS*3750) or CIS*3110) or (CIS*3760 or CIS*3050)"
+
+        ret = gp.isOrOutsideBrackets(testString)
+
+        self.assertEqual(ret, 1, "Failed test_isOrOutsideBrackets")
 
 if __name__ == '__main__':
     unittest.main()
