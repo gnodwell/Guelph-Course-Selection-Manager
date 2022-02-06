@@ -114,6 +114,7 @@ def makeGraph():
     """
     try:
         all_courses = cg.readJSON("courseGraphFunctions/relations.json")
+        all_majors = cg.readJSON("scraper/majorPages/majorPages.json")
     except:
         data = cg.readJSON("scraper/data.json")
         majorDict = cg.mapMajorCourses(data)
@@ -123,12 +124,14 @@ def makeGraph():
         all_courses = cg.readJSON("courseGraphFunctions/relations.json")
 
 
+
     #recursively generate graph for specified course
     while True:
         print("Please select the type of graph you would like to create.")
         print("1: Graph by Course")
         print("2: Graph by Department")
-        print("3: Return")
+        print("3: Graph by Major")
+        print("4: Return")
         usrInput = input("\n--> ")
         usrInput = usrInput.strip()
         if (usrInput == "1"):
@@ -149,18 +152,39 @@ def makeGraph():
                 gf.displayGraph(courseToGraph)
 
         elif (usrInput == "2"):
-            print("Please enter the major's course code you would like to graph.")
-            majorToGraph = input("\n--> ")
+            print("Please enter the subject's code you would like to graph.")
+            subjectToGraph = input("\n--> ")
             
-            graph = pgv.AGraph(directed=True)
+            subject_graph = pgv.AGraph(directed=True)
 
-            created = gf.generateGraphBySubject(graph, all_courses, majorToGraph)
+            created = gf.generateGraphBySubject(subject_graph, all_courses, subjectToGraph)
             #only draw graphs if a graph was made successfully
             if created:
-                gf.drawGraph(graph, majorToGraph)
-                gf.displayGraph(majorToGraph)
+                gf.drawGraph(subject_graph, subjectToGraph)
+                gf.displayGraph(subjectToGraph)
 
         elif (usrInput == "3"):
+            print("Please enter the major's course code you would like to graph.")
+            majorToGraph = input("\n--> ")
+
+            if not dr.validateMajorCode(majorToGraph, all_majors):
+                print("The major (" + majorToGraph.upper() + ") does not exist.")
+                continue
+
+            print(dr.validateMajorCode(majorToGraph, all_majors))
+            #code to connect the scraper to the cli and created the json file
+
+
+
+            major_graph = pgv.AGraph(directed=True)
+
+            created = gf.generateGraphByMajor(major_graph, all_courses, majorToGraph)
+            #only draw graphs if a graph was made successfully
+            if created:
+                gf.drawGraph(major_graph, majorToGraph)
+                gf.displayGraph(majorToGraph)
+
+        elif (usrInput == "4"):
             break
         else:
             print ("Incorrect Input, Please try again. \n")

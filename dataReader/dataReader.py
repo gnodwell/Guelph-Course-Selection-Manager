@@ -279,6 +279,18 @@ def printCourses(res):
     print('\n--x\n')
     return hasPrinted
 
+def validateMajorCode(majorToGraph, all_majors):
+
+    majorToGraph = '(' + majorToGraph.upper() + ')'
+    for item in all_majors:
+        #print(item)
+        if majorToGraph in item["text"]:
+            #print(majorToGraph)
+            #print(item["text"])
+            return 1
+
+    return 0
+
 def validateCourseCode(courseCode):
     """This function is used to validate user input for course code
 

@@ -81,7 +81,6 @@ def isOrOutsideBrackets(courses):
 
     return 0
         
-
 def getOrDict(graph, courses, course, isOut):
     # go through the string and get the 'or's
     idxList = [(i) for i in find_all(courses, 'or')]
@@ -145,8 +144,6 @@ def getOrDict(graph, courses, course, isOut):
                 graph.add_edge('or'+str(course)+str(i), course)
         i += 1    
     
-
-
 def find_all(courses, sub):
 
     #add all found indexes of a sub string to a list
@@ -403,7 +400,6 @@ def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOu
                 if not isConnected:
                     graph.add_edge(course1, course2, color=colour)
 
-
 def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course):
     """Add prereqs to the graph by adding the appropriate nodes and edges
 
@@ -425,8 +421,7 @@ def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course):
             addNodeAndEdge(graph, prereq, course, "purple", oneOfDict, twoOfDict, 0)
         else:
             graph.add_edge(prereq, course)
-
-    
+   
 def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course):
     """Add coreqs to the graph by adding the appropriate nodes and edges
 
@@ -454,8 +449,7 @@ def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course):
             graph.add_edge(coreq, course)
             graph.add_edge(course, coreq)
 
-
-def generateGraphBySubject(graph, all_courses, majorName):
+def generateGraphBySubject(subject_graph, all_courses, subjectName):
     """Generates a graph for a specified major.
 
     Args:
@@ -464,44 +458,44 @@ def generateGraphBySubject(graph, all_courses, majorName):
         majorName ([string]): [string of specified major]
     """
     #make sure major name is in upper case
-    majorName = majorName.upper()
+    subjectName = subjectName.upper()
 
     #return if major is not in json
-    if majorName not in all_courses: 
-        print('Major: "' + majorName + '" does not exists')
+    if subjectName not in all_courses: 
+        print('Subject: "' + subjectName + '" does not exists')
         return False
 
     seenCourses = set()
     
     #loop through courses in specified major
-    for k, v in all_courses[majorName].items():
+    for k, v in all_courses[subjectName].items():
         #add node for course 
         
         if(k[len(k) - 4] == '1'):
-            graph.add_node(k, color="red")
+            subject_graph.add_node(k, color="red")
         elif(k[len(k) - 4] == '2'):
-            graph.add_node(k, color="orange")
+            subject_graph.add_node(k, color="orange")
         elif(k[len(k) - 4] == '3'):
-            graph.add_node(k, color="green")
+            subject_graph.add_node(k, color="green")
         elif(k[len(k) - 4] == '4'):
-            graph.add_node(k, color="purple")
+            subject_graph.add_node(k, color="purple")
         else:
-            graph.add_node(k)
+            subject_graph.add_node(k)
 
         #parse prereqs from prereqs attribute
-        prereqsList = parseReqs(v["prereqs"], majorName)
+        prereqsList = parseReqs(v["prereqs"], subjectName)
         
         #add the prereqs to the graph by adding edges in a single direction from the prereq to the course
-        addPrereqsToGraph(graph, prereqsList, {}, {}, k)
+        addPrereqsToGraph(subject_graph, prereqsList, {}, {}, k)
         seenCourses.update(prereqsList)
         
         #parse coreqs from coreqs attribute
-        coreqsList = parseReqs(v["coreqs"], majorName)
+        coreqsList = parseReqs(v["coreqs"], subjectName)
         #add coreqs to the graph by adding edges in both directions between coreqs and course
-        addCoreqsToGraph(graph, coreqsList, {}, {}, k)
+        addCoreqsToGraph(subject_graph, coreqsList, {}, {}, k)
         seenCourses.update(coreqsList)
 
-    graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(majorName, len(seenCourses)))
+    subject_graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(subjectName, len(seenCourses)))
     return True
         
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
@@ -613,6 +607,9 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         checkedCourses = set()
         #print(checkedCourses)
     return True
+
+def generateGraphByMajor(major_graph, all_courses, majorName):
+    return False
 
 def main():
     all_courses = readJSON("relations.json")
