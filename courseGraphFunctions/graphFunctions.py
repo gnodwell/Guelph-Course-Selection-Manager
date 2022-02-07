@@ -65,9 +65,6 @@ def cleanUpString(string):
     return string
 
 def isOrOutsideBrackets(courses):
-<<<<<<< HEAD
-
-=======
     """Determines if the string has an 'or' outside of the brackets.
 
     Args:
@@ -76,8 +73,6 @@ def isOrOutsideBrackets(courses):
     Returns:
         [int]: [the integer to represent yes or no; 1: yes and 0: no]
     """
-    
->>>>>>> 3781c4e4f276de7aed5fc79c4b8f01cdd401a273
     orList = [(i) for i in find_all(courses, 'or')]
 
     openBr = 0 #number of open brackets
@@ -657,7 +652,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         #print(checkedCourses)
     return True
 
-<<<<<<< HEAD
+
 def generateGraphByMajor(major_graph, all_courses, course, level_counter, majorName, courseList):
     course = course.upper()
 
@@ -779,12 +774,6 @@ def generateGraphByMajor(major_graph, all_courses, course, level_counter, majorN
         orDict = {}
         checkedCourses = set()
     return True
-=======
-def generateGraphByMajor(major_graph, all_courses, major_courses, majorName):
-    
-    print(major_courses)
-    return False
->>>>>>> 3781c4e4f276de7aed5fc79c4b8f01cdd401a273
 
 def main():
     all_courses = readJSON("relations.json")
