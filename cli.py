@@ -129,7 +129,6 @@ def displayMajors(all_majors, majorToGraph):
             count += 1
             print(count, ': ', item["text"])
             majorList.append(item["text"])
-            
 
 
     usrChoice = input("\n--> ")
@@ -214,8 +213,11 @@ def makeGraph():
                 while majorToGraph == "":
                     print("Please select the specific major.")
                     majorToGraph = displayMajors(all_majors, tempName)
+                    print("Major to Graph", majorToGraph)
 
-             
+
+            else:
+                majorToGraph = displayMajors(all_majors, majorToGraph)
 
             #call scraperController to create given major's json file(s)
             try:
@@ -227,15 +229,38 @@ def makeGraph():
                 print('{} major could not be parsed to file.\n'.format(majorToGraph))
                 continue
 
-            major_courses = cg.readJSON('./scraper/majorPages/includes/' + majorToGraph + '.json')
+            major = cg.readJSON('./scraper/majorPages/includes/' + majorToGraph + '.json')
+
+            with open("./courseGraphFunctions/relations.json", "r") as fc:
+                allCourses = json.load(fc)
+
+            major_created = False
+            minor_created = False
 
             major_graph = pgv.AGraph(directed=True)
+            majorCourses = gf.getMajorCourses(major)
+            courseInfo = gf.getCourseInfo(majorCourses, allCourses)
 
-            created = gf.generateGraphByMajor(major_graph, all_courses, major_courses, majorToGraph)
+
+            for x in majorCourses:
+                major_created = gf.generateGraphByMajor(major_graph, allCourses, x, 0, majorToGraph, majorCourses)
+
+
             #only draw graphs if a graph was made successfully
-            if created:
+            if major_created:
                 gf.drawGraph(major_graph, majorToGraph)
                 gf.displayGraph(majorToGraph)
+
+            minor_graph = pgv.AGraph(directed=True)
+            minorCourses = gf.getMinorCourses(major)
+            courseInfo = gf.getCourseInfo(minorCourses, allCourses)
+            for x in minorCourses:
+                minor_created = gf.generateGraphByMajor(minor_graph, allCourses, x, 0, majorToGraph, minorCourses)
+
+            if minor_created:
+                gf.drawGraph(minor_graph, majorToGraph+"-minor")
+                gf.displayGraph(majorToGraph)
+
 
         elif (usrInput == "4"):
             break
