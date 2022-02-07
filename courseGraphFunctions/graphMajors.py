@@ -18,29 +18,22 @@ orDict = {}
 checkCourses = set()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def getMajorCourses(data):
+    ret = []
+    flag = 0
     for i in data:
         if (i['title'] == 'Major'):
             for j in i['table']:
                 for k in j['courses']:
+                    print(k)
                     if (str(k).find("Select") != -1) :
+                        flag = 1
+                        print("K: ", k)
+                    if (flag == 0):
+                        ret.append(k)
 
-                    print("K: ", k)
-
-                return j['courses']
+                print("\n\n")
+                return ret
 
 
 def getMinorCourses(data):
@@ -63,32 +56,6 @@ def getCourseInfo(majorCourses, allCourses):
                     courseInfo[course] = v
 
     return courseInfo
-
-
-def generateGraph(graph, majorCourses, courseInfo):
-    for k, v in courseInfo.items():
-        if (k[len(k) - 4] == '1'):
-            graph.add_node(k, color='red')
-            print("Adding 1", k)
-        elif(k[len(k) - 4] == '2'):
-            graph.add_node(k, color='orange')
-            print("Adding 2", k)
-        elif(k[len(k) - 4] == '3'):
-            graph.add_node(k, color='green')
-            print("Adding 3", k)
-        elif(k[len(k) - 4] == '4'):
-            graph.add_node(k, color='purple')
-            print("Adding 4", k)
-        else:
-            graph.add_node(k)
-            print("Adding 5", k)
-
-        prereqsList = gf.parseReqs(v['prereqs'], k[0:k.find('*')])
-        gf.addPrereqsToGraph(graph, prereqsList, {}, {}, k)
-        coreqsList = gf.parseReqs(v['coreqs'], k[0:k.find('*')])
-        gf.addCoreqsToGraph(graph, coreqsList, {}, {}, k)
-
-    return True
 
 
 
@@ -118,6 +85,7 @@ def main():
         allCourses = json.load(f)
 
     majorCourses = getMajorCourses(data)
+    print("Major Courses: ", majorCourses)
     courseInfo = getCourseInfo(majorCourses, allCourses)
     graph = pgv.AGraph(directed=True)
 
