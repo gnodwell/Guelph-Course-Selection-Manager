@@ -280,7 +280,7 @@ def connectOrOf(isOrOutside, graph, keyVal, course1, colour, style):
         graph.add_edge(course1, 'of'+str(keyVal), color=colour, style=style)
 
 def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
-     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
     Args:
         oneOfDict ([dict]): [the dictionary of '1 of' nodes]
         oneOfDict ([dict]): [the dictionary of '2 of' nodes]

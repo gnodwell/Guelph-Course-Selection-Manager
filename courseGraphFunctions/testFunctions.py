@@ -1,5 +1,5 @@
 import unittest
-
+from os.path import exists
 import json
 
 import courseGraph as cg
@@ -222,6 +222,39 @@ class testCLI(unittest.TestCase):
         gp.generateGraphByCourse(testGraph, all_courses, "ACCT*1220", 0)
 
         self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByCourse")
+
+    def test_generateGraphBySubject(self):
+        all_courses = readJSON("testData.json")
+        testGraph = pgv.AGraph(directed=True)
+        sampleGraph = pgv.AGraph(directed=True)
+
+        sampleGraph.add_node("ACCT*1220", color="red")
+        sampleGraph.add_node("ACCT*1240", color="red")
+        sampleGraph.add_node("ACCT*2230", color="orange")
+        sampleGraph.add_node("ACCT*3230", color="green")
+
+        gp.generateGraphBySubject(testGraph, all_courses, "ACCT")
+
+        self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphBySubject")
+
+    def test_getOrDict(self):
+
+        testGraph = pgv.AGraph(directed=True)
+        courses = "ACCT*1220 or ACCT*2220"
+        isOut = 0
+
+        gp.getOrDict(testGraph, courses, "ACCT*1240", isOut)
+
+        self.assertEqual(isOut, 0, "Failed test_getOrDict")
+
+    def test_find_all(self):
+
+        courses = "ACCT*1220 or ACCT*2220"
+        sub = "ACCT*1220"
+        gp.find_all(courses, sub)
+   
+        self.assertEqual(sub, "ACCT*1220", "Failed test_find_all")
+    
 
     def test_cleanUpString(self):
         string = "1 of CIS*3760, CIS*3750 , CIS*3110 , CIS*3050"
