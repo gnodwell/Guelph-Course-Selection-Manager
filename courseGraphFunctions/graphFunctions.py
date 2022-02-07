@@ -613,7 +613,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         #print(checkedCourses)
     return True
 
-<<<<<<< HEAD
 
 def getMajorCourses(data):
     ret = []
@@ -650,8 +649,6 @@ def getCourseInfo(majorCourses, allCourses):
 
 
 
-=======
->>>>>>> 6a115ea1039f85052794ce61bbed3584d803e9ed
 def generateGraphByMajor(major_graph, all_courses, course, level_counter, majorName, courseList):
     course = course.upper()
 
