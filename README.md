@@ -5,7 +5,7 @@
 
 Sprint 3 tasked us with adding additional features to the graph generation functionality that
 was created in Sprint 2. This addition feature included allow the user to create graphs for specified majors. On top of that we also added funcitonality for the user to create graphs for a
-specified minor. 
+specified minor and further refined many of the features that were implemented during Sprint 2.
 
 ### Prerequisites
 

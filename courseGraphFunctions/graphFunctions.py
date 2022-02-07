@@ -676,6 +676,7 @@ def getCourseInfo(majorCourses, allCourses):
                     courseInfo[course] = v
     return courseInfo
 
+
 def generateGraphByMajor(major_graph, all_courses, course, level_counter, majorName, courseList):
     course = course.upper()
 

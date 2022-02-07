@@ -231,8 +231,8 @@ def makeGraph():
 
             major = cg.readJSON('./scraper/majorPages/includes/' + majorToGraph + '.json')
 
-            #with open("./courseGraphFunctions/relations.json", "r") as fc:
-                #allCourses = json.load(fc)
+            with open("./courseGraphFunctions/relations.json", "r") as fc:
+                allCourses = json.load(fc)
 
             major_created = False
             minor_created = False
@@ -241,11 +241,11 @@ def makeGraph():
             majorCourses = gf.getMajorCourses(major)
 
             if majorCourses:
-                courseInfo = gf.getCourseInfo(majorCourses, all_courses)
+                courseInfo = gf.getCourseInfo(majorCourses, allCourses)
 
 
                 for x in majorCourses:
-                    major_created = gf.generateGraphByMajor(major_graph, all_courses, x, 0, majorToGraph, majorCourses)
+                    major_created = gf.generateGraphByMajor(major_graph, allCourses, x, 0, majorToGraph, majorCourses)
 
 
             #only draw graphs if a graph was made successfully
@@ -258,10 +258,10 @@ def makeGraph():
             minorCourses = gf.getMinorCourses(major)
 
             if minorCourses:
-                courseInfo = gf.getCourseInfo(minorCourses, all_courses)
+                courseInfo = gf.getCourseInfo(minorCourses, allCourses)
 
                 for x in minorCourses:
-                    minor_created = gf.generateGraphByMajor(minor_graph, all_courses, x, 0, majorToGraph, minorCourses)
+                    minor_created = gf.generateGraphByMajor(minor_graph, allCourses, x, 0, majorToGraph, minorCourses)
 
             if minor_created:
                 print("here2")
