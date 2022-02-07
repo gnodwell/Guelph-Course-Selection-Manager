@@ -231,35 +231,42 @@ def makeGraph():
 
             major = cg.readJSON('./scraper/majorPages/includes/' + majorToGraph + '.json')
 
-            with open("./courseGraphFunctions/relations.json", "r") as fc:
-                allCourses = json.load(fc)
+            #with open("./courseGraphFunctions/relations.json", "r") as fc:
+                #allCourses = json.load(fc)
 
             major_created = False
             minor_created = False
 
             major_graph = pgv.AGraph(directed=True)
             majorCourses = gf.getMajorCourses(major)
-            courseInfo = gf.getCourseInfo(majorCourses, allCourses)
+
+            if majorCourses:
+                courseInfo = gf.getCourseInfo(majorCourses, all_courses)
 
 
-            for x in majorCourses:
-                major_created = gf.generateGraphByMajor(major_graph, allCourses, x, 0, majorToGraph, majorCourses)
+                for x in majorCourses:
+                    major_created = gf.generateGraphByMajor(major_graph, all_courses, x, 0, majorToGraph, majorCourses)
 
 
             #only draw graphs if a graph was made successfully
             if major_created:
+                print("here1")
                 gf.drawGraph(major_graph, majorToGraph)
-                gf.displayGraph(majorToGraph)
+               # gf.displayGraph(majorToGraph)
 
             minor_graph = pgv.AGraph(directed=True)
             minorCourses = gf.getMinorCourses(major)
-            courseInfo = gf.getCourseInfo(minorCourses, allCourses)
-            for x in minorCourses:
-                minor_created = gf.generateGraphByMajor(minor_graph, allCourses, x, 0, majorToGraph, minorCourses)
+
+            if minorCourses:
+                courseInfo = gf.getCourseInfo(minorCourses, all_courses)
+
+                for x in minorCourses:
+                    minor_created = gf.generateGraphByMajor(minor_graph, all_courses, x, 0, majorToGraph, minorCourses)
 
             if minor_created:
+                print("here2")
                 gf.drawGraph(minor_graph, majorToGraph+"-minor")
-                gf.displayGraph(majorToGraph)
+                #gf.displayGraph(majorToGraph)
 
 
         elif (usrInput == "4"):

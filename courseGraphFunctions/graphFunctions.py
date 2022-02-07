@@ -32,6 +32,8 @@ def displayGraph(graphName):
     elif(platform.system() == 'Darwin'):
         commands.getstatusoutput("open " + "graphs/" + graphName +".pdf")
 
+    print("here2")
+
 def drawGraph(graph, graphName):
     """write out graph to file formats
 
@@ -42,8 +44,9 @@ def drawGraph(graph, graphName):
     graphName = graphName.replace('*', '')
 
     graph.layout(prog='dot')
-    graph.write('graphs/' + graphName + '.dot')
-    graph.draw('graphs/' + graphName + '.pdf')
+    graph.write('./graphs/' + graphName + '.dot')
+    graph.draw('./graphs/' + graphName + '.pdf')
+
 
 def cleanUpString(string):
     """Corrects the format of the string in terms of ' 's and ','s.
@@ -280,7 +283,7 @@ def connectOrOf(isOrOutside, graph, keyVal, course1, colour, style):
         graph.add_edge(course1, 'of'+str(keyVal), color=colour, style=style)
 
 def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
-     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
     Args:
         oneOfDict ([dict]): [the dictionary of '1 of' nodes]
         oneOfDict ([dict]): [the dictionary of '2 of' nodes]
@@ -288,21 +291,24 @@ def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
         isIn ([int]): [determines if the course is in any of the dictionaries]
         keyVal ([int]): [the key for the '1 of' or '2 of' dicts]
     """
+
     #go through the dictionary to find course1
-    #if then set isIn to 1
+    #if true then set isIn to 1
     for key in oneOfDict:
-        oneList = oneOfDict[key]
-        if course1 in oneList:
-            isIn = 1
-            keyVal = key
+    	oneList = oneOfDict[key]
+
+    	if course1 in oneList:
+    		isIn = 1
+    		keyVal = key
 
     #go through the dictionary to find course1
     #if then set isIn to 2
     for key in twoOfDict:
-        twoList = twoOfDict[key]
-        if course1 in twoList:
-            isIn = 2
-            keyVal = key
+    	twoList = twoOfDict[key]
+    	if course1 in twoList:
+    		isIn = 2
+    		keyVal = key
+
 
 def keyInDict(i, isConnected, orDict, course1, course2, graph):
     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
@@ -634,8 +640,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         #print(checkedCourses)
     return True
 
-<<<<<<< HEAD
-
 def getMajorCourses(data):
     ret = []
     flag = 0
@@ -647,6 +651,7 @@ def getMajorCourses(data):
                         flag = 1
                     if (flag == 0):
                         ret.append(k)
+                        #print(k)
     return ret
 
 def getMinorCourses(data):
@@ -658,6 +663,9 @@ def getMinorCourses(data):
 def getCourseInfo(majorCourses, allCourses):
     flag = 0
     courseInfo = {}
+    #if majorCourses == None:
+    	#return courseInfo
+
     for course in majorCourses:
         hold = course.find("*")
         if (course[0:hold] not in allCourses):
@@ -668,11 +676,6 @@ def getCourseInfo(majorCourses, allCourses):
                     courseInfo[course] = v
     return courseInfo
 
-
-
-
-=======
->>>>>>> 6a115ea1039f85052794ce61bbed3584d803e9ed
 def generateGraphByMajor(major_graph, all_courses, course, level_counter, majorName, courseList):
     course = course.upper()
 
