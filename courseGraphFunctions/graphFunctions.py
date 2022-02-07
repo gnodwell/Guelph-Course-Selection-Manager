@@ -262,6 +262,17 @@ def parseReqs(courses, majorName):
 
 def connectOrOf(isOrOutside, graph, keyVal, course1, colour, style):
     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    Args:
+        isOrOutside ([int]): [determines if the 'courses' string has an 'or' outside of brackets]
+        graph ([AGraph]): [the graph to be modified]
+        keyVal ([int]): [the key for the '1 of' or '2 of' dicts]
+        course1 ([string]): [the course with prerequisites]
+        colour ([string]): [the colour of the edge]
+        style ([string]): [the style of the edge]
+
+    Returns:
+        [List]: [List of course reqs]
+
     """
     #connect the 'or' node to the 'of' node, and course1 to the 'of' node
     if isOrOutside:
