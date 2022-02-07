@@ -262,6 +262,13 @@ def parseReqs(courses, majorName):
 
 def connectOrOf(isOrOutside, graph, keyVal, course1, colour, style):
     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    Args:
+        isOrOutside ([int]): [determines if the 'courses' string has an 'or' outside of brackets]
+        graph ([AGraph]): [the graph to be modified]
+        keyVal ([int]): [the key for the '1 of' or '2 of' dicts]
+        course1 ([string]): [the course with prerequisites]
+        colour ([string]): [the colour of the edge]
+        style ([string]): [the style of the edge]
     """
     #connect the 'or' node to the 'of' node, and course1 to the 'of' node
     if isOrOutside:
@@ -273,6 +280,14 @@ def connectOrOf(isOrOutside, graph, keyVal, course1, colour, style):
         graph.add_edge(course1, 'of'+str(keyVal), color=colour, style=style)
 
 def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
+     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    Args:
+        oneOfDict ([dict]): [the dictionary of '1 of' nodes]
+        oneOfDict ([dict]): [the dictionary of '2 of' nodes]
+        course1 ([string]): [the pre-requisite]
+        isIn ([int]): [determines if the course is in any of the dictionaries]
+        keyVal ([int]): [the key for the '1 of' or '2 of' dicts]
+    """
     #go through the dictionary to find course1
     #if then set isIn to 1
     for key in oneOfDict:
@@ -291,6 +306,12 @@ def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
 
 def keyInDict(i, isConnected, orDict, course1, course2, graph):
     """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    Args:
+        i ([int]): [the index counter of the dictionary]
+        isConnected ([int]): [determines if a course is connected to the course's 'or' node]
+        course1 ([string]): [the pre-requisite]
+        course2 ([string]): [the course with pre-requisites]
+        graph ([AGraph]): [the graph to be modified]
     """
     #check to see if the prereq is connected to the course through an 'or'
     #if so connect the prereq's 'or' node to the course's or node
