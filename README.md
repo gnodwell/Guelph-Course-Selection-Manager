@@ -1,13 +1,11 @@
-# W22_CIS3760_Team4 - Sprint 2
+# W22_CIS3760_Team4 - Sprint 3
 
 <!-- ABOUT SECTION -->
 ## About 
 
-Sprint 2 tasked us with adding graphical output for the scraper and cli tools that we created during Sprint 1.
-This was done using PyGraphiz which is the python graphiz library. The required graphical output was to create
-a graph for all the courses in the CIS major. We went beyond this by allow the user to create a graph for not only 
-the CIS major but for every department guelph offers. On top of that, the user can also input a specific course
-and receive a graph output of the course and its prerequisites and its prerequisites' prerequisites and so on.
+Sprint 3 tasked us with adding additional features to the graph generation functionality that
+was created in Sprint 2. This addition feature included allow the user to create graphs for specified majors. On top of that we also added funcitonality for the user to create graphs for a
+specified minor. 
 
 ### Prerequisites
 
@@ -33,7 +31,6 @@ Install Graphviz and PyGraphiz:
 Ubuntu/Debian:
 1. "sudo apt-get install graphviz graphviz-dev" in shell.
 2. "pip install pygraphviz"
-
 
 
 ## Usage
