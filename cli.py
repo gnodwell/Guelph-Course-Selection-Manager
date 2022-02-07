@@ -109,6 +109,15 @@ def courseSearch():
         dr.printCourses(res)
 
 def displayMajors(all_majors, majorToGraph):
+    """Displays options for the user to specify the degree type of the major.
+
+    Args:
+        all_majors ([list]): [the list of all majors]
+        majorToGraph ([string]): [string of specified major]
+
+    Returns:
+        [List]: [specified choice of the user]
+    """
 
     majorToGraph = '(' + majorToGraph.upper() + ')'
     print(majorToGraph)
@@ -191,11 +200,13 @@ def makeGraph():
             print("Please enter the major's course code you would like to graph.")
             majorToGraph = input("\n--> ")
 
+            #validate the major entered
             count = dr.validateMajorCode(majorToGraph, all_majors)
             if count == 0:
                 print("The major (" + majorToGraph.upper() + ") does not exist.")
                 continue
 
+            #if the major has more than one degree type
             elif count > 1:
                 tempName = majorToGraph
                 majorToGraph = ""
