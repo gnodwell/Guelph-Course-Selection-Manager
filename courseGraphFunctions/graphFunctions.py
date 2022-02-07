@@ -260,6 +260,48 @@ def parseReqs(courses, majorName):
 
     return reqsList
 
+def connectOrOf(isOrOutside, graph, keyVal, course1, colour, style):
+    """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    """
+    #connect the 'or' node to the 'of' node, and course1 to the 'of' node
+    if isOrOutside:
+        graph.add_edge('of'+str(keyVal), 'or'+str(orId))
+        graph.add_edge(course1, 'of'+str(keyVal), color=colour, style=style)
+
+    #otherwise connect the course to the 'of'
+    else:
+        graph.add_edge(course1, 'of'+str(keyVal), color=colour, style=style)
+
+def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
+    #go through the dictionary to find course1
+    #if then set isIn to 1
+    for key in oneOfDict:
+        oneList = oneOfDict[key]
+        if course1 in oneList:
+            isIn = 1
+            keyVal = key
+
+    #go through the dictionary to find course1
+    #if then set isIn to 2
+    for key in twoOfDict:
+        twoList = twoOfDict[key]
+        if course1 in twoList:
+            isIn = 2
+            keyVal = key
+
+def keyInDict(i, isConnected, orDict, course1, course2, graph):
+    """Helper for addNodeAndEdge. Handles connecting the "Or" and "Of" edge cases.
+    """
+    #check to see if the prereq is connected to the course through an 'or'
+    #if so connect the prereq's 'or' node to the course's or node
+    for key1 in orDict:
+        if key1 == course2:
+            for cList in orDict[key1]:
+                if course1 in cList:
+                    graph.add_edge(course1, 'or'+str(course2)+str(i))
+                    isConnected = 1
+                i += 1
+
 def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOutside, shape=None):
     """Add a node and edge pointing from course1 to course2 on the graph
 
@@ -287,162 +329,82 @@ def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOu
     isIn = 0 #used to check if the course is in oneOfDict, twoOfDict or none; 0 = none; 1 = oneOfDict; 2 = twoOfDict
     keyVal = 0 #the key of the dictionary
 
-    #go through the dictionary to find course1
-    #if then set isIn to 1
-    for key in oneOfDict:
-        oneList = oneOfDict[key]
-        if course1 in oneList:
-            isIn = 1
-            keyVal = key
-
-    #go through the dictionary to find course1
-    #if then set isIn to 2
-    for key in twoOfDict:
-        twoList = twoOfDict[key]
-        if course1 in twoList:
-            isIn = 2
-            keyVal = key
-
+    checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal)
 
     #if course1 is in oneOfDict
     if isIn == 1:
-        #connect the 'or' node to the 'of' node, and course1 to the 'of' node
-        if isOrOutside:
-            graph.add_edge('of'+str(keyVal), 'or'+str(orId))
-            graph.add_edge(course1, 'of'+str(keyVal), color=colour, style='dashed')
+        connectOrOf(isOrOutside, graph, keyVal, course1, colour, style='dashed')
 
-        #otherwise connect the course to the 'of'
-        else:
-            graph.add_edge(course1, 'of'+str(keyVal), color=colour, style='dashed')
-
-    #if course1 is in twoOfDict
+    #if course1 is in twoOfDict    
     elif isIn == 2:
-        #connect the 'or' node to the 'of' node, and course1 to the 'of' node
-        if isOrOutside:
-            graph.add_edge('of'+str(keyVal), 'or'+str(orId))
-            graph.add_edge(course1, 'of'+str(keyVal), color=colour, style='dotted')
-        #otherwise connect the course to the 'of'
-        else:
-            #otherwise connect the course to the 'of'
-            graph.add_edge(course1, 'of'+str(keyVal), color=colour, style='dotted')
+        connectOrOf(isOrOutside, graph, keyVal, course1, colour, style='dotted')
 
     #if course1 is not in either
     elif isIn == 0:
         if course1 == 'EXP':
-
             #if the course has an 'or' node
             if isOrOutside:
                 i = 0
                 isConnected = 0
 
-                #check to see if the prereq is connected to the course through an 'or'
-                #if so connect the prereq's 'or' node to the course's or node
-                for key1 in orDict:
-                    if key1 == course2:
-                        for cList in orDict[key1]:
-                            if course1 in cList:
-                                graph.add_edge(course1, 'or'+str(course2)+str(i))
-                                isConnected = 1
-                            i += 1
+                keyInDict(i, isConnected, orDict, course1, course2, graph)
 
                 #otherwise, connect the prereq to the course's 'or' node
-                if not isConnected:
-                    raph.add_edge(course1, 'or'+str(orId), color=colour)
-
-            else:
-                i = 0
-                isConnected = 0
-
-                #check to see if the prereq is connected to the course through an 'or'
-                #if so connect the prereq's 'or' node to the course's or node
-                for key1 in orDict:
-                    if key1 == course2:
-                        for cList in orDict[key1]:
-                            if course1 in cList:
-                                graph.add_edge(course1, 'or'+str(course2)+str(i))
-                                isConnected = 1
-                            i += 1
-
-                #otherwise, connect the prereq to the course's 'or' node
-                if not isConnected:
-                    graph.add_edge(course1, course2, color=colour)
-
-
-        elif course1 == 'IDEV reg.':
-
-            #otherwise connect the node
-            if isOrOutside:
-                i = 0
-                isConnected = 0
-
-                #check to see if the prereq is connected to the course through an 'or'
-                #if so connect the prereq's 'or' node to the course's or node
-                for key1 in orDict:
-                    if key1 == course2:
-                        for cList in orDict[key1]:
-                            if course1 in cList:
-                                graph.add_edge(course1, 'or'+str(course2)+str(i))
-                                isConnected = 1
-                            i += 1
-
-                #otherwise, connect the prereq to the course's 'or' node
-                if not isConnected:
+                if not isConnected:              
                     graph.add_edge(course1, 'or'+str(orId), color=colour)
 
             else:
                 i = 0
                 isConnected = 0
 
-                #check to see if the prereq is connected to the course through an 'or'
-                #if so connect the prereq's 'or' node to the course's or node
-                for key1 in orDict:
-                    if key1 == course2:
-                        for cList in orDict[key1]:
-                            if course1 in cList:
-                                graph.add_edge(course1, 'or'+str(course2)+str(i))
-                                isConnected = 1
-                            i += 1
+                keyInDict(i, isConnected, orDict, course1, course2, graph)   
 
+                #otherwise, connect the prereq to the course's 'or' node
                 if not isConnected:
                     graph.add_edge(course1, course2, color=colour)
+            
+    elif course1 == 'IDEV reg.':
+        
+        #otherwise connect the node
+        if isOrOutside:
+            i = 0
+            isConnected = 0
+
+            keyInDict(i, isConnected, orDict, course1, course2, graph)
+
+            #otherwise, connect the prereq to the course's 'or' node
+            if not isConnected:          
+                graph.add_edge(course1, 'or'+str(orId), color=colour)
+
         else:
+            i = 0
+            isConnected = 0
 
-            #otherwise connect the node
-            if isOrOutside:
-                i = 0
-                isConnected = 0
+            keyInDict(i, isConnected, orDict, course1, course2, graph)      
 
-                #check to see if the prereq is connected to the course through an 'or'
-                #if so connect the prereq's 'or' node to the course's or node
-                for key1 in orDict:
-                    if key1 == course2:
-                        for cList in orDict[key1]:
-                            if course1 in cList:
-                                graph.add_edge(course1, 'or'+str(course2)+str(i))
-                                isConnected = 1
-                            i += 1
+            if not isConnected:
+                graph.add_edge(course1, course2, color=colour)
+    else:
+        #otherwise connect the node
+        if isOrOutside:
+            i = 0
+            isConnected = 0
 
-                #otherwise, connect the prereq to the course's 'or' node
-                if not isConnected:
-                    graph.add_edge(course1, 'or'+str(orId), color=colour)
+            keyInDict(i, isConnected, orDict, course1, course2, graph)
 
-            else:
-                i = 0
-                isConnected = 0
+            #otherwise, connect the prereq to the course's 'or' node
+            if not isConnected:
+                graph.add_edge(course1, 'or'+str(orId), color=colour)
 
-                #check to see if the prereq is connected to the course through an 'or'
-                #if so connect the prereq's 'or' node to the course's or node
-                for key1 in orDict:
-                    if key1 == course2:
-                        for cList in orDict[key1]:
-                            if course1 in cList:
-                                graph.add_edge(course1, 'or'+str(course2)+str(i))
-                                isConnected = 1
-                            i += 1
+        else:
+            i = 0
+            isConnected = 0
 
-                #otherwise, connect the prereq to the course's 'or' node
-                if not isConnected:
-                    graph.add_edge(course1, course2, color=colour)
+            keyInDict(i, isConnected, orDict, course1, course2, graph)     
+
+            #otherwise, connect the prereq to the course's 'or' node
+            if not isConnected:
+                graph.add_edge(course1, course2, color=colour)
 
 def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course):
     """Add prereqs to the graph by adding the appropriate nodes and edges
@@ -626,7 +588,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
                         #loop through prereqs and add nodes and edges
                         #connect an edge between the 'or' node and its prereqs
                         for prereq in prereqsList:
-                            print("PREREQ: ", prereq)
                             if(level_counter == 0): #node format for first level
                                 addNodeAndEdge(course_graph, prereq, b, "red", oneOfDict, twoOfDict, isOut)
                             elif(level_counter == 1): #node format for second level
@@ -651,7 +612,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
         checkedCourses = set()
         #print(checkedCourses)
     return True
-
 
 def generateGraphByMajor(major_graph, all_courses, course, level_counter, majorName, courseList):
     course = course.upper()
@@ -783,14 +743,14 @@ def main():
 
 
     #recursively generate graph for specified course
-   # generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
+    generateGraphByCourse(course_graph, all_courses, "CIS*3190", 0)
 
 
-    generateGraphByMajor(graph, all_courses, "ENGG")
+    #generateGraphByMajor(graph, all_courses, "ENGG")
 
    # drawGraph(course_graph, "CIS*3190")
 
-    drawGraph(graph, "ENGG")
+    #drawGraph(graph, "ENGG")
 
     #displayGraph("CIS*3190.pdf")
 
