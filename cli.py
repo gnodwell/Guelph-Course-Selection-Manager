@@ -239,32 +239,35 @@ def makeGraph():
 
             major_graph = pgv.AGraph(directed=True)
             majorCourses = gf.getMajorCourses(major)
+            #print(majorCourses)
 
-            if majorCourses:
-                courseInfo = gf.getCourseInfo(majorCourses, allCourses)
-
-
-                for x in majorCourses:
-                    major_created = gf.generateGraphByMajor(major_graph, allCourses, x, 0, majorToGraph, majorCourses)
+            
+            courseInfo = gf.getCourseInfo(majorCourses, allCourses)
+            #print(courseInfo)
 
 
-            #only draw graphs if a graph was made successfully
+            #     for x in majorCourses:
+            major_created = gf.generateGraphByMajor(major_graph, allCourses, courseInfo)
+            #print(major_created)
+
+
+            # #only draw graphs if a graph was made successfully
             if major_created:
-                print("here1")
                 gf.drawGraph(major_graph, majorToGraph)
                # gf.displayGraph(majorToGraph)
 
             minor_graph = pgv.AGraph(directed=True)
             minorCourses = gf.getMinorCourses(major)
 
-            if minorCourses:
-                courseInfo = gf.getCourseInfo(minorCourses, allCourses)
+            #if minorCourses:
+            courseInfo = gf.getCourseInfo(minorCourses, allCourses)
+            #print(courseInfo)
 
-                for x in minorCourses:
-                    minor_created = gf.generateGraphByMajor(minor_graph, allCourses, x, 0, majorToGraph, minorCourses)
+                #for x in minorCourses:
+            minor_created = gf.generateGraphByMajor(minor_graph, allCourses, courseInfo)
 
             if minor_created:
-                print("here2")
+                
                 gf.drawGraph(minor_graph, majorToGraph+"-minor")
                 #gf.displayGraph(majorToGraph)
 
