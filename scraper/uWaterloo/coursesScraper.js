@@ -125,9 +125,19 @@ const main = async () => {
         //gets data
         data = await getCoursesData(page);
 
+
+        //get subject title
+        let title = null;
+        title = await page.$eval('//h2[contains(@class, "subject")]', elm => elm.innerText);
+
+        //reformat subject title because of weird spacing
+        title = title.replace(/\s\s/g, '!');
+        title = title.replace(/\s/g, '');
+        title = title.replace(/!/g, ' ');
+
         //add to json
         allData.push({
-            subject: link['text'],
+            subject: title + ' (' +link['text'] + ')',
             data: data
         })
     }
