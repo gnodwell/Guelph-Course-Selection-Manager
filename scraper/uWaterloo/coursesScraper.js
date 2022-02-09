@@ -1,7 +1,20 @@
 const playwright = require('playwright');
 const { initBrowser, writeFile, getLinks } = require("../scraper");
 
-
+/**
+ * scrapes the page by looping through courses and collecting its data
+ * @param {playwright page} page 
+ * @returns list of objects in the form:
+ *          {
+                cCode: course code,
+                creditWeight: credit weight,
+                name: name,
+                description: description,
+                prereqs: prereqs,
+                coreqs: coreqs,
+                restrictions: antireqs
+            }
+ */
 const getCoursesData = async (page) => {
     const subjectData = await page.$$eval('//center', courseBlocks => {
         const getTextFromClassTag = (elm, className, idx1, tag, idx2) => {
@@ -35,7 +48,7 @@ const getCoursesData = async (page) => {
             //parse the credits out of the string - regex matches '<nums>.<nums>' at the end of the string
             const creditWeight = cCodeAndCreds.match(/\d+\.\d+$/)[0].trim();
 
-            const title = getTextFromClassTag(elm, 'divTableCell colspan-2', 0, 'strong', 0);
+            const name = getTextFromClassTag(elm, 'divTableCell colspan-2', 0, 'strong', 0);
             const desc = getTextFromClass(elm, 'divTableCell colspan-2', 1);
 
             let prereqs = null;
@@ -75,9 +88,9 @@ const getCoursesData = async (page) => {
             //add data to json
             data.push({
                 cCode: cCode,
-                creditWeight: creditWeight,
-                title: title,
-                desc: desc,
+                creditWeight: '[' + creditWeight + ']',
+                name: name,
+                description: desc,
                 prereqs: prereqs,
                 coreqs: coreqs,
                 restrictions: antireqs
