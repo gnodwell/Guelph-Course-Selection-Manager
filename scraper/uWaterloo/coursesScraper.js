@@ -36,6 +36,23 @@ const getCoursesData = async (page) => {
             }
         }
 
+        const reformatCourseCodes = (str) => {
+            if (!str) {
+                return str;
+            }
+        
+            const codes = str.match(/[A-Z]+\s\d{1,3}[A-Z]?|[A-Z]+\s-+/g);
+        
+            if (codes) {
+                codes.forEach( code => {
+                    const newCode = code.replace(' ', '*');
+                    str = str.replace(code, newCode);
+                });
+            }
+            
+            return str;
+        }
+
         const data = [];
         courseBlocks.forEach(elm => {
             
@@ -43,8 +60,8 @@ const getCoursesData = async (page) => {
             const cCodeAndCreds = getTextFromClassTag(elm, 'divTableCell', 0, 'strong', 0);
 
             //parse the course code out of the string - regex matches '<chars> <nums><char>?' or '<chars> <------>'
-            const cCode = cCodeAndCreds.match(/^[A-Z]+\s\d+[A-Z]?\s|^[A-Z]+\s-+/)[0].trim();
-            
+            let cCode = cCodeAndCreds.match(/^[A-Z]+\s\d{1,3}[A-Z]?\s|^[A-Z]+\s-+/)[0].trim();
+            cCode = reformatCourseCodes(cCode);
             //parse the credits out of the string - regex matches '<nums>.<nums>' at the end of the string
             const creditWeight = cCodeAndCreds.match(/\d+\.\d+$/)[0].trim();
 
@@ -69,16 +86,19 @@ const getCoursesData = async (page) => {
                     if (text.match(/^Prereq:\s/)) { 
                         //remove 'Prereqs: ' from text and set prereqs
                         prereqs = text.replace(/^Prereq:\s/, ''); 
+                        prereqs = reformatCourseCodes(prereqs);
 
                     //if text starts with 'Coreqs: '
                     } else if (text.match(/^Coreq:\s/)) { 
                         //remove 'Coreqs: ' from text and set coreqs
                         coreqs = text.replace(/^Coreq:\s/, '');
-                    
+                        coreqs = reformatCourseCodes(coreqs);
+
                     //if text starts with 'Antireqs: '
                     } else if (text.match(/^Antireq:\s/)) { 
                         //remove 'Antireqs: ' from text and set antireqs
                         antireqs = text.replace(/^Antireq:\s/, ''); 
+                        antireqs = reformatCourseCodes(antireqs);
                     }
                 }
             } catch (err) {
@@ -101,6 +121,8 @@ const getCoursesData = async (page) => {
     });
     return subjectData;
 }
+
+
 
 
 /**
@@ -137,7 +159,7 @@ const main = async () => {
 
         //add to json
         allData.push({
-            subject: title + ' (' +link['text'] + ')',
+            subject: title + ' (' + link['text'] + ')',
             data: data
         })
     }
