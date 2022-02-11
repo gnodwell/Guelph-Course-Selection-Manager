@@ -41,15 +41,17 @@ const getCoursesData = async (page) => {
                 return str;
             }
         
-            const codes = str.match(/[A-Z]+\s\d{1,3}[A-Z]?|[A-Z]+\s-+/g);
-        
+            //replace all ' ' to '*' to keep course codes uniform with guelph format
+            const codes = str.match(/[A-Z]+\s\d{1,3}[A-Z]?|[A-Z]+\s-+|[A-Z]+/g);
             if (codes) {
-                codes.forEach( code => {
+                codes.forEach(code => {
                     const newCode = code.replace(' ', '*');
                     str = str.replace(code, newCode);
                 });
             }
-            
+
+            //replace '/' with 'or' word in string
+            str = str.replace(/\//g, ' or ')
             return str;
         }
 

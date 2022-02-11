@@ -70,7 +70,15 @@ const parseElements = async (page, selector) => {
         //apply Array Prototype to HTML DOM NodeList for easier parsing
         let children = [...element[0].children];
         children.forEach(child => {
-
+            /* major program = { 
+            *       'title': '', 
+            *       'desc': [], 
+            *       'table': [], 
+            *       'lists': [], 
+            *       "footnotes": [] 
+            *   }
+            */
+           
             if (child.localName == "h2" || child.localName == "h3" || child.localName == "h4" || child.localName == "h5" || child.localName == "h6") {
                 //make new entry to data per header
                 let tempDict = { 'title': child.innerText, 'desc': [], 'table': [], 'lists': [], "footnotes": [] }
