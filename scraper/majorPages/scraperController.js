@@ -30,15 +30,17 @@ const parseElements = async (page, selector) => {
                     text = cells[i].innerText;
 
                     //only read data if: is a credit, is a condition, is a course code
-                    if (text.includes('Semester')) {
+                    if (text.includes('Semester')) { //ignore 'Semester'
                         continue
-                    } else if (cells[i].colSpan >= 2 && text.match('^[0-9]*\.[0-9]+') == null) {
+                    } else if (cells[i].colSpan >= 2 && text.match('^[0-9]*\.[0-9]+') == null) { //is a condition
                         codes.push(text)
                         continue
-                    } else if (text.match('^[0-9]*\.[0-9]+') != null) {
+                    } else if (text.match('^[0-9]*\.[0-9]+') != null) { //credit
                         credits += parseFloat(text.match('[0-9]*\.[0-9]+')[0]);
                     } else if (text.includes('or')) {
-                        codes[codes.length - 1] += ' ' + text; //tack on current course to previous to fit 'or' archetype
+                        //add on current course to previous to fit 'or' archetype. 
+                        //ex: ['CIS*1300', 'OR CIS*1500'] -> ['CIS*1300 OR CIS*1500']
+                        codes[codes.length - 1] += ' ' + text; 
                     } else {
                         if (text.includes('\n&')) {
                             text = text.replace(/\n&/g, ' and') //replace & with and
@@ -71,31 +73,31 @@ const parseElements = async (page, selector) => {
         let children = [...element[0].children];
         children.forEach(child => {
             /* major program = { 
-            *       'title': '', 
-            *       'desc': [], 
-            *       'table': [], 
-            *       'lists': [], 
-            *       "footnotes": [] 
+            *       'title': 'section header', 
+            *       'desc': [extra and special notes regarding section], 
+            *       'table': [courses, credits, conditions], 
+            *       'lists': [other details or exceptions regarding section], 
+            *       "footnotes": [details regarding table data] 
             *   }
             */
            
             if (child.localName == "h2" || child.localName == "h3" || child.localName == "h4" || child.localName == "h5" || child.localName == "h6") {
-                //make new entry to data per header
+                //make new entry to data per section header
                 let tempDict = { 'title': child.innerText, 'desc': [], 'table': [], 'lists': [], "footnotes": [] }
                 data.push(tempDict)
             } else if (data.length) {
                 if (child.localName == "p") {
-                    //descriptions of header, minus note content
+                    //descriptions of section, except notes
                     text = child.innerText
                     if (text.slice(0, 5) != "Note:") {
                         data[data.length - 1]['desc'].push(text)
                     }
                 } else if (child.localName == "table") {
-                    //parse course table per header
+                    //parse course table per section
                     let table = getTableData(child.rows);
                     data[data.length - 1]['table'].push(table)
                 } else if (child.localName == "dl") {
-                    //get footnotes per header
+                    //get footnotes per section
                     let footnotes = getList(child.children)
                     data[data.length - 1]['footnotes'].push(footnotes)
                 } else if (child.localName == "ul") {
@@ -144,6 +146,7 @@ const main = async() => {
         }
     }
 
+    //inform user whether major file was written successfully
     if (!isFileWritten) {
         console.log('Major does not exist.')
     }

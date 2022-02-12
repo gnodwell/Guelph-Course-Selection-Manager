@@ -36,13 +36,46 @@ const getCoursesData = async (page) => {
             }
         }
 
+        //some courses are missing the course code assosciiated with them, 
+        //so add most recent course code to number
+        const fillCourseCode = (str) => {
+            let arr = str.split(' ');
+
+            let recent = ''
+            arr.forEach(code => {
+                if (code.includes('*')) { //get most recent course code
+                    let sym = code.indexOf('*')
+                    recent = code.slice(0, sym)
+                    console.log(recent)
+                } else {
+                    let nums = code.match(/\d+/g) //prefix course code to number
+                    if (nums) {
+                        
+                        if ((0 < nums[0] && nums[0] < 10) || //ignore '001' - '009' cases
+                            (code.charAt(0) == 'W' || code.charAt(0) == 'S' || code.charAt(0) == 'F')) { //ignore 'term' codes
+                            return;
+                        }
+
+                        nums = recent + '*' + nums + ','
+                        console.log(nums)
+                        str = str.replace(code, nums)
+                    }
+                }
+            });
+
+            if (str.includes('.')) {
+                str = str.slice(0, str.length-1)
+            }
+            return str
+        }
+
         const reformatCourseCodes = (str) => {
             if (!str) {
                 return str;
             }
         
             //replace all ' ' to '*' to keep course codes uniform with guelph format
-            const codes = str.match(/[A-Z]+\s\d{1,3}[A-Z]?|[A-Z]+\s-+|[A-Z]+/g);
+            const codes = str.match(/[A-Z]+\s\d{1,3}[A-Z]?|[A-Z]+\s-+/g);
             if (codes) {
                 codes.forEach(code => {
                     const newCode = code.replace(' ', '*');
@@ -52,6 +85,8 @@ const getCoursesData = async (page) => {
 
             //replace '/' with 'or' word in string
             str = str.replace(/\//g, ' or ')
+            str = fillCourseCode(str);
+
             return str;
         }
 
