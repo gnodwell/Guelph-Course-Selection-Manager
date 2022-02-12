@@ -39,9 +39,13 @@ const getCoursesData = async (page) => {
         //some courses are missing the course code assosciiated with them, 
         //so add most recent course code to number
         const fillCourseCode = (str) => {
-            let arr = str.split(' ');
+            if (str.includes('.')) {
+                str = str.slice(0, str.length-1)
+            }
 
+            let arr = str.split(' ');
             let recent = ''
+
             arr.forEach(code => {
                 if (code.includes('*')) { //get most recent course code
                     let sym = code.indexOf('*')
@@ -63,9 +67,6 @@ const getCoursesData = async (page) => {
                 }
             });
 
-            if (str.includes('.')) {
-                str = str.slice(0, str.length-1)
-            }
             return str
         }
 
