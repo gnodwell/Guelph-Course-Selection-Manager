@@ -208,6 +208,6 @@ if (require.main === module) {
     main();
 } else {
     module.exports = {
-        
+        getCoursesData
     }
 }
