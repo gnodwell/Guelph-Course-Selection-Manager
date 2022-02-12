@@ -39,11 +39,7 @@ const getCoursesData = async (page) => {
         //some courses are missing the course code assosciiated with them, 
         //so add most recent course code to number
         const fillCourseCode = (str) => {
-            if (str.includes('.')) {
-                str = str.slice(0, str.length-1)
-            }
-
-            let arr = str.split(' ');
+            let arr = str.split(/,| /);
             let recent = ''
 
             arr.forEach(code => {
@@ -60,7 +56,7 @@ const getCoursesData = async (page) => {
                             return;
                         }
 
-                        nums = recent + '*' + nums + ','
+                        nums = recent + '*' + nums
                         console.log(nums)
                         str = str.replace(code, nums)
                     }
