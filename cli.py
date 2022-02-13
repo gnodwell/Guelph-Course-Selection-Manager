@@ -303,8 +303,10 @@ def emailGraph():
         return
 
     print("Which graph would you like to email? (select option):")
+    counter = 1
     for i in options_list:
-        print("1. " + i)
+        print(str(counter) + ". " + i)
+        counter += 1
 
     selected = input()
 
