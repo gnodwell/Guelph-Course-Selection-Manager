@@ -2,6 +2,15 @@ import pygraphviz as pgv
 import os
 import subprocess
 import json
+import email
+import smtplib
+import ssl
+import glob
+
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from dataReader import dataReader as dr
 from courseGraphFunctions import courseGraph as cg
@@ -278,6 +287,76 @@ def makeGraph():
             print ("Incorrect Input, Please try again. \n")
             continue
 
+def emailGraph():
+    #reference: https://realpython.com/python-send-email/
+    
+    options = map(os.path.basename, glob.glob("./graphs/*.pdf"))
+    option_paths = glob.glob("./graphs/*.pdf") #get all pdf files in directory
+    options_list = list(options)
+    
+    if(len(option_paths) == 0):
+        print("Please generate a graph using 'Make Graph' before using 'Email Graph'!\n")
+        return
+
+    print("Which graph would you like to email? (select option):")
+    for i in options_list:
+        print("1. " + i)
+
+    selected = input()
+
+    if(int(selected) > len(option_paths)):
+        print("Invalid option selected!\n")
+        return
+    
+
+    receiver_email = input("Please enter the email you would like to send the graph PDF to:\n")
+
+    
+    #email vars
+    subject = "Generated Course Graph"
+    body = "Here is the course graph you requested."
+    sender_email = "3670team4@gmail.com"
+    #receiver_email = "ctodd678@gmail.com"
+
+    # password = input("Type your password and press enter:")
+    password = "AmoebaTesting4$"
+
+    #create the message to send
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message["Bcc"] = receiver_email  # Recommended for mass emails
+    message.attach(MIMEText(body, "plain"))
+
+    filename = option_paths[int(selected) - 1]  # In same directory as script
+
+    #open PDF file and add to the email
+    with open(filename, "rb") as attachment:
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+
+    encoders.encode_base64(part)    #encode file to send
+
+    # email header
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename= {options_list[int(selected) - 1]}",
+    )
+
+    #add the PDF file as an attachment to the email
+    message.attach(part)
+    text = message.as_string()
+
+    #log into GMAIL SMTP and send the email
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, text)
+
+    print("\n")
+
+
 
 def main():
     """The main menu for either searching for a course or drawing a Graph for a course or Major
@@ -288,7 +367,8 @@ def main():
         print("Please choose an option of how to proceed.")
         print("1: Course Search")
         print("2: Make Graph")
-        print("3: Exit")
+        print("3: Email Graph")
+        print("4: Exit")
         usrInput = input("\n--> ")
         usrInput = usrInput.strip()
 
@@ -297,6 +377,8 @@ def main():
         elif (usrInput == "2"):
             makeGraph()
         elif (usrInput == "3"):
+            emailGraph()
+        elif (usrInput == "4"):
             break
         else:
             print ("Incorrect Input, Please try again. \n")
