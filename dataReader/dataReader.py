@@ -289,7 +289,7 @@ def validateMajorCode(majorToGraph, all_majors):
 
     return count
 
-def validateCourseCode(courseCode):
+def validateCourseCode(courseCode, uni):
     """This function is used to validate user input for course code
 
     Args:
@@ -298,13 +298,16 @@ def validateCourseCode(courseCode):
     Returns:
         [Boolean]: [whether it courseCode is a valid code or not]
     """
-    if not(len(courseCode) >= 8):
-        print("\nIncorrect format for course code\nEx: PSYC*1000\n")
+    if uni == 0:
+        if not(len(courseCode) >= 8):
+            print("\nIncorrect format for course code\nEx: PSYC*1000\n")
+            return False
+        elif(courseCode[3] != '*' and courseCode[4] != '*'):
+            print("\nIncorrect format for course code\nEx: PSYC*1000\n")
+            return False
+        return True
+    elif uni == 1:
         return False
-    elif(courseCode[3] != '*' and courseCode[4] != '*'):
-        print("\nIncorrect format for course code\nEx: PSYC*1000\n")
-        return False
-    return True
 
 def validateCourseCreditWeight(courseCredit):
     """This function is used to validate user input for course credit
