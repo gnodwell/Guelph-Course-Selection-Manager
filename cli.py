@@ -164,13 +164,15 @@ def mergePDFs():
     pdfs = []
     for x in test:
         if (x.find(".pdf") != -1):
-            pdfs.append(x)
+            if (x != "./graphs/Results.pdf"):
+                pdfs.append(x)
 
     print(pdfs)
     merger = PdfFileMerger()
 
     for pdf in pdfs:
-        merger.append(pdf)
+        if (pdf):
+            merger.append(pdf)
 
     print("Writing")
     merger.write("./graphs/Results.pdf")
@@ -399,7 +401,6 @@ def main():
     """
     global uni
 
-    mergePDFs()
 
     print("Welcome to our program.")
     while True:
