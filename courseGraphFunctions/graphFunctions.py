@@ -16,6 +16,7 @@ orId = 0
 ofId = 0
 orDict = {}
 checkedCourses = set()
+gUni = 0
 #isOut = 0
 
 def displayGraph(graphName):
@@ -142,14 +143,13 @@ def checkOrPos(courses, idx):
 
 
 	if not courses == None:
-		regex = r"[a-zA-Z+\*[0-9]+"
+		regex = r"[a-zA-Z]+\*[0-9]+"
 		pattern = re.compile(regex)
 		cList = re.findall(pattern, courses)
 
 		for i in range(len(cList)):
-			j = i + 1
-			for j in range(len(cList)):
-				if (courses.find(cList[i]) + len(cList[i])) == idx and (courses.find(cList[j]) - len(cList[j])) == idx:
+			for j in range(i+1, len(cList)):
+				if (courses.find(cList[i]) + len(cList[i]) + 1) == idx and (courses.find(cList[j]) - 3) == idx:
 					return 1
 	else:
 		return 0
@@ -539,16 +539,28 @@ def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course, isOut):
 	#loop through prereqs and add nodes and edges
 	for prereq in prereqsList:
 		#print("PREREQ: ", prereq)
-		if(prereq[len(prereq) - 4] == '1'): #1000 level node format
-			addNodeAndEdge(graph, prereq, course,  oneOfDict, twoOfDict, isOut, colour="red",)
-		elif(prereq[len(prereq) - 4] == '2'): #2000 level node format
-			addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="orange")
-		elif(prereq[len(prereq) - 4] == '3'): #3000 level node format
-			addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut,  colour="green")
-		elif(prereq[len(prereq) - 4] == '4'): #4000 level node format
-			addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="purple")
-		else:
-			graph.add_edge(prereq, course)
+		if gUni == 0:
+			if(prereq[len(prereq) - 4] == '1'): #1000 level node format
+				addNodeAndEdge(graph, prereq, course,  oneOfDict, twoOfDict, isOut, colour="red",)
+			elif(prereq[len(prereq) - 4] == '2'): #2000 level node format
+				addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="orange")
+			elif(prereq[len(prereq) - 4] == '3'): #3000 level node format
+				addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut,  colour="green")
+			elif(prereq[len(prereq) - 4] == '4'): #4000 level node format
+				addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="purple")
+			else:
+				graph.add_edge(prereq, course)
+		elif gUni == 1:
+			if(prereq[len(prereq) - 3] == '1'): #1000 level node format
+				addNodeAndEdge(graph, prereq, course,  oneOfDict, twoOfDict, isOut, colour="red",)
+			elif(prereq[len(prereq) - 3] == '2'): #2000 level node format
+				addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="orange")
+			elif(prereq[len(prereq) - 3] == '3'): #3000 level node format
+				addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut,  colour="green")
+			elif(prereq[len(prereq) - 3] == '4'): #4000 level node format
+				addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="purple")
+			else:
+				graph.add_edge(prereq, course)
 
 def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course, isOut):
 	"""Add coreqs to the graph by adding the appropriate nodes and edges
@@ -577,7 +589,7 @@ def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course, isOut):
 			graph.add_edge(coreq, course)
 			graph.add_edge(course, coreq)
 
-def generateGraphBySubject(subject_graph, all_courses, subjectName):
+def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 	"""Generates a graph for a specified major.
 
 	Args:
@@ -586,46 +598,111 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName):
 		majorName ([string]): [string of specified major]
 	"""
 	#make sure major name is in upper case
-	subjectName = subjectName.upper()
+	global gUni
+	gUni = uni
+	subjectName = '(' + subjectName.upper() + ')'
 
-	#return if major is not in json
-	if subjectName not in all_courses:
-		print('Subject: "' + subjectName + '" does not exists')
-		return False
+	if gUni == 0:
+		#return if subject is not in json
+		if subjectName not in all_courses:
+			print('Subject: "' + subjectName + '" does not exists\n')
+			return False
 
-	seenCourses = set()
+		seenCourses = set()
 
-	#loop through courses in specified major
-	for k, v in all_courses[subjectName].items():
-		#add node for course
+		#loop through courses in specified major
+		for k, v in all_courses[subjectName].items():
+			#add node for course
 
-		if(k[len(k) - 4] == '1'):
-			subject_graph.add_node(k, color="red")
-		elif(k[len(k) - 4] == '2'):
-			subject_graph.add_node(k, color="orange")
-		elif(k[len(k) - 4] == '3'):
-			subject_graph.add_node(k, color="green")
-		elif(k[len(k) - 4] == '4'):
-			subject_graph.add_node(k, color="purple")
-		else:
-			subject_graph.add_node(k)
+			if(k[len(k) - 4] == '1'):
+				subject_graph.add_node(k, color="red")
+			elif(k[len(k) - 4] == '2'):
+				subject_graph.add_node(k, color="orange")
+			elif(k[len(k) - 4] == '3'):
+				subject_graph.add_node(k, color="green")
+			elif(k[len(k) - 4] == '4'):
+				subject_graph.add_node(k, color="purple")
+			else:
+				subject_graph.add_node(k)
 
-		#parse prereqs from prereqs attribute
-		prereqsList = parseReqs(v["prereqs"], subjectName)
-		print(prereqsList)
+			#parse prereqs from prereqs attribute
+			prereqsList = parseReqs(v["prereqs"], subjectName)
+			print(prereqsList)
 
-		#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
-		addPrereqsToGraph(subject_graph, prereqsList, {}, {}, k, 0)
-		seenCourses.update(prereqsList)
+			#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
+			addPrereqsToGraph(subject_graph, prereqsList, {}, {}, k, 0)
+			seenCourses.update(prereqsList)
 
-		#parse coreqs from coreqs attribute
-		coreqsList = parseReqs(v["coreqs"], subjectName)
-		#add coreqs to the graph by adding edges in both directions between coreqs and course
-		addCoreqsToGraph(subject_graph, coreqsList, {}, {}, k, 0)
-		seenCourses.update(coreqsList)
+			#parse coreqs from coreqs attribute
+			coreqsList = parseReqs(v["coreqs"], subjectName)
+			#add coreqs to the graph by adding edges in both directions between coreqs and course
+			addCoreqsToGraph(subject_graph, coreqsList, {}, {}, k, 0)
+			seenCourses.update(coreqsList)
 
-	#subject_graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(subjectName, len(seenCourses)))
-	return True
+		subject_graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(subjectName, len(seenCourses)))
+		return True
+	elif gUni == 1:
+		#return if subject is not in json
+		flag = 0
+		subKey = ""
+
+		for subj in all_courses:
+			if subjectName in subj["subject"]:
+				flag = 1
+				subKey = subj["subject"]
+
+		if not flag:
+			print('Subject: "' + subjectName + '" does not exists\n')
+			return False
+
+		seenCourses = set()
+
+		#loop through courses in specified major
+		for subj in all_courses:
+			if subj["subject"] == subKey:
+				for k in subj["data"]:
+					print("course = ", k['cCode'])
+					print("prereqs = ", k["prereqs"])
+					#add node for course
+
+					if(k['cCode'][len(k) - 3] == '1'):
+						subject_graph.add_node(k['cCode'], color="red", shape="box")
+					elif(k['cCode'][len(k) - 3] == '2'):
+						subject_graph.add_node(k['cCode'], color="orange", shape="box")
+					elif(k['cCode'][len(k) - 3] == '3'):
+						subject_graph.add_node(k['cCode'], color="green", shape="box")
+					elif(k['cCode'][len(k) - 3] == '4'):
+						subject_graph.add_node(k['cCode'], color="purple", shape="box")
+					else:
+						subject_graph.add_node(k['cCode'], shape="box")
+
+					#parse prereqs from prereqs attribute
+					prereqsList = parseReqs(k["prereqs"], subjectName)
+					print(prereqsList)
+
+					isOut = isOrOutsideBrackets(k["prereqs"])
+					print("isOut = ", isOut)
+
+					if isOut:
+						print("here")
+						global orId
+
+						orId += 1
+						subject_graph.add_node('or'+str(orId), label='or', shape='diamond')
+						subject_graph.add_edge('or'+str(orId), k['cCode'])
+
+					#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
+					addPrereqsToGraph(subject_graph, prereqsList, {}, {}, k['cCode'], isOut)
+					seenCourses.update(prereqsList)
+
+					#parse coreqs from coreqs attribute
+					coreqsList = parseReqs(k["coreqs"], subjectName)
+					#add coreqs to the graph by adding edges in both directions between coreqs and course
+					addCoreqsToGraph(subject_graph, coreqsList, {}, {}, k['cCode'], isOut)
+					seenCourses.update(coreqsList)
+
+				subject_graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(subjectName, len(seenCourses)))
+				return True
 
 def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 	"""Recursivevly generates a graph for a specified course.

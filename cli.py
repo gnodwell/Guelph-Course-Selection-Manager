@@ -7,6 +7,9 @@ from dataReader import dataReader as dr
 from courseGraphFunctions import courseGraph as cg
 from courseGraphFunctions import graphFunctions as gf
 
+#variable to distinguish between guelph and waterloo
+#0 = guelph; 1 = waterloo
+uni = 0 
 
 def courseSearch():
     """CLI functionality for courseSearch program using dataReader/dataReader.py
@@ -145,8 +148,11 @@ def makeGraph():
     """ Creates a graph using the course_graphs/courseGraph.py and course_graphs/graphFunctions.py
     """
     try:
-        all_courses = cg.readJSON("courseGraphFunctions/relations.json")
-        all_majors = cg.readJSON("scraper/majorPages/majorPages.json")
+        if uni == 0:
+            all_courses = cg.readJSON("courseGraphFunctions/relations.json")
+            all_majors = cg.readJSON("scraper/majorPages/majorPages.json")
+        elif uni == 1:
+            all_courses = cg.readJSON("scraper/uWaterloo/waterlooData.json")
     except:
         data = cg.readJSON("scraper/data.json")
         majorDict = cg.mapMajorCourses(data)
@@ -171,7 +177,7 @@ def makeGraph():
             courseToGraph = input("\n--> ")
 
             #create function to test validty
-            if not dr.validateCourseCode(courseToGraph):
+            if not dr.validateCourseCode(courseToGraph, uni):
                 continue
 
             course_graph = pgv.AGraph(directed=True)
@@ -189,7 +195,7 @@ def makeGraph():
             
             subject_graph = pgv.AGraph(directed=True)
 
-            created = gf.generateGraphBySubject(subject_graph, all_courses, subjectToGraph)
+            created = gf.generateGraphBySubject(subject_graph, all_courses, subjectToGraph, uni)
             #only draw graphs if a graph was made successfully
             if created:
                 gf.drawGraph(subject_graph, subjectToGraph)
@@ -282,25 +288,68 @@ def makeGraph():
 def main():
     """The main menu for either searching for a course or drawing a Graph for a course or Major
     """
+    global uni
 
     print("Welcome to our program.")
     while True:
-        print("Please choose an option of how to proceed.")
-        print("1: Course Search")
-        print("2: Make Graph")
+        print("Please choose an option of university.")
+        print("1: Guelph")
+        print("2: Waterloo")
         print("3: Exit")
         usrInput = input("\n--> ")
         usrInput = usrInput.strip()
 
         if (usrInput == "1"):
-            courseSearch()
+            uni = 0
+
+            while True:
+                print("Please choose an option of how to proceed.")
+                print("1: Course Search")
+                print("2: Make Graph")
+                print("3: Return")
+                usrInput = input("\n--> ")
+                usrInput = usrInput.strip()
+
+                if (usrInput == "1"):
+                    courseSearch()
+                elif (usrInput == "2"):
+                    makeGraph()
+                elif (usrInput == "3"):
+                    break
+                else:
+                    print ("Incorrect Input, Please try again. \n")
+                    continue
+
         elif (usrInput == "2"):
-            makeGraph()
+
+            uni = 1
+
+            while True:
+                print("Please choose an option of how to proceed.")
+                print("1: Course Search")
+                print("2: Make Graph")
+                print("3: Return")
+                usrInput = input("\n--> ")
+                usrInput = usrInput.strip()
+
+                if (usrInput == "1"):
+                    courseSearch()
+                elif (usrInput == "2"):
+                    makeGraph()
+                elif (usrInput == "3"):
+                    break
+                else:
+                    print ("Incorrect Input, Please try again. \n")
+                    continue
+
         elif (usrInput == "3"):
             break
+
         else:
             print ("Incorrect Input, Please try again. \n")
             continue
+
+        
 
     print('--x Bye!')
 
