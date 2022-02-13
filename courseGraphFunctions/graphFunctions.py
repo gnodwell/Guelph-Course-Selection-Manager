@@ -140,7 +140,7 @@ def checkBr(courses, idx):
 
 def checkOrPos(courses, idx):
 
-	
+
 	if not courses == None:
 		regex = r"[a-zA-Z+\*[0-9]+"
 		pattern = re.compile(regex)
@@ -321,7 +321,7 @@ def parseReqs(courses, majorName):
 		return []
 
 	#regex searching for course codes or credit requirements
-	regex = re.escape(majorName) + r"[*][0-9]+|\d{1,2}[.]\d\d\scredits|work\sexperience|Phase\s\d"
+	regex = r"[a-zA-Z]+[*][0-9]+|\d{1,2}[.]\d\d\scredits|work\sexperience|Phase\s\d"
 	pattern = re.compile(regex)
 	reqsList = re.findall(pattern, courses)
 
@@ -824,15 +824,23 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 		else:
 			major_graph.add_node(k)
 
+
+		prereqString = ""
+		if majorCourses[k]["prereqs"]:
+			text = majorCourses[k]["prereqs"].split('.')
+			prereqString = text[0]
+		
+
 		#parse prereqs from prereqs attribute
 		idx = k.find('*')
 		subjectCode = k[0:idx]
 
-		prereqsList = parseReqs(majorCourses[k]["prereqs"], subjectCode)
+		prereqsList = parseReqs(prereqString, subjectCode)
+		print(prereqsList)
 		#print(prereqsList)
 
 		#print(majorCourses[k]['prereqs'])
-		isOut = isOrOutsideBrackets(majorCourses[k]["prereqs"])
+		isOut = isOrOutsideBrackets(prereqString)
 
 		if isOut:
 			global orId
@@ -843,13 +851,13 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 			major_graph.add_edge('or'+str(orId), k)
 
 		#parse the prereqs string to check for other 'or's in brackets
-		getOrDict(major_graph, majorCourses[k]["prereqs"], k, isOut)
+		getOrDict(major_graph, prereqString, k, isOut)
 		#print ("orDict = ", orDict)
 
 
 		#creating the dictionaries for the format of '1 of ...' and '2 of ...'
-		oneOfDict = getTheOfRequisites(major_graph, majorCourses[k]["prereqs"], "1 of", k, isOut)
-		twoOfDict = getTheOfRequisites(major_graph, majorCourses[k]["prereqs"], "2 of", k, isOut)
+		oneOfDict = getTheOfRequisites(major_graph, prereqString, "1 of", k, isOut)
+		twoOfDict = getTheOfRequisites(major_graph, prereqString, "2 of", k, isOut)
 
 		#print("oneOfDict = ", oneOfDict)
 		#print("twoOfDict = ", twoOfDict)
