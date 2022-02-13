@@ -155,6 +155,9 @@ def displayMajors(all_majors, majorToGraph):
 
 
 def mergePDFs():
+    """Merges all pdfs in ./graphs into one resulting pdf called Results.pdf
+
+    """
 
     #print(glob.glob("./graphs/*"))
     test = glob.glob("./graphs/*")
@@ -172,6 +175,8 @@ def mergePDFs():
     print("Writing")
     merger.write("./graphs/Results.pdf")
     merger.close()
+
+    return True
 
 
 def makeGraph():
