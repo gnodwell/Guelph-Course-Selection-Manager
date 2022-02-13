@@ -140,6 +140,7 @@ def checkBr(courses, idx):
 
 def checkOrPos(courses, idx):
 
+	
 	if not courses == None:
 		regex = r"[a-zA-Z+\*[0-9]+"
 		pattern = re.compile(regex)
@@ -173,6 +174,7 @@ def getOrDict(graph, courses, course, isOut):
 	foundEnd = 0
 	startIdx = 0
 	endIdx = 0
+	flagFirst = 0
 	tempList = []
 
 	global orDict
@@ -182,16 +184,23 @@ def getOrDict(graph, courses, course, isOut):
 		startIdx = idx
 		endIdx = idx
 
-		#try to find the starting bracket
+		#try to find the starting bracket before an ending bracket
 		while(foundStart != 1 and startIdx != -1):
-			if courses[startIdx] == '(':
+			if (courses[startIdx] == '('  or courses[startIdx] == '[') and flagFirst == 0:
 				foundStart = 1
+				flagFirst = 1
+			elif (courses[startIdx] == ')' or courses[startIdx] == ']') and flagFirst == 0:
+				flagFirst = 1
 			startIdx -= 1
 
+		flagFirst = 0
 		#try to find the ending bracket
 		while(foundEnd != 1 and endIdx != len(courses)):
-			if courses[endIdx] == ')':
+			if (courses[endIdx] == ')' or courses[endIdx] == ']') and flagFirst == 0:
 				foundEnd = 1
+				flagFirst = 1
+			elif (courses[endIdx] == '(' or courses[endIdx] == '[') and flagFirst == 0:
+				flagFirst = 1
 			endIdx += 1
 
 		#if the 'or' is in brackets
@@ -217,6 +226,7 @@ def getOrDict(graph, courses, course, isOut):
 		for elem in cList:
 			#create an 'or' node for each bracket containing prereq joined with an 'or'
 			graph.add_node('or'+str(course)+str(i), label='or', shape='diamond')
+			#print("CREATED")
 
 			#if the course has an 'or' outside of brackets then,
 			#connect the newly created 'or' to the course's 'or' node
@@ -349,7 +359,12 @@ def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
 		course1 ([string]): [the pre-requisite]
 		isIn ([int]): [determines if the course is in any of the dictionaries]
 		keyVal ([int]): [the key for the '1 of' or '2 of' dicts]
+
+	Return:
+		ret ([list]): [the list containing isIn and keyVal]
 	"""
+
+	ret = []
 
 	#go through the dictionary to find course1
 	#if true then set isIn to 1
@@ -359,6 +374,9 @@ def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
 		if course1 in oneList:
 			isIn = 1
 			keyVal = key
+			ret.append(isIn)
+			ret.append(keyVal)
+			
 
 	#go through the dictionary to find course1
 	#if then set isIn to 2
@@ -367,6 +385,10 @@ def checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal):
 		if course1 in twoList:
 			isIn = 2
 			keyVal = key
+			ret.append(isIn)
+			ret.append(keyVal)
+			
+	return ret
 
 
 def keyInDict(i, orDict, course1, course2, graph):
@@ -416,9 +438,12 @@ def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOu
 	isIn = 0 #used to check if the course is in oneOfDict, twoOfDict or none; 0 = none; 1 = oneOfDict; 2 = twoOfDict
 	keyVal = 0 #the key of the dictionary
 
-	checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal)
-	# print("isIn: ", isIn)
-	# print("isOut: ", isOrOutside)
+	ret = checkKeyInDict(oneOfDict, twoOfDict, course1, isIn, keyVal)
+	if ret:
+		isIn = ret[0]
+		keyVal = ret[1]
+	#print("isIn: ", isIn)
+	#print("keyVal: ", keyVal)
 
 	#if course1 is in oneOfDict
 	if isIn == 1:
@@ -651,6 +676,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 
 						#check if there is an 'or' outside of brackets in the prereqs
 						isOut = isOrOutsideBrackets(n["prereqs"])
+						#print("isOut = ", isOut)
 
 						#print("isOut = ", isOut)
 						#if there is an 'or' outside, then create an 'or' node and connect it to the course
@@ -662,6 +688,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 							orId += 1
 							course_graph.add_node('or'+str(orId), label='or', shape='diamond')
 							course_graph.add_edge('or'+str(orId), b)
+							#print("CREATED")
 
 
 

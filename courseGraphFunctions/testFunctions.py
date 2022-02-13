@@ -269,6 +269,49 @@ class testCLI(unittest.TestCase):
 
         self.assertEqual(ret, 1, "Failed test_isOrOutsideBrackets")
 
+    def test_checkBr(self):
+        testString = "((CIS*2430, CIS1300), CIS*2750) or (CIS3760, CIS*4300)"
+        orList = [(i) for i in gp.find_all(testString, 'or')]
+
+        ret = gp.checkBr(testString, orList[0])
+
+        self.assertEqual(ret, 1, "Failed test_checkBr")
+
+    def test_getTheOfRequisites(self):
+        graph = pgv.AGraph(directed=True)
+        testString = "(CIS*3100 or CIS*2750), 1 of CIS*1300, CIS*1500, CIS*2430"
+        subStr = "1 of"
+        course = "CIS*3760"
+        isOrOutside = 0
+        trueDict = {}
+        trueDict[0] = ' CIS*1300, CIS*1500, CIS*2430'
+
+        ret = gp.getTheOfRequisites(graph, testString, subStr, course, isOrOutside)
+
+        self.assertEqual(ret, trueDict, "Failed test_getTheOfRequisites")
+
+    def test_checkKeyInDict(self):
+        course = 'CIS*1300'
+        testDict = {0 :'CIS*2430, CIS*3760', 1: 'CIS*1300, CIS*3000'}
+        isIn = 2
+        keyVal = 0
+
+        ret = gp.checkKeyInDict([], testDict, course, isIn, keyVal)
+
+        self.assertEqual(ret, [2,1], "Failed test_checkKeyInDict")
+
+
+    def test_keyInDict(self):
+        orDict = {'CIS*2430' : [['CIS*1300', 'CIS*1500'], ['CIS*2750', 'CIS*2500']]}
+        prereq = 'CIS*2500';
+        course = 'CIS*2430'
+        graph = pgv.AGraph(directed=True)
+        i = 0
+
+        ret = gp.keyInDict(i, orDict, prereq, course, graph)
+
+        self.assertEqual(ret, 1, "Failed test_keyInDict")
+
 if __name__ == '__main__':
     unittest.main()
 
