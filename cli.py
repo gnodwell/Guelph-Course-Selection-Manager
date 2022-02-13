@@ -288,8 +288,6 @@ def makeGraph():
             continue
 
 def emailGraph():
-    #reference: https://realpython.com/python-send-email/
-    
     options = map(os.path.basename, glob.glob("./graphs/*.pdf"))
     option_paths = glob.glob("./graphs/*.pdf") #get all pdf files in directory
     options_list = list(options)
