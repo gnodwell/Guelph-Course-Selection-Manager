@@ -361,7 +361,6 @@ def emailGraph():
     print("\n")
 
 
-
 def main():
     """The main menu for either searching for a course or drawing a Graph for a course or Major
     """
@@ -384,7 +383,8 @@ def main():
                 print("Please choose an option of how to proceed.")
                 print("1: Course Search")
                 print("2: Make Graph")
-                print("3: Return")
+                print("3: Email Graph")
+                print("4: Return")
                 usrInput = input("\n--> ")
                 usrInput = usrInput.strip()
 
@@ -393,6 +393,8 @@ def main():
                 elif (usrInput == "2"):
                     makeGraph()
                 elif (usrInput == "3"):
+                    emailGraph()
+                elif (usrInput == "4"):
                     break
                 else:
                     print ("Incorrect Input, Please try again. \n")
@@ -406,7 +408,8 @@ def main():
                 print("Please choose an option of how to proceed.")
                 print("1: Course Search")
                 print("2: Make Graph")
-                print("3: Return")
+                print("3: Email Graph")
+                print("4: Return")
                 usrInput = input("\n--> ")
                 usrInput = usrInput.strip()
 
@@ -415,14 +418,14 @@ def main():
                 elif (usrInput == "2"):
                     makeGraph()
                 elif (usrInput == "3"):
+                    emailGraph()
+                elif (usrInput == "4"):
                     break
                 else:
                     print ("Incorrect Input, Please try again. \n")
                     continue
 
         elif (usrInput == "3"):
-            emailGraph()
-        elif (usrInput == "4"):
             break
 
         else:
