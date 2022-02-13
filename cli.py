@@ -6,6 +6,7 @@ import email
 import smtplib
 import ssl
 import glob
+from PyPDF2 import PdfFileMerger
 
 from email import encoders
 from email.mime.base import MIMEBase
@@ -153,6 +154,26 @@ def displayMajors(all_majors, majorToGraph):
         return majorList[usrChoice-1]
 
 
+def mergePDFs():
+
+    #print(glob.glob("./graphs/*"))
+    test = glob.glob("./graphs/*")
+    pdfs = []
+    for x in test:
+        if (x.find(".pdf") != -1):
+            pdfs.append(x)
+
+    print(pdfs)
+    merger = PdfFileMerger()
+
+    for pdf in pdfs:
+        merger.append(pdf)
+
+    print("Writing")
+    merger.write("./graphs/Results.pdf")
+    merger.close()
+
+
 def makeGraph():
     """ Creates a graph using the course_graphs/courseGraph.py and course_graphs/graphFunctions.py
     """
@@ -198,6 +219,7 @@ def makeGraph():
                 gf.drawGraph(course_graph, courseToGraph)
                 gf.displayGraph(courseToGraph)
 
+            mergePDFs()
         elif (usrInput == "2"):
             print("Please enter the subject's code you would like to graph.")
             subjectToGraph = input("\n--> ")
@@ -209,6 +231,8 @@ def makeGraph():
             if created:
                 gf.drawGraph(subject_graph, subjectToGraph)
                 gf.displayGraph(subjectToGraph)
+
+            mergePDFs()
 
         elif (usrInput == "3"):
             print("Please enter the major's course code you would like to graph.")
@@ -285,6 +309,8 @@ def makeGraph():
                 
                 gf.drawGraph(minor_graph, majorToGraph+"-minor")
                 #gf.displayGraph(majorToGraph)
+
+            mergePDFs()
 
 
         elif (usrInput == "4"):
@@ -367,6 +393,8 @@ def main():
     """The main menu for either searching for a course or drawing a Graph for a course or Major
     """
     global uni
+
+    mergePDFs()
 
     print("Welcome to our program.")
     while True:
