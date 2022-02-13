@@ -180,7 +180,9 @@ def getOrDict(graph, courses, course, isOut):
 	global orDict
 
 	#determine whether or not each 'or' is in brackets
+	print("courses = ", courses)
 	for idx in idxList:
+		print("idx = ", idx)
 		startIdx = idx
 		endIdx = idx
 
@@ -203,6 +205,8 @@ def getOrDict(graph, courses, course, isOut):
 				flagFirst = 1
 			endIdx += 1
 
+		print("flagStart = ", foundStart)
+		print("FlagEnd = ", foundEnd)
 		#if the 'or' is in brackets
 		if foundStart and foundEnd:
 			#shorten the string to only the brackets
@@ -218,6 +222,7 @@ def getOrDict(graph, courses, course, isOut):
 
 		foundEnd = 0
 		foundStart = 0
+		flagFirst = 0
 
 	#set the key as the course and the val as its requisites
 	orDict[course] = tempList
@@ -411,7 +416,7 @@ def keyInDict(i, orDict, course1, course2, graph):
 				i += 1
 	#print(isConnected)
 
-def addNodeAndEdge(graph, course1, course2, colour, oneOfDict, twoOfDict, isOrOutside, shape=None):
+def addNodeAndEdge(graph, course1, course2, oneOfDict, twoOfDict, isOrOutside, shape=None, colour=None):
 	"""Add a node and edge pointing from course1 to course2 on the graph
 
 	Args:
@@ -535,13 +540,13 @@ def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course, isOut):
 	for prereq in prereqsList:
 		#print("PREREQ: ", prereq)
 		if(prereq[len(prereq) - 4] == '1'): #1000 level node format
-			addNodeAndEdge(graph, prereq, course, "red", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, prereq, course,  oneOfDict, twoOfDict, isOut, colour="red",)
 		elif(prereq[len(prereq) - 4] == '2'): #2000 level node format
-			addNodeAndEdge(graph, prereq, course, "orange", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="orange")
 		elif(prereq[len(prereq) - 4] == '3'): #3000 level node format
-			addNodeAndEdge(graph, prereq, course, "green", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut,  colour="green")
 		elif(prereq[len(prereq) - 4] == '4'): #4000 level node format
-			addNodeAndEdge(graph, prereq, course, "purple", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, prereq, course, oneOfDict, twoOfDict, isOut, colour="purple")
 		else:
 			graph.add_edge(prereq, course)
 
@@ -557,17 +562,17 @@ def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course, isOut):
 	#loop through coreqs and add nodes and edges in both directionsDict
 	for coreq in coreqsList:
 		if(coreq[len(coreq) - 4] == '1'): #1000 level node format
-			addNodeAndEdge(graph, coreq, course, "red", oneOfDict, twoOfDict, isOut, "box")
-			addNodeAndEdge(graph, course, coreq, "red", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="red", shape="box")
+			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="red")
 		elif(coreq[len(coreq) - 4] == '2'): #2000 level node format
-			addNodeAndEdge(graph, coreq, course, "orange", oneOfDict, twoOfDict, isOut, "box")
-			addNodeAndEdge(graph, course, coreq, "orange", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="orange", shape="box")
+			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="orange")
 		elif(coreq[len(coreq) - 4] == '3'): #3000 level node format
-			addNodeAndEdge(graph, coreq, course, "green", oneOfDict, twoOfDict, isOut, "box")
-			addNodeAndEdge(graph, course, coreq, "green", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="green", shape="box")
+			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="green")
 		elif(coreq[len(coreq) - 4] == '4'): #4000 level node format
-			addNodeAndEdge(graph, coreq, course, "purple", oneOfDict, twoOfDict, isOut, "box")
-			addNodeAndEdge(graph, course, coreq, "purple", oneOfDict, twoOfDict, isOut)
+			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="purple", shape="box")
+			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="purple")
 		else:
 			graph.add_edge(coreq, course)
 			graph.add_edge(course, coreq)
@@ -634,6 +639,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 		[course_graph]: [graph of specified course]
 	"""
 	#make sure course name is in upper case
+	
 	course = course.upper()
 
 	global orDict
@@ -657,6 +663,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 
 					#if prereqs exist
 					if n["prereqs"]:
+
 						#regex for parsing prereqs
 						pattern = re.compile(r"[a-zA-Z]+\*[0-9]+|work\sexperience|\d{1,2}[.]\d\d\scredits|International\sDevelopment")
 						prereqsList = re.findall(pattern, n["prereqs"])
@@ -694,7 +701,7 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 
 						#parse the prereqs string to check for other 'or's in brackets
 						getOrDict(course_graph, n["prereqs"], b, isOut)
-						#print ("orDict = ", orDict)
+						print ("orDict = ", orDict)
 
 
 						#creating the dictionaries for the format of '1 of ...' and '2 of ...'
@@ -709,15 +716,15 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 						#connect an edge between the 'or' node and its prereqs
 						for prereq in prereqsList:
 							if(level_counter == 0): #node format for first level
-								addNodeAndEdge(course_graph, prereq, b, "red", oneOfDict, twoOfDict, isOut)
+								addNodeAndEdge(course_graph, prereq, b, oneOfDict, twoOfDict, isOut, colour="red")
 							elif(level_counter == 1): #node format for second level
-								addNodeAndEdge(course_graph, prereq, b, "orange", oneOfDict, twoOfDict, isOut)
+								addNodeAndEdge(course_graph, prereq, b, oneOfDict, twoOfDict, isOut, colour="orange")
 							elif(level_counter == 2): #node format for third level
-								addNodeAndEdge(course_graph, prereq, b, "green", oneOfDict, twoOfDict, isOut)
+								addNodeAndEdge(course_graph, prereq, b, oneOfDict, twoOfDict, isOut, colour="green")
 							elif(level_counter == 3): #node format for fourth level
-								addNodeAndEdge(course_graph, prereq, b, "purple", oneOfDict, twoOfDict, isOut)
+								addNodeAndEdge(course_graph, prereq, b, oneOfDict, twoOfDict, isOut, colour="purple")
 							elif(level_counter == 4): #node format for fifth level
-								addNodeAndEdge(course_graph, prereq, b, "blue", oneOfDict, twoOfDict, isOut)
+								addNodeAndEdge(course_graph, prereq, b, oneOfDict, twoOfDict, isOut, colour="blue")
 							else:
 								course_graph.add_edge(prereq, b)
 
@@ -814,15 +821,15 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 		#add node for course
 
 		if(k[len(k) - 4] == '1'):
-			major_graph.add_node(k, color="red")
+			major_graph.add_node(k, color="red", shape="box")
 		elif(k[len(k) - 4] == '2'):
-			major_graph.add_node(k, color="orange")
+			major_graph.add_node(k, color="orange", shape="box")
 		elif(k[len(k) - 4] == '3'):
-			major_graph.add_node(k, color="green")
+			major_graph.add_node(k, color="green", shape="box")
 		elif(k[len(k) - 4] == '4'):
-			major_graph.add_node(k, color="purple")
+			major_graph.add_node(k, color="purple", shape="box")
 		else:
-			major_graph.add_node(k)
+			major_graph.add_node(k, shape="box")
 
 
 		prereqString = ""

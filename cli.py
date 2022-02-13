@@ -253,7 +253,7 @@ def makeGraph():
 
             # #only draw graphs if a graph was made successfully
             if major_created:
-                gf.drawGraph(major_graph, majorToGraph)
+                gf.drawGraph(major_graph, majorToGraph+"-major")
                # gf.displayGraph(majorToGraph)
 
             minor_graph = pgv.AGraph(directed=True)
