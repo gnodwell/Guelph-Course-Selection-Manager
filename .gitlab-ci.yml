@@ -17,7 +17,7 @@ image: node:latest
 
 stages:          # List of stages for jobs, and their order of execution
   # - build
-  - test
+  # - test
 #   - deploy
 
 # build-job:       # This job runs in the build stage, which runs first.
@@ -32,13 +32,10 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
-    # - ./installationScripts/setup.sh
     - cd scraper
-    # - npm install -D @playwright/test
     - npm install
     - npx playwright install-deps
     - cd tests
-    - npx playwright install-deps
     - npx playwright test
     # - python3 testFunctions.py
 
