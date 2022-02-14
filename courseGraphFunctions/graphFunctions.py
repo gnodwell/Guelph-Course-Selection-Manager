@@ -33,7 +33,6 @@ def displayGraph(graphName):
 	elif(platform.system() == 'Darwin'):
 		commands.getstatusoutput("open " + "graphs/" + graphName +".pdf")
 
-	#print("here2")
 
 def drawGraph(graph, graphName, graphDir="./graphs/"):
 	"""write out graph to file formats
@@ -199,9 +198,7 @@ def getOrDict(graph, courses, course, isOut):
 	global orDict
 
 	#determine whether or not each 'or' is in brackets
-	#print("courses = ", courses)
 	for idx in idxList:
-		#print("idx = ", idx)
 		startIdx = idx
 		endIdx = idx
 
@@ -224,8 +221,6 @@ def getOrDict(graph, courses, course, isOut):
 				flagFirst = 1
 			endIdx += 1
 
-		#print("flagStart = ", foundStart)
-		#print("FlagEnd = ", foundEnd)
 		#if the 'or' is in brackets
 		if foundStart and foundEnd:
 			#shorten the string to only the brackets
@@ -250,7 +245,6 @@ def getOrDict(graph, courses, course, isOut):
 		for elem in cList:
 			#create an 'or' node for each bracket containing prereq joined with an 'or'
 			graph.add_node('or'+str(course)+str(i), label='or', shape='diamond')
-			#print("CREATED")
 
 			#if the course has an 'or' outside of brackets then,
 			#connect the newly created 'or' to the course's 'or' node
@@ -310,10 +304,8 @@ def getTheOfRequisites(graph, courses, subStr, course, isOrOutside):
 
 			#regex for prereqa with '1 of ...' format
 			regex = re.escape(subStr.upper()) + r"(([a-zA-Z]+\*[0-9]+,*|\s[a-zA-Z]+\*[0-9]+,*)+)"
-			#print(regex)
 			pattern = re.compile(regex)
 			ofList = re.findall(pattern, cleanStr)
-			#print(ofList)
 
 			d = {}
 
@@ -434,7 +426,6 @@ def keyInDict(i, orDict, course1, course2, graph):
 					graph.add_edge(course1, 'or'+str(course2)+str(i))
 					return 1
 				i += 1
-	#print(isConnected)
 
 def addNodeAndEdge(graph, course1, course2, oneOfDict, twoOfDict, isOrOutside, shape=None, colour=None):
 	"""Add a node and edge pointing from course1 to course2 on the graph
@@ -458,7 +449,6 @@ def addNodeAndEdge(graph, course1, course2, oneOfDict, twoOfDict, isOrOutside, s
 
 	#check if the node is a '1 of', '2 of', or 'EXP' first
 	#then change the type of edge depending on the condition and add the edge
-	#print(isOut)
 
 	isIn = 0 #used to check if the course is in oneOfDict, twoOfDict or none; 0 = none; 1 = oneOfDict; 2 = twoOfDict
 	keyVal = 0 #the key of the dictionary
@@ -467,8 +457,6 @@ def addNodeAndEdge(graph, course1, course2, oneOfDict, twoOfDict, isOrOutside, s
 	if ret:
 		isIn = ret[0]
 		keyVal = ret[1]
-	#print("isIn: ", isIn)
-	#print("keyVal: ", keyVal)
 
 	#if course1 is in oneOfDict
 	if isIn == 1:
@@ -558,7 +546,6 @@ def addPrereqsToGraph(graph, prereqsList, oneOfDict, twoOfDict, course, isOut):
 
 	#loop through prereqs and add nodes and edges
 	for prereq in prereqsList:
-		#print("PREREQ: ", prereq)
 		if gUni == 0:
 			if(prereq[len(prereq) - 4] == '1'): #1000 level node format
 				addNodeAndEdge(graph, prereq, course,  oneOfDict, twoOfDict, isOut, colour="red",)
@@ -640,7 +627,7 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 	#make sure major name is in upper case
 	global gUni
 	gUni = uni
-	subjectName = '(' + subjectName.upper() + ')'
+	subjectName = subjectName.upper()
 
 	if gUni == 0:
 		#return if subject is not in json
@@ -667,7 +654,6 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 
 			#parse prereqs from prereqs attribute
 			prereqsList = parseReqs(v["prereqs"], subjectName)
-			print(prereqsList)
 
 			#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
 			addPrereqsToGraph(subject_graph, prereqsList, {}, {}, k, 0)
@@ -685,6 +671,7 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 		#return if subject is not in json
 		flag = 0
 		subKey = ""
+		subjectName = '(' + subjectName.upper() + ')'
 
 		for subj in all_courses:
 			if subjectName in subj["subject"]:
@@ -701,8 +688,6 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 		for subj in all_courses:
 			if subj["subject"] == subKey:
 				for k in subj["data"]:
-					print("course = ", k['cCode'])
-					print("prereqs = ", k["prereqs"])
 
 					#add node for course
 					startIdx = k['cCode'].find("*")
@@ -720,13 +705,11 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 
 					#parse prereqs from prereqs attribute
 					prereqsList = parseReqs(k["prereqs"], subjectName)
-					print(prereqsList)
 
 					isOut = isOrOutsideBrackets(k["prereqs"])
-					print("isOut = ", isOut)
 
 					if isOut:
-						#print("here")
+						
 						global orId
 
 						orId += 1
@@ -734,13 +717,10 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 						subject_graph.add_edge('or'+str(orId), k['cCode'])
 
 					getOrDict(subject_graph, k["prereqs"], k['cCode'], isOut)
-					print ("orDict = ", orDict)
 
 					#creating the dictionaries for the format of '1 of ...' and '2 of ...'
 					oneOfDict = getTheOfRequisites(subject_graph, k["prereqs"], "One of", k['cCode'], isOut)
 					twoOfDict = getTheOfRequisites(subject_graph, k["prereqs"], "Two of", k['cCode'], isOut)
-					print("oneOfDict = ", oneOfDict)
-					print("twoOfDict = ", twoOfDict)
 
 					#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
 					addPrereqsToGraph(subject_graph, prereqsList, oneOfDict, twoOfDict, k['cCode'], isOut)
@@ -784,7 +764,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 			for b, n in v.items():              #traverse second layer of json data (course codes)
 				if (b == course):
 
-					#print("COURSE: ", b)
 					#add first node in case of course having no prerequisites
 					if(level_counter == 0):
 						course_graph.add_node(course, shape="box")
@@ -811,9 +790,8 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 
 						#check if there is an 'or' outside of brackets in the prereqs
 						isOut = isOrOutsideBrackets(n["prereqs"])
-						#print("isOut = ", isOut)
+						
 
-						#print("isOut = ", isOut)
 						#if there is an 'or' outside, then create an 'or' node and connect it to the course
 						if isOut:
 
@@ -823,20 +801,16 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 							orId += 1
 							course_graph.add_node('or'+str(orId), label='or', shape='diamond')
 							course_graph.add_edge('or'+str(orId), b)
-							#print("CREATED")
 
 
 						#parse the prereqs string to check for other 'or's in brackets
 						getOrDict(course_graph, n["prereqs"], b, isOut)
-						print ("orDict = ", orDict)
 
 
 						#creating the dictionaries for the format of '1 of ...' and '2 of ...'
 						oneOfDict = getTheOfRequisites(course_graph, n["prereqs"], "1 of", b, isOut)
 						twoOfDict = getTheOfRequisites(course_graph, n["prereqs"], "2 of", b, isOut)
 
-						#print("oneOfDict = ", oneOfDict)
-						#print("twoOfDict = ", twoOfDict)
 
 						#traverses according to how deep the prereq is for the course
 						#loop through prereqs and add nodes and edges
@@ -864,7 +838,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 		ofId = 0
 		orDict = {}
 		checkedCourses = set()
-		#print(checkedCourses)
 	return True
 
 def getMajorCourses(data):
@@ -886,7 +859,6 @@ def getMajorCourses(data):
 						flag = 1
 					if (flag == 0):
 						ret.append(k)
-						#print(k)
 	return ret
 
 def getMinorCourses(data):
@@ -914,7 +886,6 @@ def getCourseInfo(majorCourses, allCourses):
 		[dict]: [a dict holding courses]
 	"""
 	flag = 0
-	#print(majorCourses)
 	courseInfo = {}
 	
 	if majorCourses == None:
@@ -945,7 +916,6 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 	#subjectName = subjectName.upper()
 
 	#return if major is not in json
-	#print("all_courses: ", all_courses)
 	subjectCode = ""
 	idx = 0
 
@@ -959,17 +929,11 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 		if course not in all_courses[subjectCode]:
 			print('Course: "' + course + '" does not exists')
 			return False
-	
-	#if majorName not in all_courses:
-		#print('Subject: "' + majorName + '" does not exists')
-		#return False
 
 	seenCourses = set()
 
 	#loop through courses in specified major
 	for k in majorCourses:
-		#print(k)
-		#[majorName].items():
 		#add node for course
 
 		if(k[len(k) - 4] == '1'):
@@ -995,10 +959,7 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 		subjectCode = k[0:idx]
 
 		prereqsList = parseReqs(prereqString, subjectCode)
-		print(prereqsList)
-		#print(prereqsList)
 
-		#print(majorCourses[k]['prereqs'])
 		isOut = isOrOutsideBrackets(prereqString)
 
 		if isOut:
@@ -1011,15 +972,11 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 
 		#parse the prereqs string to check for other 'or's in brackets
 		getOrDict(major_graph, prereqString, k, isOut)
-		#print ("orDict = ", orDict)
 
 
 		#creating the dictionaries for the format of '1 of ...' and '2 of ...'
 		oneOfDict = getTheOfRequisites(major_graph, prereqString, "1 of", k, isOut)
 		twoOfDict = getTheOfRequisites(major_graph, prereqString, "2 of", k, isOut)
-
-		#print("oneOfDict = ", oneOfDict)
-		#print("twoOfDict = ", twoOfDict)
 
 		#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
 		addPrereqsToGraph(major_graph, prereqsList, oneOfDict, twoOfDict, k, isOut)
@@ -1033,98 +990,6 @@ def generateGraphByMajor(major_graph, all_courses, majorCourses):
 
 
 
-
-
-
-
-	# global orDict
-	# global checkedCourses
-
-	# #return if course code is not in json
-	# majorName = course[:course.find('*')]
-	# flag = 0
-	# if majorName not in all_courses and level_counter == 0:
-	#     flag = 1
-	#     return False
-
-	# if isinstance(all_courses, dict):           #check if all_courses is dict
-	#     for v in all_courses.values():          #traverse first layer of json data (ex. "ACCT", "AGR", "ANSC", etc...)
-	#         for b, n in v.items():              #traverse second layer of json data (course codes)
-	#             if (b == course):
-
-	#                 flag = 0
-	#                 if (str(n['prereqs']).find("or") != -1):
-	#                     splitStr = str(n['prereqs']).split()
-	#                     if (len(splitStr) == 3):
-	#                         for l in splitStr:
-	#                             if (l != 'or'):
-	#                                 if (l not in courseList):
-	#                                     splitStr.remove(l)
-	#                                     splitStr.remove('or')
-	#                                     n['prereqs'] = str(splitStr)
-
-
-	#                 #add first node in case of course having no prerequisites
-	#                 if(level_counter == 0):
-	#                     major_graph.add_node(course, shape="box")
-
-	#                 #if prereqs exist
-	#                 if n["prereqs"]:
-	#                     #regex for parsing prereqs
-	#                     pattern = re.compile(r"[a-zA-Z]+\*[0-9]+|work\sexperience|\d{1,2}[.]\d\d\scredits|International\sDevelopment")
-	#                     prereqsList = re.findall(pattern, n["prereqs"])
-
-	#                     for req in prereqsList:
-	#                         if (req not in courseList and req.find("credits") == -1):
-	#                             #print("Removing: ", req)
-	#                             prereqsList.remove(req)
-
-
-
-	#                     #shorten the work experience prerequisite to exp
-	#                     #shorten international development to IDEV reg.
-	#                     idx = 0
-	#                     for c in prereqsList:
-	#                         if c == "work experience":
-	#                             prereqsList[idx] = "EXP"
-	#                         elif c == "International Development":
-	#                             prereqsList[idx] = "IDEV reg."
-	#                         idx += 1
-
-	#                     #traverses according to how deep the prereq is for the course
-	#                     #loop through prereqs and add nodes and edges
-	#                     #connect an edge between the 'or' node and its prereqs
-	#                     for prereq in prereqsList:
-	#                         if (prereq not in courseList and prereq.find("credits") == -1):
-	#                             #print ("This is executing on: ", prereq)
-	#                             continue
-	#                         else:
-	#                             #tried to hard type the level here, colors are not working properly
-	#                             hold = b.find("*")
-	#                             level = int(b[hold+1:hold+2])
-
-	#                             if(level == 0): #node format for first level
-	#                                 addNodeAndEdge(major_graph, prereq, b, "red", {}, {}, 0)
-	#                             elif(level == 1): #node format for second level
-	#                                 addNodeAndEdge(major_graph, prereq, b, "orange", {}, {}, 0)
-	#                             elif(level == 2): #node format for third level
-	#                                 addNodeAndEdge(major_graph, prereq, b, "green", {}, {}, 0)
-	#                             elif(level == 3): #node format for fourth level
-	#                                 addNodeAndEdge(major_graph, prereq, b, "purple", {}, {}, 0)
-	#                             elif(level == 4): #node format for fifth level
-	#                                 addNodeAndEdge(major_graph, prereq, b, "blue", {}, {}, 0)
-	#                             else:
-	#                                 major_graph.add_edge(prereq, b)
-
-	#                             if prereq not in checkedCourses:
-	#                                 generateGraphByMajor(major_graph, all_courses, prereq, level_counter + 1, majorName, courseList)
-	#                             checkedCourses.add(prereq)
-	# if level_counter == 0:
-	#     orId = 0
-	#     global ofId
-	#     ofId = 0
-	#     orDict = {}
-	#     checkedCourses = set()
 	return True
 
 

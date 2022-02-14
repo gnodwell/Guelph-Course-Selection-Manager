@@ -154,17 +154,17 @@ def displayMajors(all_majors, majorToGraph):
         return majorList[usrChoice-1]
 
 
-def mergePDFs():
+def mergePDFs(path='./graphs/'):
     """Merges all pdfs in ./graphs into one resulting pdf called Results.pdf
 
     """
 
     #print(glob.glob("./graphs/*"))
-    test = glob.glob("./graphs/waterlooSubjects/*")
+    test = glob.glob(path + "waterlooSubjects/*")
     pdfs = []
     for x in test:
         if (x.find(".pdf") != -1):
-            if (x != "./graphs/Waterloo.pdf"):
+            if (x != path + "Waterloo.pdf"):
                 pdfs.append(x)
 
     merger = PdfFileMerger()
@@ -174,7 +174,7 @@ def mergePDFs():
         if (pdf):
             merger.append(pdf)
 
-    merger.write("./graphs/Waterloo.pdf")
+    merger.write(path + "Waterloo.pdf")
     merger.close()
 
     return True
@@ -305,7 +305,7 @@ def makeGraph():
             if major_created:
                 if (uni == 0):
                     gf.drawGraph(major_graph, majorToGraph+"-major")
-                    gf.displayGraph(majorToGraph)
+                    #gf.displayGraph(majorToGraph)
                 elif(uni == 1):
                     gf.drawGraph(major_graph, majorToGraph+"-major", "./waterlooSubjects/")
 
@@ -324,7 +324,7 @@ def makeGraph():
             if minor_created:
                 if (uni == 0):
                     gf.drawGraph(minor_graph, majorToGraph+"-minor")
-                    gf.displayGraph(majorToGraph)
+                    #gf.displayGraph(majorToGraph)
                 elif(uni == 1):
                     gf.drawGraph(minor_graph, majorToGraph+"-minor", "./waterlooSubjects/")
 

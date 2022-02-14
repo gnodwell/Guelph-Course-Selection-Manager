@@ -1,10 +1,17 @@
 import unittest
+import os
 from os.path import exists
 import json
+import sys
+from PyPDF2 import PdfFileMerger
+
+sys.path.append('../')
 
 import courseGraph as cg
 import graphFunctions as gp
 import pygraphviz as pgv
+import cli as c
+
 
 try:
     from courseGraph import readJSON
@@ -200,19 +207,24 @@ class testCLI(unittest.TestCase):
     def test_generateGraphByMajor(self):
         all_courses = readJSON("testData.json")
         testGraph = pgv.AGraph(directed=True)
-        sampleGraph = pgv.AGraph(directed=True)
+        #sampleGraph = pgv.AGraph(directed=True)
 
-        sampleGraph.add_node("ACCT*1220", color="red")
-        sampleGraph.add_node("ACCT*1240", color="red")
-        sampleGraph.add_node("ACCT*2230", color="orange")
-        sampleGraph.add_node("ACCT*3230", color="green")
+        major = cg.readJSON('../scraper/majorPages/includes/Accounting (ACCT) (B.Comm.).json')
+        majorCourses = gp.getMajorCourses(major)
+        courseInfo = gp.getCourseInfo(majorCourses, all_courses)
 
-        gp.generateGraphBySubject(testGraph, all_courses, "ACCT")
+        # sampleGraph.add_node("ACCT*1220", color="red")
+        # sampleGraph.add_node("ACCT*1240", color="red")
+        # sampleGraph.add_node("ACCT*2230", color="orange")
+        # sampleGraph.add_node("ACCT*3230", color="green")
 
-        self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphByMajor")
+        ret = gp.generateGraphByMajor(testGraph, all_courses, courseInfo)
+
+        self.assertEqual(ret, True, "Failed test_generateGraphByMajor")
 
     def test_generateGraphByCourse(self):
         all_courses = readJSON("relations.json")
+
 
         testGraph = pgv.AGraph(directed=True)
         sampleGraph = pgv.AGraph(directed=True)
@@ -233,7 +245,7 @@ class testCLI(unittest.TestCase):
         sampleGraph.add_node("ACCT*2230", color="orange")
         sampleGraph.add_node("ACCT*3230", color="green")
 
-        gp.generateGraphBySubject(testGraph, all_courses, "ACCT")
+        gp.generateGraphBySubject(testGraph, all_courses, "ACCT", 0)
 
         self.assertEqual(testGraph, sampleGraph, "Failed test_generateGraphBySubject")
 
@@ -311,6 +323,13 @@ class testCLI(unittest.TestCase):
         ret = gp.keyInDict(i, orDict, prereq, course, graph)
 
         self.assertEqual(ret, 1, "Failed test_keyInDict")
+
+    def test_mergePDFs(self):
+        c.mergePDFs('../graphs/')
+
+        ret = os.path.isfile('../graphs/Waterloo.pdf')
+
+        self.assertEqual(ret, True, "Failed mergePDFs")
 
 if __name__ == '__main__':
     unittest.main()
