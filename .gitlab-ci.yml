@@ -32,8 +32,8 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
-    - cd scraper/tests 
     - ./installationScripts/setup.sh
+    - cd scraper/tests 
     - npm install -D @playwright/test
     - npx playwright test
     # - python3 testFunctions.py
