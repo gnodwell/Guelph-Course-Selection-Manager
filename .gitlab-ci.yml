@@ -33,9 +33,10 @@ unit-test-job:   # This job runs in the test stage.
   script:
     - echo "Running unit tests..."
     - ./installationScripts/setup.sh
-    - cd scraper/tests 
+    - cd scraper
     - npm install -D @playwright/test
     - npx playwright install-deps
+    - cd tests
     - npx playwright test
     # - python3 testFunctions.py
 
