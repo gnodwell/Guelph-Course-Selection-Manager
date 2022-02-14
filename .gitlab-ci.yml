@@ -16,17 +16,17 @@
 image: node:latest
 
 stages:          # List of stages for jobs, and their order of execution
-  - build
+  # - build
   - test
 #   - deploy
 
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
-    # - sudo apt-get install graphviz graphviz-dev
-    # - pip install pygraphviz
+# build-job:       # This job runs in the build stage, which runs first.
+#   stage: build
+#   script:
+#     # - echo "Compiling the code..."
+#     # - echo "Compile complete."
+#     # - sudo apt-get install graphviz graphviz-dev
+#     # - pip install pygraphviz
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -35,6 +35,7 @@ unit-test-job:   # This job runs in the test stage.
     - ./installationScripts/setup.sh
     - cd scraper/tests 
     - npm install -D @playwright/test
+    - npx playwright install-deps
     - npx playwright test
     # - python3 testFunctions.py
 
