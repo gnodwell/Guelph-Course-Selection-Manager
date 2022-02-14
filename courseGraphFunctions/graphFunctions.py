@@ -180,9 +180,9 @@ def getOrDict(graph, courses, course, isOut):
 	global orDict
 
 	#determine whether or not each 'or' is in brackets
-	print("courses = ", courses)
+	#print("courses = ", courses)
 	for idx in idxList:
-		print("idx = ", idx)
+		#print("idx = ", idx)
 		startIdx = idx
 		endIdx = idx
 
@@ -205,8 +205,8 @@ def getOrDict(graph, courses, course, isOut):
 				flagFirst = 1
 			endIdx += 1
 
-		print("flagStart = ", foundStart)
-		print("FlagEnd = ", foundEnd)
+		#print("flagStart = ", foundStart)
+		#print("FlagEnd = ", foundEnd)
 		#if the 'or' is in brackets
 		if foundStart and foundEnd:
 			#shorten the string to only the brackets
@@ -287,9 +287,10 @@ def getTheOfRequisites(graph, courses, subStr, course, isOrOutside):
 
 			#clean up the string
 			cleanStr = cleanUpString(courses)
+			cleanStr = cleanStr.upper()
 
 			#regex for prereqa with '1 of ...' format
-			regex = re.escape(subStr) + r"(([a-zA-Z]+\*[0-9]+,*|\s[a-zA-Z]+\*[0-9]+,*)+)"
+			regex = re.escape(subStr.upper()) + r"(([a-zA-Z]+\*[0-9]+,*|\s[a-zA-Z]+\*[0-9]+,*)+)"
 			#print(regex)
 			pattern = re.compile(regex)
 			ofList = re.findall(pattern, cleanStr)
@@ -685,21 +686,30 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 					print("isOut = ", isOut)
 
 					if isOut:
-						print("here")
+						#print("here")
 						global orId
 
 						orId += 1
 						subject_graph.add_node('or'+str(orId), label='or', shape='diamond')
 						subject_graph.add_edge('or'+str(orId), k['cCode'])
 
+					getOrDict(subject_graph, k["prereqs"], k['cCode'], isOut)
+					print ("orDict = ", orDict)
+
+					#creating the dictionaries for the format of '1 of ...' and '2 of ...'
+					oneOfDict = getTheOfRequisites(subject_graph, k["prereqs"], "One of", k['cCode'], isOut)
+					twoOfDict = getTheOfRequisites(subject_graph, k["prereqs"], "Two of", k['cCode'], isOut)
+					print("oneOfDict = ", oneOfDict)
+					print("twoOfDict = ", twoOfDict)
+
 					#add the prereqs to the graph by adding edges in a single direction from the prereq to the course
-					addPrereqsToGraph(subject_graph, prereqsList, {}, {}, k['cCode'], isOut)
+					addPrereqsToGraph(subject_graph, prereqsList, oneOfDict, twoOfDict, k['cCode'], isOut)
 					seenCourses.update(prereqsList)
 
 					#parse coreqs from coreqs attribute
 					coreqsList = parseReqs(k["coreqs"], subjectName)
 					#add coreqs to the graph by adding edges in both directions between coreqs and course
-					addCoreqsToGraph(subject_graph, coreqsList, {}, {}, k['cCode'], isOut)
+					addCoreqsToGraph(subject_graph, coreqsList, oneOfDict, twoOfDict, k['cCode'], isOut)
 					seenCourses.update(coreqsList)
 
 				subject_graph.graph_attr.update(label="Graph of Requisites for {} ({})".format(subjectName, len(seenCourses)))
@@ -774,7 +784,6 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 							course_graph.add_node('or'+str(orId), label='or', shape='diamond')
 							course_graph.add_edge('or'+str(orId), b)
 							#print("CREATED")
-
 
 
 						#parse the prereqs string to check for other 'or's in brackets
