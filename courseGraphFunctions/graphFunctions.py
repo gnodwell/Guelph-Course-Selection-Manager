@@ -105,6 +105,16 @@ def isOrOutsideBrackets(courses):
 	return 0
 
 def checkBr(courses, idx):
+	"""Determines if the 'or' is outside the brackets.
+
+	Args:
+		courses ([string]): [the string to be checked]
+		idx ([int]): [the index at which the 'or' was found at]
+
+	Returns:
+		[int]: [the integer to represent yes or no; 1: yes and 0: no]
+	"""
+
 	if not courses == None:
 		flagA = 0
 		flagB = 0
@@ -140,6 +150,15 @@ def checkBr(courses, idx):
 		return 0
 
 def checkOrPos(courses, idx):
+	"""Determines if the 'or' is between courses outside of brackets.
+
+	Args:
+		courses ([string]): [the string to be checked]
+		idx ([int]): [the index at which the 'or' was found at]
+
+	Returns:
+		[int]: [the integer to represent yes or no; 1: yes and 0: no]
+	"""
 
 
 	if not courses == None:
@@ -574,21 +593,41 @@ def addCoreqsToGraph(graph, coreqsList, oneOfDict, twoOfDict, course, isOut):
 
 	#loop through coreqs and add nodes and edges in both directionsDict
 	for coreq in coreqsList:
-		if(coreq[len(coreq) - 4] == '1'): #1000 level node format
-			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="red", shape="box")
-			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="red")
-		elif(coreq[len(coreq) - 4] == '2'): #2000 level node format
-			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="orange", shape="box")
-			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="orange")
-		elif(coreq[len(coreq) - 4] == '3'): #3000 level node format
-			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="green", shape="box")
-			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="green")
-		elif(coreq[len(coreq) - 4] == '4'): #4000 level node format
-			addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="purple", shape="box")
-			addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="purple")
-		else:
-			graph.add_edge(coreq, course)
-			graph.add_edge(course, coreq)
+		if gUni == 0:
+
+			if(coreq[len(coreq) - 4] == '1'): #1000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="red", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="red")
+			elif(coreq[len(coreq) - 4] == '2'): #2000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="orange", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="orange")
+			elif(coreq[len(coreq) - 4] == '3'): #3000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="green", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="green")
+			elif(coreq[len(coreq) - 4] == '4'): #4000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="purple", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="purple")
+			else:
+				graph.add_edge(coreq, course)
+				graph.add_edge(course, coreq)
+		if gUni == 1:
+
+			if(coreq[len(coreq) - 3] == '1'): #1000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="red", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="red")
+			elif(coreq[len(coreq) - 3] == '2'): #2000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="orange", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="orange")
+			elif(coreq[len(coreq) - 3] == '3'): #3000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="green", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="green")
+			elif(coreq[len(coreq) - 3] == '4'): #4000 level node format
+				addNodeAndEdge(graph, coreq, course, oneOfDict, twoOfDict, isOut, colour="purple", shape="box")
+				addNodeAndEdge(graph, course, coreq, oneOfDict, twoOfDict, isOut, colour="purple")
+			else:
+				graph.add_edge(coreq, course)
+				graph.add_edge(course, coreq)
+
 
 def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 	"""Generates a graph for a specified major.
@@ -664,7 +703,7 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 				for k in subj["data"]:
 					print("course = ", k['cCode'])
 					print("prereqs = ", k["prereqs"])
-					
+
 					#add node for course
 					startIdx = k['cCode'].find("*")
 
@@ -829,6 +868,14 @@ def generateGraphByCourse(course_graph, all_courses, course, level_counter):
 	return True
 
 def getMajorCourses(data):
+	"""get the courses for the major.
+
+	Args:
+		data ([list]): [list holding the major data]
+
+	Returns:
+		[list]: [a list of all the courses for the major]
+	"""
 	ret = []
 	flag = 0
 	for i in data:
@@ -843,12 +890,29 @@ def getMajorCourses(data):
 	return ret
 
 def getMinorCourses(data):
+	"""Get the courses for the minor.
+
+	Args:
+		data ([list]): [list holding the minor data]
+
+	Returns:
+		[list]: [a list of all the courses for the minor]
+	"""
 	for i in data:
 		if (i['title'] == 'Minor (Honours Program)'):
 			for j in i['table']:
 				return j['courses']
 
 def getCourseInfo(majorCourses, allCourses):
+	"""get the info of the courses in majorCourses.
+
+	Args:
+		majorCourses ([list]): [list holding the major/minor courses]
+		allCourses ([list]): [list holding all the courses in the university]
+
+	Returns:
+		[dict]: [a dict holding courses]
+	"""
 	flag = 0
 	#print(majorCourses)
 	courseInfo = {}

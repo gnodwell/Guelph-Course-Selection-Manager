@@ -340,6 +340,8 @@ def makeGraph():
             continue
 
 def emailGraph():
+    """ Emails a pdf to a specified email address
+    """
     options = map(os.path.basename, glob.glob("./graphs/*.pdf"))
     option_paths = glob.glob("./graphs/*.pdf") #get all pdf files in directory
     options_list = list(options)
@@ -410,6 +412,8 @@ def emailGraph():
 
 
 def createWaterLooSubject():
+    """ Creates the pdfs of all subjects that Waterloo offers and merges them into one
+    """
 
     waterlooData = cg.readJSON("./scraper/uWaterloo/waterlooData.json")
 
