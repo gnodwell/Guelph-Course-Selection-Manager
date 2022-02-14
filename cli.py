@@ -223,10 +223,12 @@ def makeGraph():
             created = gf.generateGraphByCourse(course_graph, all_courses, courseToGraph, 0)
             #only draw graphs if a graph was made successfully
             if created:
-                gf.drawGraph(course_graph, courseToGraph)
-                gf.displayGraph(courseToGraph)
+                if (uni == 0):
+                    gf.drawGraph(course_graph, courseToGraph)
+                    gf.displayGraph(courseToGraph)
+                elif(uni == 1):
+                    gf.drawGraph(course_graph, courseToGraph, "./waterlooSubjects/")
 
-            mergePDFs()
         elif (usrInput == "2"):
             print("Please enter the subject's code you would like to graph.")
             subjectToGraph = input("\n--> ")
@@ -236,10 +238,12 @@ def makeGraph():
             created = gf.generateGraphBySubject(subject_graph, all_courses, subjectToGraph, uni)
             #only draw graphs if a graph was made successfully
             if created:
-                gf.drawGraph(subject_graph, subjectToGraph)
-                gf.displayGraph(subjectToGraph)
+                if (uni == 0):
+                    gf.drawGraph(subject_graph, subjectToGraph)
+                    gf.displayGraph(subjectToGraph)
+                elif(uni == 1):
+                    gf.drawGraph(subject_graph, subjectToGraph, "./waterlooSubjects/")
 
-            mergePDFs()
 
         elif (usrInput == "3"):
             print("Please enter the major's course code you would like to graph.")
@@ -298,9 +302,14 @@ def makeGraph():
 
 
             # #only draw graphs if a graph was made successfully
+
             if major_created:
-                gf.drawGraph(major_graph, majorToGraph+"-major")
-               # gf.displayGraph(majorToGraph)
+                if (uni == 0):
+                    gf.drawGraph(major_graph, majorToGraph+"-major")
+                    gf.displayGraph(majorToGraph)
+                elif(uni == 1):
+                    gf.drawGraph(major_graph, majorToGraph+"-major", "./waterlooSubjects/")
+
 
             minor_graph = pgv.AGraph(directed=True)
             minorCourses = gf.getMinorCourses(major)
@@ -312,12 +321,17 @@ def makeGraph():
                 #for x in minorCourses:
             minor_created = gf.generateGraphByMajor(minor_graph, allCourses, courseInfo)
 
-            if minor_created:
-                
-                gf.drawGraph(minor_graph, majorToGraph+"-minor")
-                #gf.displayGraph(majorToGraph)
 
-            mergePDFs()
+            if minor_created:
+                if (uni == 0):
+                    gf.drawGraph(minor_graph, majorToGraph+"-minor")
+                    gf.displayGraph(majorToGraph)
+                elif(uni == 1):
+                    gf.drawGraph(minor_graph, majorToGraph+"-minor", "./waterlooSubjects/")
+
+
+
+
 
 
         elif (usrInput == "4"):
@@ -396,6 +410,33 @@ def emailGraph():
     print("\n")
 
 
+def createWaterLooSubject():
+
+    waterlooData = cg.readJSON("./scraper/uWaterloo/waterlooData.json")
+
+    for x in waterlooData:
+        #print(x['subject'])
+        start = x['subject'].find('(') + 1
+        end = x['subject'].find(')')
+        #print(x['subject'][start:end])
+        subjectToGraph = x['subject'][start:end]
+
+
+        subject_graph = pgv.AGraph(directed=True)
+
+        created = gf.generateGraphBySubject(subject_graph, waterlooData, subjectToGraph, uni)
+        #only draw graphs if a graph was made successfully
+        if created:
+            if (uni == 0):
+                gf.drawGraph(subject_graph, subjectToGraph)
+                gf.displayGraph(subjectToGraph)
+            elif(uni == 1):
+                gf.drawGraph(subject_graph, subjectToGraph, "./graphs/waterlooSubjects/")
+
+
+
+
+
 def main():
     """The main menu for either searching for a course or drawing a Graph for a course or Major
     """
@@ -445,7 +486,8 @@ def main():
                 print("1: Course Search")
                 print("2: Make Graph")
                 print("3: Email Graph")
-                print("4: Return")
+                print("4: Graph Waterloo Subjects")
+                print("5: Return")
                 usrInput = input("\n--> ")
                 usrInput = usrInput.strip()
 
@@ -455,7 +497,9 @@ def main():
                     makeGraph()
                 elif (usrInput == "3"):
                     emailGraph()
-                elif (usrInput == "4"):
+                elif(usrInput == "4"):
+                    createWaterLooSubject()
+                elif (usrInput == "5"):
                     break
                 else:
                     print ("Incorrect Input, Please try again. \n")

@@ -35,7 +35,7 @@ def displayGraph(graphName):
 
 	#print("here2")
 
-def drawGraph(graph, graphName):
+def drawGraph(graph, graphName, graphDir="./graphs/"):
 	"""write out graph to file formats
 
 	Args:
@@ -45,8 +45,8 @@ def drawGraph(graph, graphName):
 	graphName = graphName.replace('*', '')
 
 	graph.layout(prog='dot')
-	graph.write('./graphs/' + graphName + '.dot')
-	graph.draw('./graphs/' + graphName + '.pdf')
+	graph.write(graphDir + graphName + '.dot')
+	graph.draw(graphDir + graphName + '.pdf')
 
 
 def cleanUpString(string):
@@ -664,14 +664,15 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 					print("course = ", k['cCode'])
 					print("prereqs = ", k["prereqs"])
 					#add node for course
+                                        startIdx = k['cCode'].find("*")
 
-					if(k['cCode'][len(k) - 3] == '1'):
+					if(k['cCode'][startIdx+1] == '1'):
 						subject_graph.add_node(k['cCode'], color="red", shape="box")
-					elif(k['cCode'][len(k) - 3] == '2'):
+					elif(k['cCode'][startIdx+1] == '2'):
 						subject_graph.add_node(k['cCode'], color="orange", shape="box")
-					elif(k['cCode'][len(k) - 3] == '3'):
+					elif(k['cCode'][startIdx+1] == '3'):
 						subject_graph.add_node(k['cCode'], color="green", shape="box")
-					elif(k['cCode'][len(k) - 3] == '4'):
+					elif(k['cCode'][startIdx+1] == '4'):
 						subject_graph.add_node(k['cCode'], color="purple", shape="box")
 					else:
 						subject_graph.add_node(k['cCode'], shape="box")
