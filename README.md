@@ -1,11 +1,11 @@
-# W22_CIS3760_Team4 - Sprint 3
+# W22_CIS3760_Team4 - Sprint 4
 
 <!-- ABOUT SECTION -->
 ## About 
 
-Sprint 3 tasked us with adding additional features to the graph generation functionality that
-was created in Sprint 2. This addition feature included allow the user to create graphs for specified majors. On top of that we also added funcitonality for the user to create graphs for a
-specified minor and further refined many of the features that were implemented during Sprint 2.
+Sprint 4 tasked us with adding support for another University's course 
+catalog to our project. We decided to go with the University of Waterloos
+course database. 
 
 ### Prerequisites
 
