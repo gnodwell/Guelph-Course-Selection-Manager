@@ -15,6 +15,10 @@
 
 image: node:latest
 
+cache:
+  paths:
+    - scraper/node_modules/
+
 stages:          # List of stages for jobs, and their order of execution
   # - build
   - test
@@ -32,11 +36,11 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
-    # - cd scraper
-    # - npm install
-    # - npx playwright install-deps
-    # - cd tests
-    # - npx playwright test
+    - cd scraper
+    - npm install
+    - npx playwright install-deps
+    - cd tests
+    - npx playwright test
     # - python3 testFunctions.py
 
 # lint-test-job:   # This job also runs in the test stage.
