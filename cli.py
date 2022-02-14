@@ -160,22 +160,21 @@ def mergePDFs():
     """
 
     #print(glob.glob("./graphs/*"))
-    test = glob.glob("./graphs/*")
+    test = glob.glob("./graphs/waterlooSubjects/*")
     pdfs = []
     for x in test:
         if (x.find(".pdf") != -1):
-            if (x != "./graphs/Results.pdf"):
+            if (x != "./graphs/Waterloo.pdf"):
                 pdfs.append(x)
 
-    print(pdfs)
     merger = PdfFileMerger()
 
+    pdfs = sorted(pdfs)
     for pdf in pdfs:
         if (pdf):
             merger.append(pdf)
 
-    print("Writing")
-    merger.write("./graphs/Results.pdf")
+    merger.write("./graphs/Waterloo.pdf")
     merger.close()
 
     return True
@@ -434,6 +433,7 @@ def createWaterLooSubject():
                 gf.drawGraph(subject_graph, subjectToGraph, "./graphs/waterlooSubjects/")
 
 
+    mergePDFs()
 
 
 
