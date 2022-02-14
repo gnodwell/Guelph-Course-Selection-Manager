@@ -34,7 +34,7 @@ stages:          # List of stages for jobs, and their order of execution
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-    # - echo "Running unit tests..."
+    - echo "Running unit tests..."
     # - sudo apt-get install graphviz graphviz-dev
     # - pip install pygraphviz
     # - cd scraper
