@@ -1,5 +1,5 @@
 # Graph Guide
-All pdfs from Waterloo are compiled into 1 pdf: 'waterloo.pdf'
+All pdfs from Waterloo are compiled into 1 pdf: 'Waterloo.pdf'
 
 Nodes with different shapes:
 - Box: These courses are apart of the subject or major
