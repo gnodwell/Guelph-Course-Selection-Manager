@@ -664,8 +664,9 @@ def generateGraphBySubject(subject_graph, all_courses, subjectName, uni):
 				for k in subj["data"]:
 					print("course = ", k['cCode'])
 					print("prereqs = ", k["prereqs"])
+					
 					#add node for course
-                                        startIdx = k['cCode'].find("*")
+					startIdx = k['cCode'].find("*")
 
 					if(k['cCode'][startIdx+1] == '1'):
 						subject_graph.add_node(k['cCode'], color="red", shape="box")
