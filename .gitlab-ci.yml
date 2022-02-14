@@ -25,7 +25,6 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Compiling the code..."
     - echo "Compile complete."
-    - ./installationScripts/setup.sh
     # - sudo apt-get install graphviz graphviz-dev
     # - pip install pygraphviz
 
@@ -34,6 +33,8 @@ unit-test-job:   # This job runs in the test stage.
   script:
     - echo "Running unit tests..."
     - cd scraper/tests 
+    - ./installationScripts/setup.sh
+    - npm install -D @playwright/test
     - npx playwright test
     # - python3 testFunctions.py
 
