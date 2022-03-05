@@ -16,6 +16,7 @@ function App() {
           rel="noopener noreferrer"
         >
         More
+        </a>
         <p>sheeesh 🥶🥶</p>
       </header>
     </div>
