@@ -1,0 +1,34 @@
+strict digraph "" {
+	graph [bb="0,0,632,59",
+		label="Graph of Requisites for (HEALTH) (0)",
+		lheight=0.21,
+		lp="316,11.5",
+		lwidth=3.72
+	];
+	node [label="\N"];
+	"HEALTH*100"	[color=red,
+		height=0.5,
+		pos="56,41",
+		shape=box,
+		width=1.5556];
+	"HEALTH*105"	[color=red,
+		height=0.5,
+		pos="186,41",
+		shape=box,
+		width=1.5556];
+	"HEALTH*107"	[color=red,
+		height=0.5,
+		pos="316,41",
+		shape=box,
+		width=1.5556];
+	"HEALTH*150"	[color=red,
+		height=0.5,
+		pos="446,41",
+		shape=box,
+		width=1.5556];
+	"HEALTH*395"	[color=green,
+		height=0.5,
+		pos="576,41",
+		shape=box,
+		width=1.5556];
+}

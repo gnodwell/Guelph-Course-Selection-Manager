@@ -1,0 +1,43 @@
+strict digraph "" {
+	graph [bb="0,0,494,203",
+		label="Graph of Requisites for (INDENT) (2)",
+		lheight=0.21,
+		lp="247,11.5",
+		lwidth=3.69
+	];
+	node [label="\N"];
+	"INDENT*200"	[color=orange,
+		height=0.5,
+		pos="55,185",
+		shape=box,
+		width=1.5278];
+	"INDENT*210"	[color=orange,
+		height=0.5,
+		pos="183,185",
+		shape=box,
+		width=1.5278];
+	"INDENT*225"	[color=orange,
+		height=0.5,
+		pos="183,113",
+		shape=box,
+		width=1.5278];
+	"INDENT*210" -> "INDENT*225"	[color=orange,
+		pos="e,183,131.1 183,166.7 183,158.98 183,149.71 183,141.11"];
+	"INDENT*325"	[color=green,
+		height=0.5,
+		pos="183,41",
+		shape=box,
+		width=1.5278];
+	"INDENT*225" -> "INDENT*325"	[color=orange,
+		pos="e,183,59.104 183,94.697 183,86.983 183,77.712 183,69.112"];
+	"INDENT*310"	[color=green,
+		height=0.5,
+		pos="311,185",
+		shape=box,
+		width=1.5278];
+	"INDENT*320"	[color=green,
+		height=0.5,
+		pos="439,185",
+		shape=box,
+		width=1.5278];
+}

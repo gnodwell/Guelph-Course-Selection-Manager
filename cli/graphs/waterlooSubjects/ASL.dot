@@ -1,0 +1,25 @@
+strict digraph "" {
+	graph [bb="0,0,251,131",
+		label="Graph of Requisites for (ASL) (1)",
+		lheight=0.21,
+		lp="125.5,11.5",
+		lwidth=3.26
+	];
+	node [label="\N"];
+	"ASL*101R"	[color=red,
+		height=0.5,
+		pos="65.077,113",
+		shape=box,
+		width=1.2361];
+	"ASL*102R"	[color=red,
+		height=0.5,
+		pos="179.08,41",
+		shape=box,
+		width=1.2361];
+	"ASL*101"	[color=red,
+		height=0.5,
+		pos="179.08,113",
+		width=1.4263];
+	"ASL*101" -> "ASL*102R"	[color=red,
+		pos="e,179.08,59.104 179.08,94.697 179.08,86.983 179.08,77.712 179.08,69.112"];
+}

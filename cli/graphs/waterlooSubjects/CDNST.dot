@@ -1,0 +1,34 @@
+strict digraph "" {
+	graph [bb="0,0,587,59",
+		label="Graph of Requisites for (CDNST) (0)",
+		lheight=0.21,
+		lp="293.5,11.5",
+		lwidth=3.60
+	];
+	node [label="\N"];
+	"CDNST*101"	[color=red,
+		height=0.5,
+		pos="51.5,41",
+		shape=box,
+		width=1.4306];
+	"CDNST*201"	[color=orange,
+		height=0.5,
+		pos="172.5,41",
+		shape=box,
+		width=1.4306];
+	"CDNST*211"	[color=orange,
+		height=0.5,
+		pos="293.5,41",
+		shape=box,
+		width=1.4306];
+	"CDNST*212"	[color=orange,
+		height=0.5,
+		pos="414.5,41",
+		shape=box,
+		width=1.4306];
+	"CDNST*244"	[color=orange,
+		height=0.5,
+		pos="535.5,41",
+		shape=box,
+		width=1.4306];
+}

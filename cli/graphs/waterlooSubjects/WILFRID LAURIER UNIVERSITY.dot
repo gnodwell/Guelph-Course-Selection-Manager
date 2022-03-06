@@ -1,0 +1,13 @@
+strict digraph "" {
+	graph [bb="0,0,457,59",
+		label="Graph of Requisites for (WILFRID LAURIER UNIVERSITY) (0)",
+		lheight=0.21,
+		lp="228.5,11.5",
+		lwidth=6.12
+	];
+	node [label="\N"];
+	"BUS*-----"	[height=0.5,
+		pos="228.5,41",
+		shape=box,
+		width=1.0833];
+}

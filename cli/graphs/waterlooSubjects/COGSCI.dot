@@ -1,0 +1,20 @@
+strict digraph "" {
+	graph [bb="0,0,281,131",
+		label="Graph of Requisites for (COGSCI) (1)",
+		lheight=0.21,
+		lp="140.5,11.5",
+		lwidth=3.68
+	];
+	node [label="\N"];
+	"COGSCI*300"	[color=green,
+		height=0.5,
+		pos="140.5,41",
+		shape=box,
+		width=1.5139];
+	"PSYCH*256"	[color=orange,
+		height=0.5,
+		pos="140.5,113",
+		width=1.8234];
+	"PSYCH*256" -> "COGSCI*300"	[color=orange,
+		pos="e,140.5,59.104 140.5,94.697 140.5,86.983 140.5,77.712 140.5,69.112"];
+}

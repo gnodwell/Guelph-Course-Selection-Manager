@@ -1,0 +1,34 @@
+strict digraph "" {
+	graph [bb="0,0,517,59",
+		label="Graph of Requisites for (CMW) (0)",
+		lheight=0.21,
+		lp="258.5,11.5",
+		lwidth=3.40
+	];
+	node [label="\N"];
+	"CMW*201"	[color=orange,
+		height=0.5,
+		pos="44.5,41",
+		shape=box,
+		width=1.2361];
+	"CMW*202"	[color=orange,
+		height=0.5,
+		pos="151.5,41",
+		shape=box,
+		width=1.2361];
+	"CMW*363"	[color=green,
+		height=0.5,
+		pos="258.5,41",
+		shape=box,
+		width=1.2361];
+	"CMW*364"	[color=green,
+		height=0.5,
+		pos="365.5,41",
+		shape=box,
+		width=1.2361];
+	"CMW*390"	[color=green,
+		height=0.5,
+		pos="472.5,41",
+		shape=box,
+		width=1.2361];
+}

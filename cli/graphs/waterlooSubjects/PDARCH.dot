@@ -1,0 +1,32 @@
+strict digraph "" {
+	graph [bb="0,0,286,203",
+		label="Graph of Requisites for (PDARCH) (2)",
+		lheight=0.21,
+		lp="143,11.5",
+		lwidth=3.75
+	];
+	node [label="\N"];
+	"PDARCH*1"	[color=red,
+		height=0.5,
+		pos="143,185",
+		shape=box,
+		width=1.3333];
+	"PDARCH*2"	[color=orange,
+		height=0.5,
+		pos="86,113",
+		shape=box,
+		width=1.3333];
+	"PDARCH*1" -> "PDARCH*2"	[pos="e,99.928,131.1 128.91,166.7 122.08,158.3 113.74,148.07 106.24,138.86"];
+	"PDARCH*3"	[color=green,
+		height=0.5,
+		pos="200,113",
+		shape=box,
+		width=1.3333];
+	"PDARCH*1" -> "PDARCH*3"	[pos="e,186.07,131.1 157.09,166.7 163.92,158.3 172.26,148.07 179.76,138.86"];
+	"PDARCH*4"	[color=purple,
+		height=0.5,
+		pos="200,41",
+		shape=box,
+		width=1.3333];
+	"PDARCH*3" -> "PDARCH*4"	[pos="e,200,59.104 200,94.697 200,86.983 200,77.712 200,69.112"];
+}

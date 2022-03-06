@@ -1,0 +1,24 @@
+strict digraph "" {
+	graph [bb="0,0,333,59",
+		label="Graph of Requisites for (MENN) (0)",
+		lheight=0.21,
+		lp="166.5,11.5",
+		lwidth=3.54
+	];
+	node [label="\N"];
+	"MENN*125"	[color=red,
+		height=0.5,
+		pos="49.5,41",
+		shape=box,
+		width=1.375];
+	"MENN*390"	[color=green,
+		height=0.5,
+		pos="166.5,41",
+		shape=box,
+		width=1.375];
+	"MENN*397"	[color=green,
+		height=0.5,
+		pos="283.5,41",
+		shape=box,
+		width=1.375];
+}

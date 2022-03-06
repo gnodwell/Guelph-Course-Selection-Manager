@@ -1,0 +1,44 @@
+strict digraph "" {
+	graph [bb="0,0,836,59",
+		label="Graph of Requisites for (EMLS) (0)",
+		lheight=0.21,
+		lp="418,11.5",
+		lwidth=3.47
+	];
+	node [label="\N"];
+	"EMLS*101R"	[color=red,
+		height=0.5,
+		pos="52,41",
+		shape=box,
+		width=1.4444];
+	"EMLS*102R"	[color=red,
+		height=0.5,
+		pos="174,41",
+		shape=box,
+		width=1.4444];
+	"EMLS*103R"	[color=red,
+		height=0.5,
+		pos="296,41",
+		shape=box,
+		width=1.4444];
+	"EMLS*104R"	[color=red,
+		height=0.5,
+		pos="418,41",
+		shape=box,
+		width=1.4444];
+	"EMLS*105R"	[color=red,
+		height=0.5,
+		pos="540,41",
+		shape=box,
+		width=1.4444];
+	"EMLS*110R"	[color=red,
+		height=0.5,
+		pos="662,41",
+		shape=box,
+		width=1.4444];
+	"EMLS*129R"	[color=red,
+		height=0.5,
+		pos="784,41",
+		shape=box,
+		width=1.4444];
+}
