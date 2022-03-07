@@ -1,5 +1,9 @@
 echo "Starting installations"
 
+cd webapp
+
+cd front
+
 npm install jquery
 
 npm install bootstrap
