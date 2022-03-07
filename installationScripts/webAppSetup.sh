@@ -14,7 +14,7 @@ npm install -g create-react-app
 
 pip install -U Flask
 
-
+## get updates and install nginx
 sudo apt update
 sudo apt install nginx
 sudo ufw allow 'Nginx HTTP'		
