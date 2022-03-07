@@ -1,6 +1,6 @@
-scraper/package.json
-scraper/package.json
-scraper/package-lock.json
-scraper/package.json
+cli/scraper/package.json
+cli/scraper/package.json
+cli/scraper/package-lock.json
+cli/scraper/package.json
 __pycache__
 .vscode

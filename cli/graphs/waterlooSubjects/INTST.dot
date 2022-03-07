@@ -1,0 +1,14 @@
+strict digraph "" {
+	graph [bb="0,0,267,59",
+		label="Graph of Requisites for (INTST) (0)",
+		lheight=0.21,
+		lp="133.5,11.5",
+		lwidth=3.49
+	];
+	node [label="\N"];
+	"INTST*101"	[color=red,
+		height=0.5,
+		pos="133.5,41",
+		shape=box,
+		width=1.3194];
+}

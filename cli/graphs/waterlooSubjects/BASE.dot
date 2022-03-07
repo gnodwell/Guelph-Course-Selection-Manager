@@ -1,0 +1,39 @@
+strict digraph "" {
+	graph [bb="0,0,582,59",
+		label="Graph of Requisites for (BASE) (0)",
+		lheight=0.21,
+		lp="291,11.5",
+		lwidth=3.43
+	];
+	node [label="\N"];
+	"BASE*32"	[color=green,
+		height=0.5,
+		pos="41,41",
+		shape=box,
+		width=1.1389];
+	"BASE*34"	[color=green,
+		height=0.5,
+		pos="141,41",
+		shape=box,
+		width=1.1389];
+	"BASE*36"	[color=green,
+		height=0.5,
+		pos="241,41",
+		shape=box,
+		width=1.1389];
+	"BASE*42"	[color=purple,
+		height=0.5,
+		pos="341,41",
+		shape=box,
+		width=1.1389];
+	"BASE*44"	[color=purple,
+		height=0.5,
+		pos="441,41",
+		shape=box,
+		width=1.1389];
+	"BASE*46"	[color=purple,
+		height=0.5,
+		pos="541,41",
+		shape=box,
+		width=1.1389];
+}
