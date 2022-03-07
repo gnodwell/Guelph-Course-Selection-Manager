@@ -8,6 +8,8 @@ npm install jquery
 
 npm install bootstrap
 
+npm install @material-ui/core
+
 npm install -g create-react-app
 
 pip install -U Flask
