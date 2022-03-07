@@ -13,6 +13,9 @@ then
     cd scraper
     npm install
     cd ..
+    cd webapp
+    cd front
+    npm install
 
 
 elif [[ "$OS" == *"Darwin"* ]]
