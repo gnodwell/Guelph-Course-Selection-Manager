@@ -1,11 +1,9 @@
-# W22_CIS3760_Team4 - Sprint 4
+# W22_CIS3760_Team4 - Sprint 5
 
 <!-- ABOUT SECTION -->
 ## About 
 
-Sprint 4 tasked us with adding support for another University's course 
-catalog to our project. We decided to go with the University of Waterloos
-course database. 
+Sprint 5 involves setting up a web application using NGINX, React, Bootstrap, Flask and jQuery.
 
 ### Prerequisites
 
@@ -13,15 +11,21 @@ course database.
 -Python 3 (https://www.python.org/downloads/)
 -PlayWright (https://playwright.dev/)
 -PyGraphiz (https://pypi.org/project/pygraphviz/)
+-NGINX
+-React
+-Bootstrap
+-Flask
+-jQuery
 
 ### Installation
+#### LOCAL
 
 To install project:
 1. Download/clone the project folder to a compatible system.
 2. Navigate to root folder of project. 
 3. Run the "setup.sh" shell script by typing "./setup" in shell or terminal.
 
-Note: if an error occurs during step 3 ensure the script is executable by typing the command:
+NOTE: if an error occurs during step 3 ensure the script is executable by typing the command:
 "chmod +x setup.sh".
 
 Install PlayWright:
@@ -31,6 +35,17 @@ Install Graphviz and PyGraphiz:
 Ubuntu/Debian:
 1. "sudo apt-get install graphviz graphviz-dev" in shell.
 2. "pip install pygraphviz"
+
+#### WEB APP
+
+To setup web app:
+1. Navigate to root folder of project.
+2. Navigate to "installationScripts" folder.
+3. Navigate to "nginx_config" folder within "installationScripts" folder.
+4. Copy "self-signed.conf" and "ssl-params.conf" to NGINX "snippets" directory (usually located @ /etc/nginx/snippets/).
+5. Copy "131.104.49.104" and "default" to NGINX "sites-available directory" directory (usually located @ /etc/nginx/site-availible/) overwrite files if necessary.
+6. Run "webAppSetup.sh"
+
 
 
 ## Usage
@@ -49,4 +64,10 @@ To use the CLI tool:
 2. Navigate to root project folder.
 3. Type "python3 cli.py" to run program.
 4. Use the numbered menu to operate the CLI tool and follow the prompts to perform searchs.
+
+To use the Web Application:
+
+1. Start NGINX web server by typing "sudo systemctl start nginx".
+2. Using a browser navigate to "http://131.104.49.104/".
+2. Stop NGINX web server by typing "sudo systemctl stop nginx".
 
