@@ -2,6 +2,8 @@ echo "Starting installations"
 
 npm install jquery
 
+npm install bootstrap
+
 npm install -g create-react-app
 
 pip install -U Flask
