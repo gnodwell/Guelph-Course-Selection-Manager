@@ -19,7 +19,8 @@ then
     cd webapp
     cd front
     npm install
-    # in case npm install does not work?
+    
+    # in case node hits max space size
     # node --max-old-space-size=1000 $(which npm) install
 
 
