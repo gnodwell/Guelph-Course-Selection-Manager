@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
 
-        <Button onClick = {()=>alert('Hello!')} variant='contained' color='primary'>
+        <Button onClick = {()=>alert('Hello World!')} variant='contained' color='primary'>
           Hello World
         </Button>
         <p>
