@@ -19,6 +19,8 @@ then
     cd webapp
     cd front
     npm install
+    # in case npm install does not work?
+    # node --max-old-space-size=1000 $(which npm) install
 
 
 elif [[ "$OS" == *"Darwin"* ]]
