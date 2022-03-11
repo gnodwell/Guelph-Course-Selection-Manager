@@ -16,19 +16,19 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Create } from '@material-ui/icons';
 
 function App() {
-    const [courses, setCourses] = useState([])
-    const fetchCourses = async() => {
-        fetch('131.104.49.104:5000', {
-            'methods': 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            setCourses(response.json())
-            console.log(courses)})
-        .catch(error => console.log(error))
-    };
+    // const [courses, setCourses] = useState([])
+    // const fetchCourses = async() => {
+    //     fetch('131.104.49.104:5000', {
+    //         'methods': 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     .then(response => {
+    //         setCourses(response.json())
+    //         console.log(courses)})
+    //     .catch(error => console.log(error))
+    // };
 
   return (
     <Router>
