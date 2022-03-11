@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, jsonify, request
 import json
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def filter():
                     res.append(course)
 
     
-        return json.dumps(res)
+        return jsonify(res) 
 
 
 if __name__ == '__main__':
