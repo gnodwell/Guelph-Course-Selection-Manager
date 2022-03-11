@@ -1,47 +1,53 @@
 import logo from './logo.svg';
 import './App.css';
+import Home from './Pages/Home';
+import CreateGraphs from './Pages/CreateGraphs';
+import ErrorPage from './Pages/ErrorPage';
 
 import Button from '@material-ui/core/Button'
 import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import Typography from '@material-ui/core/Typography'
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Typography from '@material-ui/core/Typography';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { Create } from '@material-ui/icons';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <AppBar>
-          <Toolbar>
-            <IconButton>
-              <MenuIcon />
-            </IconButton>
-            <Typography variant='h6'>
-              CIS*3760 Team 4
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <img src={logo} className="App-logo" alt="logo" />
+    <Router>
+      <div className="App">
+        <header className="App-header">
 
-        <Button onClick = {()=>alert('Hello World!')} variant='contained' color='primary'>
-          Hello World
-        </Button>
-        
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-        More
-        </a>
-        <p>sheeesh 🥶🥶</p>
-      </header>
-    </div>
+          <AppBar>
+            <Toolbar>
+              <IconButton>
+                <MenuIcon />
+              </IconButton>
+
+            <Link to="/">
+              <Button type='button'>
+                Home  
+              </Button>  
+            </Link>
+            <Link to="/CreateGraphs">
+              <Button type='button'>
+                Create Graphs  
+              </Button>  
+            </Link>
+
+
+            </Toolbar>
+          </AppBar>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/CreateGraphs" element={<CreateGraphs />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+
+        </header>
+      </div>
+    </Router>
   );
 }
 
