@@ -3,6 +3,8 @@ import './App.css';
 import Home from './Pages/Home';
 import CreateGraphs from './Pages/CreateGraphs';
 import ErrorPage from './Pages/ErrorPage';
+import React, { useState, useEffect } from 'react';
+
 
 import Button from '@material-ui/core/Button'
 import AppBar from '@material-ui/core/AppBar'
@@ -14,6 +16,20 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Create } from '@material-ui/icons';
 
 function App() {
+    const [courses, setCourses] = useState([])
+    const fetchCourses = async() => {
+        fetch('131.104.49.104:5000', {
+            'methods': 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            setCourses(response.json())
+            console.log(courses)})
+        .catch(error => console.log(error))
+    };
+
   return (
     <Router>
       <div className="App">
@@ -48,6 +64,7 @@ function App() {
         </header>
       </div>
     </Router>
+
   );
 }
 
