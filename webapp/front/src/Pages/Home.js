@@ -25,16 +25,15 @@ function Home() {
 
             <img src={logo} className="App-logo" alt="logo" />
 
-
-        <Button onClick = {fetchCourses} variant='contained' color='primary'>
+            <Button onClick = {fetchCourses} variant='contained' color='primary'>
             Fetch Courses
-        </Button>
-        
-        {courses && <div>{
-          courses.map(course => (
-            <p key={course.cCode}>course code: {course.cCode}</p>
-        ))}
-        </div>}
+            </Button>
+            
+            {courses && <div>{
+            courses.map(course => (
+                <p key={course.cCode}>course code: {course.cCode}</p>
+            ))}
+            </div>}
         
         </div>
     );
