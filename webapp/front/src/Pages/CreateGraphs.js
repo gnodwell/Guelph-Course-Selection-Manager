@@ -1,7 +1,7 @@
 
 
 
-function graph() {
+function Graph() {
     return (
         <div className="CreateGraphs">
             <p>Hello From Graphs</p>
@@ -13,4 +13,4 @@ function graph() {
 }
 
 
-export default graph;
+export default Graph;
