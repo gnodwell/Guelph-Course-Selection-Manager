@@ -11,12 +11,17 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Divider from '@material-ui/core/Divider';
+import Zoom from '@material-ui/core/Zoom';
+
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Create } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles'
 import { withThemeCreator } from '@material-ui/styles';
+import { Menu, MenuItem } from '@material-ui/core';
+
 
 const useStyles = makeStyles({
   root: {
@@ -29,8 +34,22 @@ function MenuIconStyled() {
   return <MenuIcon className={classes.root} />
 }
 
-
 function App() {
+
+  //menu functionality
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  
+  const handleClose = () => {
+    setAnchorEl(null)
+  };
+
+  const openMenu = (event) => {
+    setAnchorEl(event.currentTarget)
+  };
+
+
+
+  //menu functionality
   
   return (
     <Router>
@@ -39,16 +58,32 @@ function App() {
 
           <AppBar>
             <Toolbar>
-              <IconButton>
+              <IconButton
+                id='zoom-button'
+                onClick={openMenu}>
                 <MenuIconStyled />
               </IconButton>
+              <Menu
+                id='zoom-menu'
+                MenuListProps={{
+                  'aria-labelledby': 'zoom-button',
+                }}
+                anchorEl={anchorEl}
+                open = {Boolean(anchorEl)}
+                onClose={handleClose}
+                TransitionComponent={Zoom}
+              >
+                <MenuItem onClick={handleClose}>Home</MenuItem>
+                <Divider variant='middle' />
+                <MenuItem onClick={handleClose}>Create Graph</MenuItem>
+              </Menu>
 
               <Link to="/">
                 <Button type='button' style={{color: 'white'}}>
                   Home  
                 </Button>  
               </Link>
-              
+
               <Link to="/CreateGraphs">
                 <Button type='button' style={{color: 'white'}}>
                   Create Graphs  
