@@ -11,6 +11,7 @@ function Home() {
     const fetchCourses = async() => {
         fetch('http://131.104.49.104:5000/', {
             'methods': 'GET',
+            referrerPolicy: "unsafe_url",
             headers: {
                 'Content-Type': 'application/json'
             }

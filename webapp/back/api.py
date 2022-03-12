@@ -1,10 +1,18 @@
 from flask import Flask, jsonify, request
 import json
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-    
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+# import ssl
+# context = ssl.SSLContext()
+# context.load_cert_chain('/etc/ssl/certs/nginx-selfsigned.crt','/etc/ssl/private/nginx-selfsigned.key')
 
 @app.route('/', methods=['GET'])
+@cross_origin()
+
 def filter():
     args = request.args
     filters = {}
@@ -46,4 +54,6 @@ def filter():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    context = ('/etc/ssl/certs/nginx-selfsigned.crt','/etc/ssl/private/nginx-selfsigned.key')
+    app.run(host='131.104.49.104', debug=True, ssl_context=context)
+    # app.run(host='0.0.0.0')
