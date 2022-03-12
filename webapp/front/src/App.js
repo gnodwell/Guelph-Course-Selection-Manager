@@ -73,9 +73,15 @@ function App() {
                 onClose={handleClose}
                 TransitionComponent={Zoom}
               >
-                <MenuItem onClick={handleClose}>Home</MenuItem>
+                <Link to="/" style={{textDecoration: 'none'}}>
+                  <MenuItem onClick={handleClose} style={{color: 'black'}}>Home</MenuItem>
+                </Link>
+                
                 <Divider variant='middle' />
-                <MenuItem onClick={handleClose}>Create Graph</MenuItem>
+                
+                <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
+                  <MenuItem onClick={handleClose} style={{color: 'black'}}>Create Graphs</MenuItem>
+                </Link>
               </Menu>
 
               <Link to="/">
