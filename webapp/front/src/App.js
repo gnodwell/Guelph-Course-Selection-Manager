@@ -15,6 +15,21 @@ import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Create } from '@material-ui/icons';
 
+import { makeStyles } from '@material-ui/core/styles'
+import { withThemeCreator } from '@material-ui/styles';
+
+const useStyles = makeStyles({
+  root: {
+    fill: 'white'
+  }
+})
+
+function MenuIconStyled() {
+  const classes = useStyles();
+  return <MenuIcon className={classes.root} />
+}
+
+
 function App() {
   
   return (
@@ -25,23 +40,23 @@ function App() {
           <AppBar>
             <Toolbar>
               <IconButton>
-                <MenuIcon />
+                <MenuIconStyled />
               </IconButton>
 
-            <Link to="/">
-              <Button type='button'>
-                Home  
-              </Button>  
-            </Link>
-            <Link to="/CreateGraphs">
-              <Button type='button'>
-                Create Graphs  
-              </Button>  
-            </Link>
-
-
+              <Link to="/">
+                <Button type='button' style={{color: 'white'}}>
+                  Home  
+                </Button>  
+              </Link>
+              
+              <Link to="/CreateGraphs">
+                <Button type='button' style={{color: 'white'}}>
+                  Create Graphs  
+                </Button>  
+              </Link>
             </Toolbar>
           </AppBar>
+          
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/CreateGraphs" element={<CreateGraphs />} />

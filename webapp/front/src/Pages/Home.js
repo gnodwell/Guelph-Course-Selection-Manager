@@ -11,7 +11,7 @@ function Home() {
     const fetchCourses = async() => {
         fetch('http://131.104.49.104:5000/', {
             'methods': 'GET',
-            referrerPolicy: "unsafe_url",
+            referrerPolicy: "unsafe-url",
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -26,6 +26,7 @@ function Home() {
 
             <img src={logo} className="App-logo" alt="logo" />
 
+            <br></br>
             <Button onClick = {fetchCourses} variant='contained' color='primary'>
             Fetch Courses
             </Button>
