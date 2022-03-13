@@ -84,13 +84,13 @@ function App() {
                 </Link>
               </Menu>
 
-              <Link to="/">
+              <Link to="/" style={{textDecoration: 'none'}}>
                 <Button type='button' style={{color: 'white'}}>
                   Home  
                 </Button>  
               </Link>
 
-              <Link to="/CreateGraphs">
+              <Link to="/CreateGraphs"style={{textDecoration: 'none'}}>
                 <Button type='button' style={{color: 'white'}}>
                   Create Graphs  
                 </Button>  
