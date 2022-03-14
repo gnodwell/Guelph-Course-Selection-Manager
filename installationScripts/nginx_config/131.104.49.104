@@ -15,6 +15,7 @@ server {
     include snippets/ssl-params.conf;
 
 	root /var/www/131.104.49.104/html;
+	# root /home/sysadmin/Gitlab/sprint6/w22_cis3760_team4/webapp/front/build;
 
 	# Add index.php to the list if you are using PHP
 	index index.html index.htm index.nginx-debian.html;
@@ -24,26 +25,12 @@ server {
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
+		# root /var/www/131.104.49.104/html;
 		try_files $uri $uri/ =404;
 	}
+
+	location /api {
+		include uwsgi_params;
+	        uwsgi_pass unix:/home/sysadmin/Gitlab/sprint6/w22_cis3760_team4/webapp/back/api.sock;
+	}
 }
-
-
-# Virtual Host configuration for example.com
-#
-# You can move that to a different file under sites-available/ and symlink that
-# to sites-enabled/ to enable it.
-#
-#server {
-#	listen 80;
-#	listen [::]:80;
-#
-#	server_name example.com;
-#
-#	root /var/www/example.com;
-#	index index.html;
-#
-#	location / {
-#		try_files $uri $uri/ =404;
-#	}
-#}

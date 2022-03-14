@@ -50,9 +50,9 @@ NOTE: if an error occurs during step 3 ensure the script is executable by typing
 1. Navigate to root webapp/back/ folder of project.
 2. Open api.ini with text-editor.
 3. Change chdir value to be the path to the "back" folder on your machine" (Ex: "chdir = {project_director}/w22_cis3760_team4/webapp/back/" without quotations in file).
-
-{project_directory} is the path to the directory which you have the project in.
-
+*{project_directory} is the path to the directory which you have the project in.*
+4. Within the same directory of api.ini, create and save a new file that will process all web requests sent - api.sock
+5. Copy "api.service" to NGINX "system directory" directory (usually located @ /etc/systemd/system/) overwrite files if necessary.
 
 <!-- USAGE SECTION -->
 ## Usage
@@ -77,10 +77,5 @@ course data form the UofG course descriptions website.
 
 ###### Back-End (uWSGI & Flask):
 1. Start uWSGI server by typing "sudo systemctl start api".
-2. Using a browser navigate to "http://131.104.49.104:5000" to view the API data.
+2. Using a browser navigate to "http://131.104.49.104/api" to view the API data.
 3. Stop uWSGI server by typing "sudo systemctl stop api".
-
-NOTE: when viewing the api @ "http://131.104.49.104:5000" this will only be accessible when you are on the same local network as the machine that is running the uWSGI server. 
-
-
-

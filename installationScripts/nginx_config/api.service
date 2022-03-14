@@ -1,0 +1,12 @@
+[Unit]
+Description = uWSGI instance to serve webapp/back/api
+After = network.target
+
+[Service]
+User = sysadmin
+Group = www-data
+WorkingDirectory = /home/sysadmin/Gitlab/sprint6/w22_cis3760_team4/webapp/back
+ExecStart = /home/sysadmin/.local/bin/uwsgi --ini api.ini
+
+[Install]
+WantedBy = multi-user.target
