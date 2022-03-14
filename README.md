@@ -1,9 +1,9 @@
-# W22_CIS3760_Team4 - Sprint 5
+# W22_CIS3760_Team4 - Sprint 6
 
 <!-- ABOUT SECTION -->
 ## About 
 
-Sprint 5 involves setting up a web application using NGINX, React, Bootstrap, Flask and jQuery.
+Sprint 6 involves setting up flask integration as an API with our NGINX-hosted web application.
 
 ### Prerequisites
 
@@ -38,7 +38,8 @@ Ubuntu/Debian:
 
 #### WEB APP
 
-To setup web app:
+
+Front-End Setup:
 1. Navigate to root folder of project.
 2. Navigate to "installationScripts" folder.
 3. Navigate to "nginx_config" folder within "installationScripts" folder.
@@ -46,6 +47,12 @@ To setup web app:
 5. Copy "131.104.49.104" and "default" to NGINX "sites-available directory" directory (usually located @ /etc/nginx/site-availible/) overwrite files if necessary.
 6. Run "webAppSetup.sh"
 
+Back-End Setup:
+1. Navigate to root webapp/back/ folder of project.
+2. Open api.ini with text-editor.
+3. Change chdir value to be the path to the "back" folder on your machine" (Ex: "chdir = {project_director}/w22_cis3760_team4/webapp/back/" without quotations in file).
+
+{project_directory} is the path to the directory which you have the project in.
 
 
 ## Usage
@@ -67,7 +74,17 @@ To use the CLI tool:
 
 To use the Web Application:
 
+Front-End:
 1. Start NGINX web server by typing "sudo systemctl start nginx".
-2. Using a browser navigate to "http://131.104.49.104/".
-2. Stop NGINX web server by typing "sudo systemctl stop nginx".
+2. Using a browser navigate to "https://131.104.49.104/".
+3. Stop NGINX web server by typing "sudo systemctl stop nginx".
+
+Back-End (uWSGI & Flask):
+1. Start uWSGI server by typing "sudo systemctl start api".
+2. Using a browser navigate to "http://131.104.49.104:5000" to view the API data.
+3. Stop uWSGI server by typing "sudo systemctl stop api".
+
+NOTE: when viewing the api @ "http://131.104.49.104:5000" this will only be accessible when you are on the same local network as the machine that is running the uWSGI server. 
+
+
 
