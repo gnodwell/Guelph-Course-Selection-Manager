@@ -1,5 +1,7 @@
 echo "Starting installations"
 
+cd ../
+
 cd webapp
 
 cd front
@@ -9,6 +11,12 @@ npm install jquery
 npm install bootstrap
 
 npm install @material-ui/core
+npm install @material-ui/icons
+
+npm install react-router-dom
+
+
+npm install react-d3-tree
 
 npm install -g create-react-app
 
