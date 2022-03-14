@@ -10,7 +10,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # context = ssl.SSLContext()
 # context.load_cert_chain('/etc/ssl/certs/nginx-selfsigned.crt','/etc/ssl/private/nginx-selfsigned.key')
 
-@app.route('/', methods=['GET'])
+@app.route('/api', methods=['GET'])
 @cross_origin()
 
 def filter():
@@ -55,5 +55,5 @@ def filter():
 
 if __name__ == '__main__':
     context = ('/etc/ssl/certs/nginx-selfsigned.crt','/etc/ssl/private/nginx-selfsigned.key')
-    app.run(host='131.104.49.104', debug=True, ssl_context=context)
-    # app.run(host='0.0.0.0')
+    # app.run(host='131.104.49.104', debug=True, ssl_context=context)
+    app.run(host='0.0.0.0', debug=True, ssl_context=context)
