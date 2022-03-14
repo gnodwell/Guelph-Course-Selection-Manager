@@ -4,16 +4,19 @@ import Typography from '@material-ui/core/Typography';
 //temporarily add the mock data set this way
 import data from '../Data/mockdataset.json';
 import { useState } from 'react';
-import { useRef } from 'react';
+// import { useRef } from 'react';
 
 function Graph() {
 
+    //creating a state
     const [graph, setGraphData] = useState(null)
 
+    //function to update the graph div
     function addGraph() {
         setGraphData(data)
     }
 
+    //function to clear the graph div
     function clearGraph() {
         setGraphData(null)
     }
@@ -32,8 +35,10 @@ function Graph() {
 
             <Typography>Graph of CIS*3760</Typography>
 
+            {/*Graph div*/}
             <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px'}}>
                 {(() => {
+                    //function to create the tree graph
                     if (graph != null) {
                         return (
                             <Tree
