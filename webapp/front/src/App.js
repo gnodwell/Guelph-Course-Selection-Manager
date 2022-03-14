@@ -23,16 +23,7 @@ import { withThemeCreator } from '@material-ui/styles';
 import { Menu, MenuItem } from '@material-ui/core';
 
 
-const useStyles = makeStyles({
-  root: {
-    fill: 'white'
-  }
-})
 
-function MenuIconStyled() {
-  const classes = useStyles();
-  return <MenuIcon className={classes.root} />
-}
 
 function App() {
 
@@ -47,8 +38,16 @@ function App() {
     setAnchorEl(event.currentTarget)
   };
 
-
-
+  const useStyles = makeStyles({
+    root: {
+      fill: 'white'
+    }
+  })
+  
+  function MenuIconStyled() {
+    const classes = useStyles();
+    return <MenuIcon className={classes.root} />
+  }
   //menu functionality
   
   return (

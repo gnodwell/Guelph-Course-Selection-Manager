@@ -1,0 +1,101 @@
+{
+    "name": "CIS*3760",
+    "children": [
+        {
+            "name": "CIS*3750",
+            "children": [
+                {"name": "9.00 credits"},
+                {
+                    "name": "CIS*2520",
+                    "children": [
+                        {
+                            "name": "OR",
+                            "children": [
+                                {"name": "ENGG*1420"},
+                                {
+                                    "name": "CIS*2500",
+                                    "children": [
+                                        {"name": "CIS*1300"}
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "1 OF",
+                            "children": [
+                                {"name": "CIS*1910"},
+                                {"name": "ENGG*1500"},
+                                {"name": "MATH*1200"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "OR",
+                    "children": [
+                        {"name": "ENGG*1420"},
+                        {
+                            "name": "CIS*2430",
+                            "children": [
+                                {
+                                    "name": "CIS*2500",
+                                    "children": [
+                                        {"name": "CIS*1300"}
+                                    ]
+                                }
+                            ]
+                        }
+
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "CIS*2750",
+            "children": [
+                {
+                    "name": "CIS*2520",
+                    "children": [
+                        {
+                            "name": "OR",
+                            "children": [
+                                {"name": "ENGG*1420"},
+                                {
+                                    "name": "CIS*2500",
+                                    "children": [
+                                        {"name": "CIS*1300"}
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "1 OF",
+                            "children": [
+                                {"name": "CIS*1910"},
+                                {"name": "ENGG*1500"},
+                                {"name": "MATH*1200"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "OR",
+                    "children": [
+                        {"name": "ENGG*1420"},
+                        {
+                            "name": "CIS*2430",
+                            "children": [
+                                {
+                                    "name": "CIS*2500",
+                                    "children": [
+                                        {"name": "CIS*1300"}
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
