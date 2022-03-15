@@ -9,7 +9,7 @@ function Home() {
     const [courses, setCourses] = useState([])
 
     const fetchCourses = async() => {
-        fetch('http://131.104.49.104:5000/', {
+        fetch('https://131.104.49.104/api', {
             'methods': 'GET',
             referrerPolicy: "unsafe-url",
             headers: {
