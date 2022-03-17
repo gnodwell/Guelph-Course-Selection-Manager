@@ -10,7 +10,8 @@ function Home() {
 
     const fetchCourses = async() => {
         fetch('https://131.104.49.104/api', {
-            'methods': 'GET',
+            method: 'POST',
+            body: JSON.stringify({}),
             referrerPolicy: "unsafe-url",
             headers: {
                 'Content-Type': 'application/json'
