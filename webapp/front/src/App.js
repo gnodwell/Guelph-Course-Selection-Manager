@@ -16,7 +16,7 @@ import Zoom from '@material-ui/core/Zoom';
 
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { Create } from '@material-ui/icons';
+import { ContactlessOutlined, Create } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles'
 import { withThemeCreator } from '@material-ui/styles';
@@ -29,6 +29,7 @@ function App() {
 
   //menu functionality
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [page, setPage] = React.useState('Home')
   
   const handleClose = () => {
     setAnchorEl(null)
@@ -84,15 +85,38 @@ function App() {
               </Menu>
 
               <Link to="/" style={{textDecoration: 'none'}}>
-                <Button type='button' style={{color: 'white'}}>
-                  Home  
-                </Button>  
+                {(() => {
+                  if(window.location.pathname === "/") {
+                    return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
+                              Home  
+                            </Button>
+                    )
+                  } else {
+                    return (<Button type='button' style={{color: 'white'}}>
+                              Home  
+                            </Button>
+                    )
+                  }
+
+                })()}
+                  
               </Link>
 
-              <Link to="/CreateGraphs"style={{textDecoration: 'none'}}>
-                <Button type='button' style={{color: 'white'}}>
-                  Create Graphs  
-                </Button>  
+              <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
+                {(() => {
+                  if(window.location.pathname === "/CreateGraphs") {
+                    return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
+                              Create Graphs  
+                            </Button>
+                    )
+                  } else {
+                    return (<Button type='button' style={{color: 'white'}}>
+                              Create Graphs  
+                            </Button>
+                    )
+                  }
+
+                })()} 
               </Link>
             </Toolbar>
           </AppBar>
