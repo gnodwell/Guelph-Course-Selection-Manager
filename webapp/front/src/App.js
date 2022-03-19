@@ -79,14 +79,13 @@ function App() {
                 </Link>
 
                 <Divider variant='middle' />
-
-                <Link to="/#/CourseSearch" style={{textDecoration: 'none'}}>
+                <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
                   <MenuItem onClick={handleClose} style={{color: 'black'}}>CourseSearch</MenuItem>
                 </Link>
                 
                 <Divider variant='middle' />
                 
-                <Link to="/#/CreateGraphs" style={{textDecoration: 'none'}}>
+                <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
                   <MenuItem onClick={handleClose} style={{color: 'black'}}>Create Graphs</MenuItem>
                 </Link>
               </Menu>
@@ -110,9 +109,9 @@ function App() {
               </Link>
 
 
-              <Link to="/#/CourseSearch" style={{textDecoration: 'none'}}>
+              <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
                 {(() => {
-                  if(window.location.pathname === "/#/CourseSearch") {
+                  if(window.location.pathname === "/CourseSearch") {
                     return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
                               Course Search 
                             </Button>
@@ -128,9 +127,9 @@ function App() {
               </Link>
 
 
-              <Link to="/#/CreateGraphs" style={{textDecoration: 'none'}}>
+              <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
                 {(() => {
-                  if(window.location.pathname === "/#/CreateGraphs") {
+                  if(window.location.pathname === "/CreateGraphs") {
                     return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
                               Create Graphs  
                             </Button>
