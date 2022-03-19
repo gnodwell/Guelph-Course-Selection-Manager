@@ -26,7 +26,11 @@ server {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
 		# root /var/www/131.104.49.104/html;
-		try_files $uri $uri/ =404;
+		#try_files $uri $uri/ =404;
+
+        if (!-e $request_filename){
+            rewrite ^(.*)$ /index.html break;
+        }
 	}
 
 	location /api {
