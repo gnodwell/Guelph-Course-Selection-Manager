@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Home from './Pages/Home';
 import CreateGraphs from './Pages/CreateGraphs';
+import CourseSearch from './Pages/CourseSearch'
 import ErrorPage from './Pages/ErrorPage';
 import React, { useState, useEffect } from 'react';
 
@@ -76,6 +77,12 @@ function App() {
                 <Link to="/" style={{textDecoration: 'none'}}>
                   <MenuItem onClick={handleClose} style={{color: 'black'}}>Home</MenuItem>
                 </Link>
+
+                <Divider variant='middle' />
+
+                <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
+                  <MenuItem onClick={handleClose} style={{color: 'black'}}>CourseSearch</MenuItem>
+                </Link>
                 
                 <Divider variant='middle' />
                 
@@ -102,6 +109,25 @@ function App() {
                   
               </Link>
 
+
+              <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
+                {(() => {
+                  if(window.location.pathname === "/CourseSearch") {
+                    return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
+                              Course Search 
+                            </Button>
+                    )
+                  } else {
+                    return (<Button type='button' style={{color: 'white'}}>
+                              Course Search  
+                            </Button>
+                    )
+                  }
+
+                })()} 
+              </Link>
+
+
               <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
                 {(() => {
                   if(window.location.pathname === "/CreateGraphs") {
@@ -124,6 +150,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/CreateGraphs" element={<CreateGraphs />} />
+            <Route path="/CourseSearch" element={<CourseSearch />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
 
