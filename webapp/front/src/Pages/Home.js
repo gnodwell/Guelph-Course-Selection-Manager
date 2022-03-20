@@ -1,6 +1,7 @@
 import Button from '@material-ui/core/Button'
 import logo from '../logo.svg';
 import React, { useState, useEffect } from 'react';
+import { Typography } from '@material-ui/core';
 
 
 
@@ -12,6 +13,7 @@ function Home() {
 
             <img src={logo} className="App-logo" alt="logo" />
 
+            <Typography>Navigate to pages using the menu bar!</Typography>
         </div>
     );
 }

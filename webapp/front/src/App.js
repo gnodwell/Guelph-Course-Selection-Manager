@@ -45,6 +45,11 @@ function App() {
       fill: 'white'
     }
   })
+
+  const updatePage = (event) => {
+    const newPage = event.target.to.split("/")
+    setPage(newPage)
+  }
   
   function MenuIconStyled() {
     const classes = useStyles();
@@ -90,7 +95,7 @@ function App() {
                 </Link>
               </Menu>
 
-              <Link to="/" style={{textDecoration: 'none'}}>
+              <Link to="/" onClick={updatePage} style={{textDecoration: 'none'}}>
                 {(() => {
                   if(window.location.pathname === "/") {
                     return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
@@ -109,7 +114,7 @@ function App() {
               </Link>
 
 
-              <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
+              <Link to="/CourseSearch" onClick={updatePage} style={{textDecoration: 'none'}}>
                 {(() => {
                   if(window.location.pathname === "/CourseSearch") {
                     return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
@@ -127,7 +132,7 @@ function App() {
               </Link>
 
 
-              <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
+              <Link to="/CreateGraphs" onClick={updatePage} style={{textDecoration: 'none'}}>
                 {(() => {
                   if(window.location.pathname === "/CreateGraphs") {
                     return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
