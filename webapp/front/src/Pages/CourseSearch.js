@@ -8,19 +8,33 @@ import Zoom from '@material-ui/core/Zoom';
 import { ArrowDropDown } from '@material-ui/icons';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 
-
-
-
 function Home() {
     const [courses, setCourses] = useState([])
     const [filters, setFilters] = useState({})
     const [anchorElSem, setAnchorElSem] = useState(null)
     const [anchorElCr, setAnchorElCr] = useState(null)
     const [anchorElLv, setAnchorElLv] = useState(null)
+    const [anchorElDept, setAnchorElDept] = useState(null)
+    const [depts, setDepts] = useState([])
+
+    useEffect( async () => {
+        await getDepartments()
+    }, [])
+
+    const getDepartments = async() => {
+        fetch('https://131.104.49.104/api/getDepartments', {
+            method: 'GET',
+            referrerPolicy: 'unsafe-url'
+        })
+        .then(res => res.json())
+        .then(data => setDepts(data))
+        .catch(error => console.log(error))
+    }
 
     const fetchCourses = async() => {
         console.log(filters)
-
+        
+        //if server is taking a long time to fetch then run the api locally
         fetch('https://131.104.49.104/api', {
             method: 'POST',
             body: JSON.stringify(filters),
@@ -45,26 +59,30 @@ function Home() {
         } else {
             setFilters(values => ({...values, [name]: value}))
         }
-        
-        
     }
 
-    const handleCloseSem = async(event) => {
+    const handleCloseSem = (event) => {
         //add the semester to the filters
         updateFilters(event, 1)
         setAnchorElSem(null)
     }
 
-    const handleCloseCr = async(event) => {
+    const handleCloseCr = (event) => {
         //add the credit weight to the filters
         updateFilters(event, 2)
         setAnchorElCr(null)
     }
 
-    const handleCloseLv = async(event) => {
+    const handleCloseLv = (event) => {
         //add the semester to the filters
         updateFilters(event, 3)
         setAnchorElLv(null)
+    }
+
+    const handleCloseDept = (event) => {
+        //add the semester to the filters
+        updateFilters(event, 4)
+        setAnchorElDept(null)
     }
 
     const openMenuSem = (event) => {
@@ -79,26 +97,67 @@ function Home() {
         setAnchorElLv(event.currentTarget)
     }
 
+    const openMenuDept = (event) => {
+        setAnchorElDept(event.currentTarget)
+    }
+
+    function checkIfInArray (array, item) {
+        for(let i = 0; i < array.length; i++) {
+            if (array[i] === item) {
+                return(1)
+            }
+        }
+        return(0)
+    }
+
     function updateFilters (event, mode) {
         //updating either the semester, credit or level attr. based on the mode
+        var isIn = 0
         if (mode === 1) {
             if (filters.semesters === undefined) {
                 setFilters(values => ({...values, ['semesters']: [event.target.innerText]}))
             } else {
-                setFilters(values => ({...values, ['semesters']: [...filters.semesters, event.target.innerText]}))
+                //check if filter already exists
+                isIn = checkIfInArray(filters.semesters, event.target.innerText)
+                
+                if (isIn === 0) {
+                    setFilters(values => ({...values, ['semesters']: [...filters.semesters, event.target.innerText]}))
+                }
             }
         } else if (mode === 2) {
             if (filters.creditWeight === undefined) {
                 setFilters(values => ({...values, ['creditWeight']: [event.target.innerText]}))
             } else {
-                setFilters(values => ({...values, ['creditWeight']: [...filters.creditWeight, event.target.innerText]}))
+                //check if filter already exists
+                isIn = checkIfInArray(filters.creditWeight, event.target.innerText)
+
+                if (isIn === 0) {
+                    setFilters(values => ({...values, ['creditWeight']: [...filters.creditWeight, event.target.innerText]}))
+                }
             }
         } else if (mode === 3) {
-            const val = event.target.value.toString()
+            const val = event.target.value?.toString()
             if (filters.level === undefined) {
                 setFilters(values => ({...values, ['level']: [val]}))
             } else {
-                setFilters(values => ({...values, ['level']: [...filters.level, val]}))
+                //check if filter already exists
+                isIn = checkIfInArray(filters.level, val)
+
+                if (isIn === 0) {
+                    setFilters(values => ({...values, ['level']: [...filters.level, val]}))
+                }
+            }
+        } else if (mode === 4) {
+            const val = event.target.innerText
+            if (filters.department === undefined) {
+                setFilters(values => ({...values, ['department']: [val]}))
+            } else {
+                //check if filter already exists
+                isIn = checkIfInArray(filters.department, val)
+
+                if (isIn === 0) {
+                    setFilters(values => ({...values, ['department']: [...filters.department, val]}))
+                }
             }
         }
     }
@@ -145,7 +204,7 @@ function Home() {
                             type='text'
                             name="prereqs"
                             value={filters.prereqs || ""}
-                            placeholder='ex: cis*2750, cis*3750'
+                            placeholder='ex: CIS*2750, CIS*3750'
                             onChange={handleChange}
                         />
                     </label>
@@ -157,7 +216,7 @@ function Home() {
                             type='text'
                             name="coreqs"
                             value={filters.coreqs || ""}
-                            placeholder='ex: cis*2750, cis*3750'
+                            placeholder='ex: CIS*2750, CIS*3750'
                             onChange={handleChange}
                         />
                     </label>
@@ -222,7 +281,7 @@ function Home() {
                         <ArrowDropDown style={{fill: 'white'}}/>
                     </Button>
                     <Menu
-                        id='credit-menu'
+                        id='level-menu'
                         anchorEl={anchorElLv}
                         open={Boolean(anchorElLv)}
                         onClose={handleCloseLv}
@@ -233,20 +292,57 @@ function Home() {
                         <MenuItem onClick={handleCloseLv} value='3'>3000</MenuItem>
                         <MenuItem onClick={handleCloseLv} value='4'>4000</MenuItem>
                     </Menu>
+
+                    <Button
+                        id='dept-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuDept}
+                    >
+                        Department
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='dept-menu'
+                        anchorEl={anchorElDept}
+                        open={Boolean(anchorElDept)}
+                        onClose={handleCloseDept}
+                        TransitionComponent={Zoom}
+                    >
+                        { depts.map(dept => (
+                            <MenuItem key={dept} onClick={handleCloseDept}>{dept}</MenuItem>
+                        ))}
+                    </Menu>
                 </div>
-                
+            </div>
+
+            {/* function to display currently applied filters */}
+            <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px'}}>
+                {filters && <div>{
+                    Object.entries(filters).map(filter => {
+                        return (
+                            <div key={filter}>
+                                <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p>
+                                    {filter[1].map(f => (
+                                    <p key={f} style={{color: 'black'}}>{f}</p>
+                                ))}
+                            </div>
+                        )
+                    })
+                }
+                </div>}
             </div>
 
             <Button onClick = {fetchCourses} variant='contained' color='primary'>
-                Fetch Courses
+                Search Courses
             </Button>
-            
+
             {/* function to display the fetched data in a table */}
             {(() => {
                 if (courses.length > 0) {
                     return (
                         <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', maxHeight: '400px', maxWidth:'73%'}}>
-                            
                             <TableContainer component={Paper}>
                                 <Table>
                                     <TableHead>
@@ -255,6 +351,8 @@ function Home() {
                                             <TableCell>Credits</TableCell>
                                             <TableCell>Title</TableCell>
                                             <TableCell>Description</TableCell>
+                                            <TableCell>Semester</TableCell>
+                                            <TableCell>Department</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -267,6 +365,8 @@ function Home() {
                                                 <TableCell>{course.creditWeight}</TableCell>
                                                 <TableCell>{course.name}</TableCell>
                                                 <TableCell>{course.description}</TableCell>
+                                                <TableCell>{course.semesters}</TableCell>
+                                                <TableCell>{course.department}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -276,7 +376,6 @@ function Home() {
                     )
                 }
             })()}
-            
         </div>
     );
 }
