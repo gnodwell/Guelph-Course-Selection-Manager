@@ -39,6 +39,34 @@
   display: flex;
 }
 
+.flex_div {
+  display: flex;
+  flex-direction: row;
+  /* align-items: flex-start; */
+  flex-wrap: wrap;
+}
+
+.flex_item_sm {
+  flex-grow: 3;
+  flex-basis: auto;
+  margin: 5px;
+  width: 30%;
+  text-align: left;
+}
+
+.flex_item_md {
+  flex-grow: 3;
+  flex-basis: auto;
+  margin: 5px;
+  width: 75%;
+  text-align: left;
+}
+
+.input_field {
+  border-radius: 7px;
+  width: 100%;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

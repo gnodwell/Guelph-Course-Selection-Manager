@@ -25,11 +25,11 @@ function Graph() {
         <div className="CreateGraphs">
             <p>Hello From Graphs</p>
             
-            <Button onClick = {addGraph} variant='contained' color='primary'>
+            <Button onClick = {addGraph} variant='contained' color='primary' style={{margin: '5px'}}>
                 Generate Graph
             </Button>
 
-            <Button onClick = {clearGraph} variant='contained' color='primary'>
+            <Button onClick = {clearGraph} variant='contained' color='primary' style={{margin: '5px'}}>
                 Clear Graph
             </Button>
 
