@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@materi
 
 
 
-
 function Home() {
     const [courses, setCourses] = useState([])
     const [filters, setFilters] = useState({})
