@@ -16,8 +16,11 @@ function Home() {
     const [filters, setFilters] = useState({})
     const [anchorElSem, setAnchorElSem] = useState(null)
     const [anchorElCr, setAnchorElCr] = useState(null)
+    const [anchorElLv, setAnchorElLv] = useState(null)
 
     const fetchCourses = async() => {
+        console.log(filters)
+
         fetch('https://131.104.49.104/api', {
             method: 'POST',
             body: JSON.stringify(filters),
@@ -58,6 +61,12 @@ function Home() {
         setAnchorElCr(null)
     }
 
+    const handleCloseLv = async(event) => {
+        //add the semester to the filters
+        updateFilters(event, 3)
+        setAnchorElLv(null)
+    }
+
     const openMenuSem = (event) => {
         setAnchorElSem(event.currentTarget)
     }
@@ -66,8 +75,12 @@ function Home() {
         setAnchorElCr(event.currentTarget)
     }
 
+    const openMenuLv = (event) => {
+        setAnchorElLv(event.currentTarget)
+    }
+
     function updateFilters (event, mode) {
-        //updating either the semester or credit attr. based on the mode
+        //updating either the semester, credit or level attr. based on the mode
         if (mode === 1) {
             if (filters.semesters === undefined) {
                 setFilters(values => ({...values, ['semesters']: [event.target.innerText]}))
@@ -79,6 +92,13 @@ function Home() {
                 setFilters(values => ({...values, ['creditWeight']: [event.target.innerText]}))
             } else {
                 setFilters(values => ({...values, ['creditWeight']: [...filters.creditWeight, event.target.innerText]}))
+            }
+        } else if (mode === 3) {
+            const val = event.target.value.toString()
+            if (filters.level === undefined) {
+                setFilters(values => ({...values, ['level']: [val]}))
+            } else {
+                setFilters(values => ({...values, ['level']: [...filters.level, val]}))
             }
         }
     }
@@ -189,6 +209,29 @@ function Home() {
                         <MenuItem onClick={handleCloseCr}>1.00</MenuItem>
                         <MenuItem onClick={handleCloseCr}>1.25</MenuItem>
                         <MenuItem onClick={handleCloseCr}>1.50</MenuItem>
+                    </Menu>
+
+                    <Button
+                        id='level-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuLv}
+                    >
+                        Course Level
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='credit-menu'
+                        anchorEl={anchorElLv}
+                        open={Boolean(anchorElLv)}
+                        onClose={handleCloseLv}
+                        TransitionComponent={Zoom}
+                    >
+                        <MenuItem onClick={handleCloseLv} value='1'>1000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='2'>2000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='3'>3000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='4'>4000</MenuItem>
                     </Menu>
                 </div>
                 
