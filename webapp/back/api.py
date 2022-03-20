@@ -12,7 +12,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/api', methods=['POST'])
 @cross_origin()
-
 def filter():
     filters = request.get_json()
 
@@ -27,8 +26,17 @@ def filter():
                 add = True
                 #loop through filters
                 for k, v in filters.items():
+
+                    #special case for if key is for course level
+                    if k.lower() == 'level':
+                        levelIndex = course['cCode'].find('*')
+
+                        if course['cCode'][levelIndex+1] != v:
+                            add = False
+                            break
+
                     #if filter comes in as a list, then loop through the list
-                    if isinstance(v, list):
+                    elif isinstance(v, list):
                         for vItem in v:
                             #if course does not match the filter value, don't add course
                             #checks if the filter exists and the course doesn't have a value for that filter or if the filter exists but the course dosn't match
@@ -50,6 +58,30 @@ def filter():
 
     
         return jsonify(res) 
+
+@app.route('/api/getDepartments', methods=['GET'])
+@cross_origin()
+def getDepartments():
+
+    #open data.json file
+    with open('data.json', 'r') as f:
+        res = set()
+        data = json.load(f)
+
+        #loop through department
+        for department in data:
+            #loop through courses in department
+            for course in department['title']:
+                res.add(course['department'])
+
+        res.remove(None)
+        return jsonify(list(res))
+
+@app.route('/api/createCourseGraph', methods=['POST'])
+@cross_origin()
+def createCourseGraph():
+    
+    department = request.get_json()
 
 
 if __name__ == '__main__':
