@@ -27,28 +27,42 @@ def filter():
                 #loop through filters
                 for k, v in filters.items():
 
-                    #special case for if key is for course level
-                    if k.lower() == 'level':
-                        levelIndex = course['cCode'].find('*')
+                    
 
-                        if course['cCode'][levelIndex+1] != v:
+                    #if filter comes in as a list, then loop through the list
+                    if isinstance(v, list):
+                        addFlag2 = False
+                        for vItem in v:
+                            #special case for if key is for course level
+                            if k.lower() == 'level':
+                                levelIndex = course['cCode'].find('*')
+
+                                if course['cCode'][levelIndex+1] == vItem:
+                                    addFlag2 = True
+                                    break
+
+                            #if course does not match the filter value, don't add course
+                            #checks if the filter exists and the course doesn't have a value for that filter or if the filter exists but the course dosn't match
+                            elif course[k] and vItem and vItem.lower() in course[k].lower():
+                                addFlag2 = True
+                                break
+
+                        if not addFlag2:
                             add = False
                             break
 
-                    #if filter comes in as a list, then loop through the list
-                    elif isinstance(v, list):
-                        for vItem in v:
-                            #if course does not match the filter value, don't add course
-                            #checks if the filter exists and the course doesn't have a value for that filter or if the filter exists but the course dosn't match
-                            if (vItem and not course[k]) or (vItem and vItem.lower() not in course[k].lower()):
-                                add = False
-                                break
-
                     #else, just check filter
                     else:
+                        #special case for if key is for course level
+                        if k.lower() == 'level':
+                            levelIndex = course['cCode'].find('*')
+
+                            if course['cCode'][levelIndex+1] != v:
+                                add = False
+                                break
                         #if course does not match the filter value, don't add course
                         #checks if the filter exists and the course doesn't have a value for that filter or if the filter exists but the course dosn't match
-                        if (v and not course[k]) or (v and v.lower() not in course[k].lower()):
+                        elif (v and not course[k]) or (v and v.lower() not in course[k].lower()):
                             add = False
                             break
                 
