@@ -2,11 +2,7 @@
 
 <!-- ABOUT SECTION -->
 ## About 
-<<<<<<< HEAD
-Sprint 7 involves adding course searching functionality to our web-application.
-=======
 Sprint 7 involves adding course searching funcitonality to our web-application.
->>>>>>> 764ab76bd3c647550e1792db3b0a3d9f6d2f73ac
 
 ### Prerequisites
 -NodeJS (https://nodejs.dev/)
@@ -27,11 +23,7 @@ Sprint 7 involves adding course searching funcitonality to our web-application.
 ###### To install project:
 1. Download/clone the project folder to a compatible system.
 2. Navigate to root folder of project. 
-<<<<<<< HEAD
-3. Navigate to "installationScripts" folder.
-=======
 3. Navigate to "installationScripts" folder of project.
->>>>>>> 764ab76bd3c647550e1792db3b0a3d9f6d2f73ac
 4. Run the "setup.sh" shell script by typing "./setup" in shell or terminal.
 
 NOTE: if an error occurs during step 3 ensure the script is executable by typing the command:
