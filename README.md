@@ -85,6 +85,6 @@ course data form the UofG course descriptions website.
 1. Navigate web-app by clicking "HOME", "COURSE SEARCH" or "CREATE GRAPHS" tab located at top of page.
 2. On the "Course Search" page enter in textboxes desired requirements and press "SEARCH COURSES". The drop-down filters can also be used.
 
-####### NOTE: When entering input in the "Course Pre-requisites" or "Course Co-requisites" boxes, the course codes must be seperate by commas.
+##### NOTE: When entering input in the "Course Pre-requisites" or "Course Co-requisites" boxes, the course codes must be seperate by commas.
 
 3. On the "Create Graph" page click either "GENERATE GRAPH" to show an example graph or "CLEAR GRAPH" to clear the graph.
