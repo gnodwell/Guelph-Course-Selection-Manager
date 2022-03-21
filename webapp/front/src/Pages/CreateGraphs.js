@@ -39,7 +39,7 @@ function Graph() {
                 Clear Graph
             </Button>
 
-            <Button
+            {/* <Button
                         id='sel-graph-button'
                         style={{color: 'white', margin: '5px'}}
                         variant='contained'
@@ -65,7 +65,7 @@ function Graph() {
                         <MenuItem onClick={handleCloseGraph}>
                             G3
                         </MenuItem>
-                    </Menu>
+                    </Menu> */}
                     
             <Typography>Graph of CIS*3760</Typography>
 
