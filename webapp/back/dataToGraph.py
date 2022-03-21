@@ -13,6 +13,16 @@ def getMajorCode(major):
     return major[major.find('(')+1:-1]
 
 def getPrereqs(course, data):
+    """retrieve course prereqs in string format
+
+    Args:
+        course (String): course to find prereqs for
+        data (List): course data from course's department
+
+    Returns:
+        None | String: course prereqs
+    """
+
     if '*' not in course:
         return None    
 
@@ -23,6 +33,15 @@ def getPrereqs(course, data):
     return None
 
 def getNodes(prereqs):
+    """get all the to-be-added-node prereqs from string
+
+    Args:
+        prereqs (String): course prereqs
+
+    Returns:
+        List: all prereqs as nodes to be added
+    """
+
     if not prereqs:
         return []
 
@@ -38,23 +57,52 @@ def getNodes(prereqs):
     return reqsList
 
 def addNodes(node, curr, data):
+    """recursively add prereq courses to course's prereqs
+
+    Args:
+        node (String): current course being built
+        curr (Dictionary): current course's information
+        data (List): course data from course's department
+
+    Returns:
+        Dictionary: current course's updated information
+    """
+
     curr["name"] = node
     prereqs = getPrereqs(node, data)
-    if not prereqs:
+    if not prereqs: # prereqs does not exist for given course, return just name
         return curr
     
     curr["children"] = []
     nodes = getNodes(prereqs)
     for node in nodes:
+        # recursively search for course child's prereqs
         child = addNodes(node, {}, data)
+        # add prereqs of current course to its children list
         curr["children"].append(child)
 
     return curr
 
 def createGraphJSON(course, data):
+    """wrapper for addNodes, called on root course
+
+    Args:
+        course (String): course given to build
+        data (List): course data from course's department
+
+    Returns:
+        Dictionary: root course's updated information
+    """
+
     return addNodes(course, {}, data)
 
 def generateDataset(course):
+    """create graph json to be passed to front-end
+
+    Args:
+        course (String): course to build
+    """
+
     with open('data.json', 'r') as f:
         data = json.load(f)
 
