@@ -74,13 +74,13 @@ function Home() {
     }
 
     const handleCloseLv = (event) => {
-        //add the semester to the filters
+        //add the level to the filters
         updateFilters(event, 3)
         setAnchorElLv(null)
     }
 
     const handleCloseDept = (event) => {
-        //add the semester to the filters
+        //add the department to the filters
         updateFilters(event, 4)
         setAnchorElDept(null)
     }
@@ -324,14 +324,25 @@ function Home() {
                         return (
                             <div key={filter}>
                                 <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p>
-                                    {filter[1].map(f => (
-                                    <p key={f} style={{color: 'black'}}>{f}</p>
-                                ))}
+                                    {(() => {
+                                        // if the filter is an array, then traverse it's indexes
+                                        //otherwise just return it
+                                        if (Array.isArray(filter[1])) {
+                                            return(
+                                                <div>{
+                                                    filter[1].map((f) => (
+                                                        <p key={f} style={{color: 'black'}}>{f}</p>
+                                                    ))
+                                                }</div>
+                                            )
+                                        } else {
+                                            return(<p key={filter[1]} style={{color: 'black'}}>{filter[1]}</p>)
+                                        }
+                                    })()}
                             </div>
                         )
                     })
-                }
-                </div>}
+                }</div>}
             </div>
 
             <Button onClick = {fetchCourses} variant='contained' color='primary'>
