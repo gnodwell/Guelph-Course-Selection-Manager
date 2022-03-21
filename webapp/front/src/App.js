@@ -85,7 +85,7 @@ function App() {
 
                 <Divider variant='middle' />
                 <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
-                  <MenuItem onClick={handleClose} style={{color: 'black'}}>CourseSearch</MenuItem>
+                  <MenuItem onClick={handleClose} style={{color: 'black'}}>Course Search</MenuItem>
                 </Link>
                 
                 <Divider variant='middle' />

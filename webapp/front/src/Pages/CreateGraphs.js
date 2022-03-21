@@ -8,8 +8,10 @@ import { useState } from 'react';
 
 function Graph() {
 
+
     //creating a state
     const [graph, setGraphData] = useState(null)
+    
 
     //function to update the graph div
     function addGraph() {
@@ -19,6 +21,10 @@ function Graph() {
     //function to clear the graph div
     function clearGraph() {
         setGraphData(null)
+    }
+
+    const handleCloseGraph = async(event) => {
+        
     }
 
     return (
@@ -33,6 +39,34 @@ function Graph() {
                 Clear Graph
             </Button>
 
+            <Button
+                        id='sel-graph-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuSem}
+                    >
+                        Graph Name
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='sel-graph-menu'
+                        anchorEl={anchorElSem}
+                        open={Boolean(anchorElSem)}
+                        onClose={handleCloseGraph}
+                        TransitionComponent={Zoom}
+                    >
+                        <MenuItem onClick={handleCloseGraph}>
+                            G1
+                        </MenuItem>
+                        <MenuItem onClick={handleCloseGraph}>
+                            G2
+                        </MenuItem>
+                        <MenuItem onClick={handleCloseGraph}>
+                            G3
+                        </MenuItem>
+                    </Menu>
+                    
             <Typography>Graph of CIS*3760</Typography>
 
             {/*Graph div*/}
@@ -57,7 +91,7 @@ function Graph() {
         
         </div>
     );
+    
 }
-
 
 export default Graph;

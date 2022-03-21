@@ -1,8 +1,8 @@
-# W22_CIS3760_Team4 - Sprint 6
+# W22_CIS3760_Team4 - Sprint 7
 
 <!-- ABOUT SECTION -->
 ## About 
-Sprint 6 involves setting up flask integration as an API with our NGINX-hosted web application.
+Sprint 7 involves adding course searching functionality to our web-application.
 
 ### Prerequisites
 -NodeJS (https://nodejs.dev/)
@@ -23,7 +23,8 @@ Sprint 6 involves setting up flask integration as an API with our NGINX-hosted w
 ###### To install project:
 1. Download/clone the project folder to a compatible system.
 2. Navigate to root folder of project. 
-3. Run the "setup.sh" shell script by typing "./setup" in shell or terminal.
+3. Navigate to "installationScripts" folder.
+4. Run the "setup.sh" shell script by typing "./setup" in shell or terminal.
 
 NOTE: if an error occurs during step 3 ensure the script is executable by typing the command:
 "chmod +x setup.sh".
