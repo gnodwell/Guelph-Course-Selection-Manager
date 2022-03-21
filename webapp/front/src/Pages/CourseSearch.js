@@ -353,7 +353,7 @@ function Home() {
             {(() => {
                 if (courses.length > 0) {
                     return (
-                        <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', maxHeight: '400px', maxWidth:'73%'}}>
+                        <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', maxHeight: '400px', maxWidth:'85%'}}>
                             <TableContainer component={Paper}>
                                 <Table>
                                     <TableHead>
@@ -364,6 +364,7 @@ function Home() {
                                             <TableCell>Description</TableCell>
                                             <TableCell>Semester</TableCell>
                                             <TableCell>Department</TableCell>
+                                            <TableCell>Pre-requisites</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -378,6 +379,7 @@ function Home() {
                                                 <TableCell>{course.description}</TableCell>
                                                 <TableCell>{course.semesters}</TableCell>
                                                 <TableCell>{course.department}</TableCell>
+                                                <TableCell>{course.prereqs}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
