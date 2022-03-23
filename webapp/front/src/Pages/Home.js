@@ -1,7 +1,6 @@
-import Button from '@material-ui/core/Button'
 import logo from '../logo.svg';
 import React, { useState, useEffect } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material/';
 
 // import * as React from 'react';
 // import { styled, useTheme } from '@mui/material/styles';

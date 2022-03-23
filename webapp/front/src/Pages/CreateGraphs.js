@@ -1,6 +1,6 @@
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import Tree from 'react-d3-tree';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 //temporarily add the mock data set this way
 import data from '../Data/mockdataset.json';
 import { useState } from 'react';

@@ -1,12 +1,12 @@
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button';
 import logo from '../logo.svg';
 import React, { useState, useEffect } from 'react';
-import { Divider, IconButton, TableContainer, Typography } from '@material-ui/core';
-import { Menu } from '@material-ui/core/';
-import { MenuItem } from '@material-ui/core';
-import Zoom from '@material-ui/core/Zoom';
-import { ArrowDropDown } from '@material-ui/icons';
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
+import { Divider, IconButton, TableContainer, Typography } from '@mui/material/';
+import { Menu } from '@mui/material/';
+import { MenuItem } from '@mui/material/';
+import Zoom from '@mui/material/Zoom';
+import { ArrowDropDown } from '@mui/icons-material/';
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material/';
 
 function Home() {
     const [courses, setCourses] = useState([])
@@ -329,7 +329,7 @@ function Home() {
                                         //otherwise just return it
                                         if (Array.isArray(filter[1])) {
                                             return(
-                                                <div>{
+                                                <div key={filter[1]}>{
                                                     filter[1].map((f) => (
                                                         <p key={f} style={{color: 'black'}}>{f}</p>
                                                     ))
