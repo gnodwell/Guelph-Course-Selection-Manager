@@ -77,7 +77,7 @@ def generateDataset(subject):
     """
 
     #open relations.json and load it in
-    with open('../../cli/courseGraphFunctions/relations.json', 'r') as f:
+    with open('relations.json', 'r') as f:
         relations = json.load(f)
 
     graphJSON = createGraphJSON(relations[subject])
