@@ -1,0 +1,169 @@
+[
+    {
+        "title": "Area of Concentration (General Program)",
+        "desc": [
+            "A minimum of 5.00 credits is required, including:"
+        ],
+        "table": [
+            {
+                "courses": [
+                    "POLS*1150",
+                    "POLS*2300",
+                    "PHIL*2280 or POLS*2000",
+                    "Select 0.50 credits from the following:",
+                    "IDEV*2000",
+                    "POLS*2100",
+                    "POLS*2200",
+                    "Select 0.50 credits from the following:",
+                    "POLS*2150",
+                    "POLS*2230",
+                    "POLS*2250",
+                    "POLS*2350"
+                ],
+                "credits": 2.5
+            }
+        ],
+        "lists": [],
+        "footnotes": []
+    },
+    {
+        "title": "Major (Honours Program)",
+        "desc": [
+            "A minimum of 9.00 credits is required, including:",
+            "\n4000 level courses that fulfill the writing and research intensive course requirement:",
+            "Students interested in pursuing graduate or professional studies related to Political Science are encouraged to consider taking the POLS*4970 Honours Political Science Research I/POLS*4980 Honours Political Science Research II Honours Thesis sequence. Interested students must obtain instructor consent in order to register for this option."
+        ],
+        "table": [
+            {
+                "courses": [
+                    "POLS*1150",
+                    "POLS*2300",
+                    "POLS*2650",
+                    "POLS*3650",
+                    "PHIL*2280 or POLS*2000",
+                    "Select 0.50 credits from the following:",
+                    "IDEV*2000",
+                    "POLS*2100",
+                    "POLS*2200",
+                    "Select 0.50 credits from the following:",
+                    "POLS*2150",
+                    "POLS*2230",
+                    "POLS*2250",
+                    "POLS*2350",
+                    "At least 0.50 credits at the 3000 level in three of the five fields in the department"
+                ],
+                "credits": 4
+            },
+            {
+                "courses": [
+                    "POLS*4020",
+                    "POLS*4050",
+                    "POLS*4070",
+                    "POLS*4090",
+                    "POLS*4100",
+                    "POLS*4110",
+                    "POLS*4140",
+                    "POLS*4160",
+                    "POLS*4170",
+                    "POLS*4200",
+                    "POLS*4250",
+                    "POLS*4260",
+                    "POLS*4300",
+                    "POLS*4340",
+                    "POLS*4710",
+                    "POLS*4720",
+                    "POLS*4730",
+                    "POLS*4740",
+                    "POLS*4900"
+                ],
+                "credits": 0
+            }
+        ],
+        "lists": [],
+        "footnotes": [
+            [
+                "Must include one course from the 1.00 credit-weighted research and writing intensive seminar courses or the two courses which comprise the POLS*4970 Honours Political Science Research I/POLS*4980 Honours Political Science Research II Honours Thesis sequence.",
+                "A maximum of 2.00 credits at the 4000 level may be counted towards a major in Political Science."
+            ]
+        ]
+    },
+    {
+        "title": "Minor (Honours Program)",
+        "desc": [
+            "A minimum of 5.00 credits is required, including:",
+            "Choices for fulfillment of prerequisites for 4000 level courses (see course descriptions for corresponding requirements).",
+            "The Department of Political Science offers an academic advising service for students in Political Science.",
+            "Students are encouraged to consult with the faculty advisor for either of these programs about course selection, substitution of courses offered by other departments, or other matters."
+        ],
+        "table": [
+            {
+                "courses": [
+                    "POLS*1150",
+                    "POLS*2300",
+                    "POLS*2650",
+                    "PHIL*2280 or POLS*2000",
+                    "Select 0.50 credits from the following:",
+                    "IDEV*2000",
+                    "POLS*2100",
+                    "POLS*2200",
+                    "Select 0.50 credits from the following:",
+                    "POLS*2150",
+                    "POLS*2230",
+                    "POLS*2250",
+                    "POLS*2350"
+                ],
+                "credits": 2
+            },
+            {
+                "courses": [
+                    "Political Thought",
+                    "POLS*3230",
+                    "POLS*3710",
+                    "Canadian Politics",
+                    "HIST*3160",
+                    "POLS*3050",
+                    "POLS*3130",
+                    "POLS*3140",
+                    "POLS*3210",
+                    "POLS*3270",
+                    "POLS*3340",
+                    "POLS*3470",
+                    "Public Policy, Governance and Law",
+                    "POLS*3130",
+                    "POLS*3140",
+                    "POLS*3210",
+                    "POLS*3250",
+                    "POLS*3300",
+                    "POLS*3350",
+                    "POLS*3370",
+                    "POLS*3440",
+                    "POLS*3470",
+                    "POLS*3670",
+                    "POLS*3710",
+                    "Comparative Politics",
+                    "POLS*3000",
+                    "POLS*3060",
+                    "POLS*3080",
+                    "POLS*3160",
+                    "POLS*3320",
+                    "POLS*3350",
+                    "POLS*3410",
+                    "POLS*3440",
+                    "POLS*3450",
+                    "POLS*3670",
+                    "POLS*3890",
+                    "POLS*3920",
+                    "International Relations and Global Studies",
+                    "POLS*3020",
+                    "POLS*3160",
+                    "POLS*3320",
+                    "POLS*3490",
+                    "POLS*3790"
+                ],
+                "credits": 0
+            }
+        ],
+        "lists": [],
+        "footnotes": []
+    }
+]
