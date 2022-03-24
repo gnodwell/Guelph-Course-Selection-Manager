@@ -155,18 +155,18 @@ def createMajorMinorGraph(majorCode):
         return {}
     print('a')
     #search folder for file with major
-    majorJson = searchFiles('../../cli/scraper/majorPages/includes/', '(' + majorCode + ')')
+    majorJson = searchFiles('includes/', '(' + majorCode + ')')
     print(majorJson)
     if not majorJson:
         return {}
 
     print('b')
     #open file and load data
-    with open('../../cli/scraper/majorPages/includes/' + majorJson, 'r') as f:
+    with open('includes/' + majorJson, 'r') as f:
         data = json.load(f)
 
     #open relations.json and load it in
-    with open('../../cli/courseGraphFunctions/relations.json', 'r') as f:
+    with open('relations.json', 'r') as f:
         relations = json.load(f)
 
     #get all the courses in the major/minor
