@@ -84,8 +84,8 @@ def getMajorMinorCourses(data, majorMinor):
                     regex = r"[a-zA-Z]+[*][0-9]+"
 
                     #checks if the entry is a course code and not just a description
-                    if re.search(regex, course):
-                        coursesToGraph.append(course)
+                    for c in re.findall(regex, course):
+                        coursesToGraph.append(c)
 
     return coursesToGraph
 
@@ -150,16 +150,17 @@ def createMajorMinorGraph(majorCode):
     Returns:
         Dict: d3 graph in json format
     """
-
+    print(majorCode)
     if not majorCode:
         return {}
-
+    print('a')
     #search folder for file with major
     majorJson = searchFiles('../../cli/scraper/majorPages/includes/', '(' + majorCode + ')')
-
+    print(majorJson)
     if not majorJson:
         return {}
 
+    print('b')
     #open file and load data
     with open('../../cli/scraper/majorPages/includes/' + majorJson, 'r') as f:
         data = json.load(f)
