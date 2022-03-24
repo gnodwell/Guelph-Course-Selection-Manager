@@ -3,6 +3,7 @@ import json
 from flask_cors import CORS, cross_origin
 import dataToGraph as courseGraphs
 import createMajorGraphs as majorGraphs
+import createSubjectGraphs as subjectGraphs
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -108,6 +109,18 @@ def createMajorGraph():
 
     #create graph
     graphJson = majorGraphs.createMajorMinorGraph(major['major'])
+
+    return jsonify(graphJson)
+
+@app.route('/api/createSubjectGraph', methods=['POST'])
+@cross_origin()
+def createSubjectGraph():
+
+    #get the subject
+    subject = request.get_json()
+
+    #create graph
+    graphJson = subjectGraphs.generateDataset(subject['subject'])
 
     return jsonify(graphJson)
 
