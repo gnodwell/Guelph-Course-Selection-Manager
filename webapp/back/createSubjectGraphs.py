@@ -53,7 +53,6 @@ def createGraphJSON(subject):
                 nodes.append(
                     {
                         "id": p,
-                        "symbolType": "square"
                     }
                 )
 
@@ -82,9 +81,10 @@ def generateDataset(subject):
         return {}
 
     #open relations.json and load it in
-    with open('relations.json', 'r') as f:
+    with open('relations.json', 'r', encoding='utf-8') as f:
         relations = json.load(f)
 
+    subject = subject.upper()
     graphJSON = createGraphJSON(relations[subject])
 
     # file = json.dumps(graphJSON, indent=4)
