@@ -1,0 +1,214 @@
+{
+    "nodes": [
+        {
+            "id": "CIS*1300",
+            "name": "CIS*1300"
+        },
+        {
+            "id": "CIS*1910",
+            "name": "CIS*1910"
+        },
+        {
+            "id": "MATH*1200",
+            "name": "MATH*1200"
+        },
+        {
+            "id": "CIS*2500",
+            "name": "CIS*2500"
+        },
+        {
+            "id": "CIS*2910",
+            "name": "CIS*2910"
+        },
+        {
+            "id": "MATH*1160",
+            "name": "MATH*1160"
+        },
+        {
+            "id": "CIS*2030",
+            "name": "CIS*2030"
+        },
+        {
+            "id": "CIS*2430",
+            "name": "CIS*2430"
+        },
+        {
+            "id": "CIS*2520",
+            "name": "CIS*2520"
+        },
+        {
+            "id": "CIS*2750",
+            "name": "CIS*2750"
+        },
+        {
+            "id": "CIS*3110",
+            "name": "CIS*3110"
+        },
+        {
+            "id": "CIS*3490",
+            "name": "CIS*3490"
+        },
+        {
+            "id": "CIS*3150",
+            "name": "CIS*3150"
+        },
+        {
+            "id": "CIS*3750",
+            "name": "CIS*3750"
+        },
+        {
+            "id": "STAT*2040",
+            "name": "STAT*2040"
+        },
+        {
+            "id": "CIS*3760",
+            "name": "CIS*3760"
+        },
+        {
+            "id": "CIS*4650",
+            "name": "CIS*4650"
+        }
+    ],
+    "links": [
+        {
+            "source": "CIS*1300",
+            "target": "CIS*2500"
+        },
+        {
+            "source": "CIS*1300",
+            "target": "CIS*2910"
+        },
+        {
+            "source": "ENGG*1410",
+            "target": "CIS*2910"
+        },
+        {
+            "source": "CIS*1910",
+            "target": "CIS*2910"
+        },
+        {
+            "source": "ENGG*1500",
+            "target": "CIS*2910"
+        },
+        {
+            "source": "CIS*1910",
+            "target": "CIS*2030"
+        },
+        {
+            "source": "CIS*2500",
+            "target": "CIS*2030"
+        },
+        {
+            "source": "CIS*2500",
+            "target": "CIS*2430"
+        },
+        {
+            "source": "CIS*2500",
+            "target": "CIS*2520"
+        },
+        {
+            "source": "ENGG*1420",
+            "target": "CIS*2520"
+        },
+        {
+            "source": "CIS*1910",
+            "target": "CIS*2520"
+        },
+        {
+            "source": "ENGG*1500",
+            "target": "CIS*2520"
+        },
+        {
+            "source": "MATH*2000",
+            "target": "CIS*2520"
+        },
+        {
+            "source": "CIS*2520",
+            "target": "CIS*2750"
+        },
+        {
+            "source": "CIS*2430",
+            "target": "CIS*2750"
+        },
+        {
+            "source": "ENGG*1420",
+            "target": "CIS*2750"
+        },
+        {
+            "source": "CIS*2520",
+            "target": "CIS*3110"
+        },
+        {
+            "source": "CIS*2030",
+            "target": "CIS*3110"
+        },
+        {
+            "source": "ENGG*2410",
+            "target": "CIS*3110"
+        },
+        {
+            "source": "CIS*1910",
+            "target": "CIS*3490"
+        },
+        {
+            "source": "CIS*2910",
+            "target": "CIS*3490"
+        },
+        {
+            "source": "ENGG*1500",
+            "target": "CIS*3490"
+        },
+        {
+            "source": "CIS*2520",
+            "target": "CIS*3490"
+        },
+        {
+            "source": "CIS*2750",
+            "target": "CIS*3150"
+        },
+        {
+            "source": "CIS*3490",
+            "target": "CIS*3150"
+        },
+        {
+            "source": "9.00 credits",
+            "target": "CIS*3750"
+        },
+        {
+            "source": "CIS*2520",
+            "target": "CIS*3750"
+        },
+        {
+            "source": "CIS*2430",
+            "target": "CIS*3750"
+        },
+        {
+            "source": "ENGG*1420",
+            "target": "CIS*3750"
+        },
+        {
+            "source": "MATH*1080",
+            "target": "STAT*2040"
+        },
+        {
+            "source": "CIS*2750",
+            "target": "CIS*3760"
+        },
+        {
+            "source": "CIS*3750",
+            "target": "CIS*3760"
+        },
+        {
+            "source": "CIS*2030",
+            "target": "CIS*4650"
+        },
+        {
+            "source": "CIS*3110",
+            "target": "CIS*4650"
+        },
+        {
+            "source": "CIS*3150",
+            "target": "CIS*4650"
+        }
+    ]
+}
