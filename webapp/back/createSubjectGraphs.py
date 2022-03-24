@@ -74,7 +74,12 @@ def generateDataset(subject):
 
     Args:
         subject (String): subject to build
+
+    Returns:
+        Dict: d3 graph in json format
     """
+    if not subject:
+        return {}
 
     #open relations.json and load it in
     with open('relations.json', 'r') as f:
@@ -82,9 +87,11 @@ def generateDataset(subject):
 
     graphJSON = createGraphJSON(relations[subject])
 
-    file = json.dumps(graphJSON, indent=4)
-    with open("subjectGraph.json", "w") as f:
-        f.write(file)
+    # file = json.dumps(graphJSON, indent=4)
+    # with open("subjectGraph.json", "w") as f:
+    #     f.write(file)
+
+    return graphJSON
 
 if __name__ == "__main__":
     generateDataset('CIS')
