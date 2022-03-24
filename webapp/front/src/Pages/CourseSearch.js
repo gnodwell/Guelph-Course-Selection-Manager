@@ -7,6 +7,7 @@ import { MenuItem } from '@mui/material/';
 import Zoom from '@mui/material/Zoom';
 import { ArrowDropDown } from '@mui/icons-material/';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material/';
+import { Close } from '@mui/icons-material/';
 
 function Home() {
     const [courses, setCourses] = useState([])
@@ -51,37 +52,48 @@ function Home() {
     const handleChange = (event) => {
         const name = event.target.name
         const value = event.target.value
-        
+        console.log(value)
         //allows user to enter multiple courses separated by commas
-        if (name === 'prereqs' || name === 'coreqs') {
-            const vals = value.split(",")
-            setFilters(values => ({...values, [name]: vals}))
-        } else {
-            setFilters(values => ({...values, [name]: value}))
+        if (value != "" && value != null) {
+            if (name === 'prereqs' || name === 'coreqs') {
+                const vals = value.split(",")
+                setFilters(values => ({...values, [name]: vals}))
+            } else {
+                setFilters(values => ({...values, [name]: value}))
+            }
         }
+        
     }
 
     const handleCloseSem = (event) => {
         //add the semester to the filters
-        updateFilters(event, 1)
+        if (event.currentTarget.innerText != "") {
+            updateFilters(event, 1)
+        }
         setAnchorElSem(null)
     }
 
     const handleCloseCr = (event) => {
         //add the credit weight to the filters
-        updateFilters(event, 2)
+        if (event.currentTarget.innerText != "") {
+            updateFilters(event, 2)
+        }
         setAnchorElCr(null)
     }
 
     const handleCloseLv = (event) => {
         //add the level to the filters
-        updateFilters(event, 3)
+        if (event.currentTarget.value != null) {
+            updateFilters(event, 3)
+        }
         setAnchorElLv(null)
     }
 
     const handleCloseDept = (event) => {
         //add the department to the filters
-        updateFilters(event, 4)
+        if (event.currentTarget.innerText != null && event.currentTarget.innerText != "") {
+            updateFilters(event, 4)
+        }
         setAnchorElDept(null)
     }
 
@@ -108,6 +120,30 @@ function Home() {
             }
         }
         return(0)
+    }
+
+    const removeFilter = (event)  => {
+        console.log(event.currentTarget.id)
+        const arr = event.currentTarget.id.split(":")
+        console.log(arr)
+
+        const tempObj = filters
+        console.log(tempObj)
+        const tempFilters = tempObj[arr[0]]
+        console.log(tempFilters)
+
+
+        if (Array.isArray(tempFilters)) {
+            if(tempFilters.includes(arr[1])){
+                var newFilters = tempFilters.filter((f) => {return f != arr[1]})
+                //tempFilters.pop(arr[1])
+            }
+            //console.log(tempFilters)
+            setFilters(values => ({...values, [arr[0]]: newFilters}))
+        } else {
+            setFilters(values => ({...values, [arr[0]]: null}))
+        }
+        
     }
 
     function updateFilters (event, mode) {
@@ -323,7 +359,7 @@ function Home() {
                     Object.entries(filters).map(filter => {
                         return (
                             <div key={filter}>
-                                <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p>
+                                {/* <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p> */}
                                     {(() => {
                                         // if the filter is an array, then traverse it's indexes
                                         //otherwise just return it
@@ -331,12 +367,27 @@ function Home() {
                                             return(
                                                 <div key={filter[1]}>{
                                                     filter[1].map((f) => (
-                                                        <p key={f} style={{color: 'black'}}>{f}</p>
+                                                        <Button key={f} style={{color: 'black', fontSize: '18px'}}>
+                                                            {filter[0]}:{f}
+                                                            <Close id={filter[0]+':'+f} onClick={removeFilter}/>
+                                                        </Button>
                                                     ))
                                                 }</div>
                                             )
                                         } else {
-                                            return(<p key={filter[1]} style={{color: 'black'}}>{filter[1]}</p>)
+                                            //console.log(filters)
+                                            //console.log('here')
+                                            //console.log(filter[0])
+                                            //return(<p key={filter[1]} style={{color: 'black'}}>{filter[1]}</p>)
+                                            if (filter[1] != null) {
+                                                return(<Button key={filter[1]} style={{color: 'black', fontSize: '18px'}}>
+                                                            {filter[0]}:{filter[1]}
+                                                            <Close id={filter[0]+':'+filter[1]} onClick={removeFilter}/>
+                                                        </Button>
+                                                )
+                                            }
+                                            
+                                            
                                         }
                                     })()}
                             </div>
