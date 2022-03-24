@@ -162,11 +162,11 @@ def createMajorMinorGraph(majorCode):
 
     print('b')
     #open file and load data
-    with open('includes/' + majorJson, 'r') as f:
+    with open('includes/' + majorJson, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     #open relations.json and load it in
-    with open('relations.json', 'r') as f:
+    with open('relations.json', 'r', encoding='utf-8') as f:
         relations = json.load(f)
 
     #get all the courses in the major/minor
