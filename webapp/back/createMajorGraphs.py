@@ -19,7 +19,7 @@ def searchFiles(directory, name):
 
         #checks each file for name
         for file in files:
-            if name in file:
+            if name.lower() in file.lower():
                 return file
 
     return ''
