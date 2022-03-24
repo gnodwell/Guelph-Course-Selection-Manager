@@ -120,17 +120,17 @@ def createGraphJson(courses, relations):
         if not isDup(graphJson, course):
             graphJson['nodes'].append({
                 'id': course,
-                'name': course
+                # 'name': course
             })
         
         #add its prereqs to json
         for prereq in prereqsList:
             
             #add prereq as a node if it doesn't already exist
-            if not isDup(graphJson, course):
+            if not isDup(graphJson, prereq):
                 graphJson['nodes'].append({
                     'id': prereq,
-                    'name': prereq
+                    # 'name': prereq
                 })
 
             #add the links
