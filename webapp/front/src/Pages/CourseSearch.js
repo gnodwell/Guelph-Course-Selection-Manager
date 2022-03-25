@@ -354,40 +354,31 @@ function Home() {
             </div>
 
             {/* function to display currently applied filters */}
-            <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px'}}>
-                {filters && <div>{
+            <div style={{backgroundColor: '#001e3c', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px', maxHeight: '240px'}}>
+                {filters && <div >{
                     Object.entries(filters).map(filter => {
                         return (
                             <div key={filter}>
-                                {/* <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p> */}
                                     {(() => {
                                         // if the filter is an array, then traverse it's indexes
                                         //otherwise just return it
                                         if (Array.isArray(filter[1])) {
                                             return(
-                                                <div key={filter[1]}>{
                                                     filter[1].map((f) => (
-                                                        <Button key={f} style={{color: 'black', fontSize: '18px'}}>
+                                                        <Button key={f} style={{color: 'white', fontSize: '18px', margin: '5px'}} variant="contained" color='info'>
                                                             {filter[0]}:{f}
                                                             <Close id={filter[0]+':'+f} onClick={removeFilter}/>
                                                         </Button>
                                                     ))
-                                                }</div>
                                             )
                                         } else {
-                                            //console.log(filters)
-                                            //console.log('here')
-                                            //console.log(filter[0])
-                                            //return(<p key={filter[1]} style={{color: 'black'}}>{filter[1]}</p>)
                                             if (filter[1] != null) {
-                                                return(<Button key={filter[1]} style={{color: 'black', fontSize: '18px'}}>
+                                                return(<Button key={filter[1]} style={{color: 'white', fontSize: '18px', margin: '5px'}} color='info' variant='contained'>
                                                             {filter[0]}:{filter[1]}
                                                             <Close id={filter[0]+':'+filter[1]} onClick={removeFilter}/>
                                                         </Button>
                                                 )
                                             }
-                                            
-                                            
                                         }
                                     })()}
                             </div>
