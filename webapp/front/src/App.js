@@ -1,32 +1,324 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Home from './Pages/Home';
 import CreateGraphs from './Pages/CreateGraphs';
 import CourseSearch from './Pages/CourseSearch'
 import ErrorPage from './Pages/ErrorPage';
-import React, { useState, useEffect } from 'react';
 
 
-import Button from '@material-ui/core/Button'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Divider from '@material-ui/core/Divider';
-import Zoom from '@material-ui/core/Zoom';
+import { styled, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
 
-import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { ContactlessOutlined, Create } from '@material-ui/icons';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import { dark } from '@mui/material/styles/createPalette';
+import { createTheme } from '@mui/system';
+import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { makeStyles } from "@material-ui/core/styles";
+import {ThemeProvider} from '@mui/styles';
 
-import { makeStyles } from '@material-ui/core/styles'
-import { withThemeCreator } from '@material-ui/styles';
-import { Menu, MenuItem } from '@material-ui/core';
+import Button from '@mui/material/Button';
+import {TableContainer} from '@mui/material/';
+import { Menu } from '@mui/material/';
+import { MenuItem } from '@mui/material/';
+import Zoom from '@mui/material/Zoom';
+import { ArrowDropDown } from '@mui/icons-material/';
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material/';
+import { Close } from '@mui/icons-material/';
+
+import Tree from 'react-d3-tree';
+
+import data from './Data/mockdataset.json';
+
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from "react-router-dom";
+import { create } from '@mui/material/styles/createTransitions';
+
+var body = document.body, html = document.documentElement;
+var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+const drawerWidth = 240;
 
 
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  }),
+);
 
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  transition: theme.transitions.create(['margin', 'width'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: '#171717'
+  }
+}));
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-end',
+}));
 
 function App() {
+
+  const [courses, setCourses] = useState([])
+  const [filters, setFilters] = useState({})
+  const [anchorElSem, setAnchorElSem] = useState(null)
+  const [anchorElCr, setAnchorElCr] = useState(null)
+  const [anchorElLv, setAnchorElLv] = useState(null)
+  const [anchorElDept, setAnchorElDept] = useState(null)
+  const [depts, setDepts] = useState([])
+
+  useEffect( async () => {
+      await getDepartments()
+  }, [])
+
+  const getDepartments = async() => {
+      fetch('https://131.104.49.104/api/getDepartments', {
+          method: 'GET',
+          referrerPolicy: 'unsafe-url'
+      })
+      .then(res => res.json())
+      .then(data => setDepts(data))
+      .catch(error => console.log(error))
+  }
+
+  const fetchCourses = async() => {
+      console.log(filters)
+      
+      //if server is taking a long time to fetch then run the api locally
+      fetch('https://131.104.49.104/api', {
+          method: 'POST',
+          body: JSON.stringify(filters),
+          referrerPolicy: "unsafe-url",
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      })
+      .then(response => response.json())
+      .then(data => setCourses(data))
+      .catch(error => console.log(error))
+  };
+
+  const handleChange = (event) => {
+      const name = event.target.name
+      const value = event.target.value
+      console.log(value)
+      //allows user to enter multiple courses separated by commas
+      if (value != "" && value != null) {
+          if (name === 'prereqs' || name === 'coreqs') {
+              const vals = value.split(",")
+              setFilters(values => ({...values, [name]: vals}))
+          } else {
+              setFilters(values => ({...values, [name]: value}))
+          }
+      }
+      
+  }
+
+  const handleCloseSem = (event) => {
+      //add the semester to the filters
+      if (event.currentTarget.innerText != "") {
+          updateFilters(event, 1)
+      }
+      setAnchorElSem(null)
+  }
+
+  const handleCloseCr = (event) => {
+      //add the credit weight to the filters
+      if (event.currentTarget.innerText != "") {
+          updateFilters(event, 2)
+      }
+      setAnchorElCr(null)
+  }
+
+  const handleCloseLv = (event) => {
+      //add the level to the filters
+      if (event.currentTarget.value != null) {
+          updateFilters(event, 3)
+      }
+      setAnchorElLv(null)
+  }
+
+  const handleCloseDept = (event) => {
+      //add the department to the filters
+      if (event.currentTarget.innerText != null && event.currentTarget.innerText != "") {
+          updateFilters(event, 4)
+      }
+      setAnchorElDept(null)
+  }
+
+  const openMenuSem = (event) => {
+      setAnchorElSem(event.currentTarget)
+  }
+
+  const openMenuCr = (event) => {
+      setAnchorElCr(event.currentTarget)
+  }
+
+  const openMenuLv = (event) => {
+      setAnchorElLv(event.currentTarget)
+  }
+
+  const openMenuDept = (event) => {
+      setAnchorElDept(event.currentTarget)
+  }
+
+  function checkIfInArray (array, item) {
+      for(let i = 0; i < array.length; i++) {
+          if (array[i] === item) {
+              return(1)
+          }
+      }
+      return(0)
+  }
+
+  const removeFilter = (event)  => {
+      console.log(event.currentTarget.id)
+      const arr = event.currentTarget.id.split(":")
+      console.log(arr)
+
+      const tempObj = filters
+      console.log(tempObj)
+      const tempFilters = tempObj[arr[0]]
+      console.log(tempFilters)
+
+
+      if (Array.isArray(tempFilters)) {
+          if(tempFilters.includes(arr[1])){
+              var newFilters = tempFilters.filter((f) => {return f != arr[1]})
+              //tempFilters.pop(arr[1])
+          }
+          //console.log(tempFilters)
+          setFilters(values => ({...values, [arr[0]]: newFilters}))
+      } else {
+          setFilters(values => ({...values, [arr[0]]: null}))
+      }
+      
+  }
+
+  function updateFilters (event, mode) {
+      //updating either the semester, credit or level attr. based on the mode
+      var isIn = 0
+      if (mode === 1) {
+          if (filters.semesters === undefined) {
+              setFilters(values => ({...values, ['semesters']: [event.target.innerText]}))
+          } else {
+              //check if filter already exists
+              isIn = checkIfInArray(filters.semesters, event.target.innerText)
+              
+              if (isIn === 0) {
+                  setFilters(values => ({...values, ['semesters']: [...filters.semesters, event.target.innerText]}))
+              }
+          }
+      } else if (mode === 2) {
+          if (filters.creditWeight === undefined) {
+              setFilters(values => ({...values, ['creditWeight']: [event.target.innerText]}))
+          } else {
+              //check if filter already exists
+              isIn = checkIfInArray(filters.creditWeight, event.target.innerText)
+
+              if (isIn === 0) {
+                  setFilters(values => ({...values, ['creditWeight']: [...filters.creditWeight, event.target.innerText]}))
+              }
+          }
+      } else if (mode === 3) {
+          const val = event.target.value?.toString()
+          if (filters.level === undefined) {
+              setFilters(values => ({...values, ['level']: [val]}))
+          } else {
+              //check if filter already exists
+              isIn = checkIfInArray(filters.level, val)
+
+              if (isIn === 0) {
+                  setFilters(values => ({...values, ['level']: [...filters.level, val]}))
+              }
+          }
+      } else if (mode === 4) {
+          const val = event.target.innerText
+          if (filters.department === undefined) {
+              setFilters(values => ({...values, ['department']: [val]}))
+          } else {
+              //check if filter already exists
+              isIn = checkIfInArray(filters.department, val)
+
+              if (isIn === 0) {
+                  setFilters(values => ({...values, ['department']: [...filters.department, val]}))
+              }
+          }
+      }
+  }
+
+  //creating a state
+  const [graph, setGraphData] = useState(null)
+    
+
+  //function to update the graph div
+  function addGraph() {
+      setGraphData(data)
+  }
+
+  //function to clear the graph div
+  function clearGraph() {
+      setGraphData(null)
+  }
+
+  const handleCloseGraph = async(event) => {
+      
+  }
+
+  const classes = useStyles();
 
   //menu functionality
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -40,128 +332,397 @@ function App() {
     setAnchorEl(event.currentTarget)
   };
 
-  const useStyles = makeStyles({
-    root: {
-      fill: 'white'
-    }
-  })
 
   const updatePage = (event) => {
     const newPage = event.target.to.split("/")
     setPage(newPage)
   }
   
-  function MenuIconStyled() {
-    const classes = useStyles();
-    return <MenuIcon className={classes.root} />
-  }
-  //menu functionality
-  
+  const theme = useTheme();
+
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <Router>
-      <div className="App">
-        <header className="App-header">
-
-          <AppBar>
-            <Toolbar>
-              <IconButton
-                id='zoom-button'
-                onClick={openMenu}>
-                <MenuIconStyled />
-              </IconButton>
-              <Menu
-                id='zoom-menu'
-                MenuListProps={{
-                  'aria-labelledby': 'zoom-button',
-                }}
-                anchorEl={anchorEl}
-                open = {Boolean(anchorEl)}
-                onClose={handleClose}
-                TransitionComponent={Zoom}
-              >
-                <Link to="/" style={{textDecoration: 'none'}}>
-                  <MenuItem onClick={handleClose} style={{color: 'black'}}>Home</MenuItem>
-                </Link>
-
-                <Divider variant='middle' />
-                <Link to="/CourseSearch" style={{textDecoration: 'none'}}>
-                  <MenuItem onClick={handleClose} style={{color: 'black'}}>Course Search</MenuItem>
-                </Link>
-                
-                <Divider variant='middle' />
-                
-                <Link to="/CreateGraphs" style={{textDecoration: 'none'}}>
-                  <MenuItem onClick={handleClose} style={{color: 'black'}}>Create Graphs</MenuItem>
-                </Link>
-              </Menu>
-
-              <Link to="/" onClick={updatePage} style={{textDecoration: 'none'}}>
-                {(() => {
-                  if(window.location.pathname === "/") {
-                    return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
-                              Home  
-                            </Button>
-                    )
-                  } else {
-                    return (<Button type='button' style={{color: 'white'}}>
-                              Home  
-                            </Button>
-                    )
-                  }
-
-                })()}
-                  
-              </Link>
+    
+    <Box sx={{ display: 'flex' }}>
+      
+      <ThemeProvider theme={theme}>
+      <CssBaseline />
+      
+        <AppBar className= {classes.root} position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h5" noWrap component="div">
+              University Course Utility - CIS*3760 Team 4
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+      >
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
 
 
-              <Link to="/CourseSearch" onClick={updatePage} style={{textDecoration: 'none'}}>
-                {(() => {
-                  if(window.location.pathname === "/CourseSearch") {
-                    return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
-                              Course Search 
-                            </Button>
-                    )
-                  } else {
-                    return (<Button type='button' style={{color: 'white'}}>
-                              Course Search  
-                            </Button>
-                    )
-                  }
+        <List>
+          {/* SCROLL TO HOME */}
+          <a href="#home">
+            <ListItem button key={"Home"} onClick={handleDrawerClose}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Home"} />
+            </ListItem>
+          </a>
 
-                })()} 
-              </Link>
+          {/* SCROLL TO COURSE SEARCH */}
+          <a href="#course-search">
+            <ListItem button key={"Course Search"} onClick={handleDrawerClose}>
+              <ListItemIcon>
+                <SearchIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Course Search"} />
+            </ListItem>
+          </a>
 
+          {/* SCROLL TO CREATE GRAPHS*/}
+          <a href="#create-graphs">
+            <ListItem button key={"Course Graph"} onClick={handleDrawerClose}>
+              <ListItemIcon>
+                <AnalyticsIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Course Graph"} />
+            </ListItem>
+          </a>  
 
-              <Link to="/CreateGraphs" onClick={updatePage} style={{textDecoration: 'none'}}>
-                {(() => {
-                  if(window.location.pathname === "/CreateGraphs") {
-                    return (<Button type='button' style={{color: 'white', backgroundColor: '#097ff6'}}>
-                              Create Graphs  
-                            </Button>
-                    )
-                  } else {
-                    return (<Button type='button' style={{color: 'white'}}>
-                              Create Graphs  
-                            </Button>
-                    )
-                  }
-
-                })()} 
-              </Link>
-            </Toolbar>
-          </AppBar>
+        </List>
+      </Drawer>
+      
+        
+        
+      <Main open={open}>
+        <DrawerHeader />
+        <div id="home" style={{height: height}}>
           
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/CreateGraphs" element={<CreateGraphs />} />
-            <Route path="/CourseSearch" element={<CourseSearch />} />
-            <Route path="*" element={<ErrorPage />} />
-          </Routes>
+          <h1>University Course Utility</h1>
+          <Typography>Navigate to pages using the menu bar!</Typography>
+        </div>
 
-        </header>
-      </div>
-    </Router>
+        {/* COURSE SEARCH SECTION */}
+        <div id="course-search" style={{height: height}}>
+            <h1>Course Search</h1>
 
+            <Typography variant='h5'>Select the filters you would like to apply for course search</Typography>
+
+            <br></br>
+
+            <div  style={{margin: '5px'}}>
+                {/* form to send set filters and fetch courses */}
+                <form className='flex_div'>
+                    <label className='flex_item_md'>
+                        <Typography variant='body1'>Course Name</Typography>
+                        <input
+                            className='input_field'
+                            type='text'
+                            name="name"
+                            value={filters.name || ""}
+                            placeholder='ex: Software Engineering'
+                            onChange={handleChange}
+                        />
+                    </label>
+
+                    <label className='flex_item_sm'>
+                        <Typography variant='body1'>Course Code</Typography>
+                        <input
+                            className='input_field'
+                            type='text'
+                            name="cCode"
+                            value={filters.cCode || ""}
+                            placeholder='ex: CIS*3760'
+                            onChange={handleChange}
+                        />
+                    </label>
+                    
+                    <label className='flex_item_sm'>
+                        <Typography variant='body1'>Course Pre-requisites</Typography>
+                        <input
+                            className='input_field'
+                            type='text'
+                            name="prereqs"
+                            value={filters.prereqs || ""}
+                            placeholder='ex: CIS*2750, CIS*3750'
+                            onChange={handleChange}
+                        />
+                    </label>
+                    
+                    <label className='flex_item_sm'>
+                        <Typography variant='body1'>Course Co-requisites</Typography>
+                        <input
+                            className='input_field'
+                            type='text'
+                            name="coreqs"
+                            value={filters.coreqs || ""}
+                            placeholder='ex: CIS*2750, CIS*3750'
+                            onChange={handleChange}
+                        />
+                    </label>
+                </form>
+                {/* div to select the semester and credit filter */}
+                <div>
+                    <Button
+                        id='semester-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuSem}
+                    >
+                        Semester
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='semester-menu'
+                        anchorEl={anchorElSem}
+                        open={Boolean(anchorElSem)}
+                        onClose={handleCloseSem}
+                        TransitionComponent={Zoom}
+                    >
+                        <MenuItem onClick={handleCloseSem}>Fall</MenuItem>
+                        <MenuItem onClick={handleCloseSem}>Summer</MenuItem>
+                        <MenuItem onClick={handleCloseSem}>Winter</MenuItem>
+                    </Menu>
+
+                    <Button
+                        id='credit-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuCr}
+                    >
+                        Credit Weight
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='credit-menu'
+                        anchorEl={anchorElCr}
+                        open={Boolean(anchorElCr)}
+                        onClose={handleCloseCr}
+                        TransitionComponent={Zoom}
+                    >
+                        <MenuItem onClick={handleCloseCr}>0.25</MenuItem>
+                        <MenuItem onClick={handleCloseCr}>0.50</MenuItem>
+                        <MenuItem onClick={handleCloseCr}>0.75</MenuItem>
+                        <MenuItem onClick={handleCloseCr}>1.00</MenuItem>
+                        <MenuItem onClick={handleCloseCr}>1.25</MenuItem>
+                        <MenuItem onClick={handleCloseCr}>1.50</MenuItem>
+                    </Menu>
+
+                    <Button
+                        id='level-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuLv}
+                    >
+                        Course Level
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='level-menu'
+                        anchorEl={anchorElLv}
+                        open={Boolean(anchorElLv)}
+                        onClose={handleCloseLv}
+                        TransitionComponent={Zoom}
+                    >
+                        <MenuItem onClick={handleCloseLv} value='1'>1000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='2'>2000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='3'>3000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='4'>4000</MenuItem>
+                    </Menu>
+
+                    <Button
+                        id='dept-button'
+                        style={{color: 'white', margin: '5px'}}
+                        variant='contained'
+                        color='secondary'
+                        onClick={openMenuDept}
+                    >
+                        Department
+                        <ArrowDropDown style={{fill: 'white'}}/>
+                    </Button>
+                    <Menu
+                        id='dept-menu'
+                        anchorEl={anchorElDept}
+                        open={Boolean(anchorElDept)}
+                        onClose={handleCloseDept}
+                        TransitionComponent={Zoom}
+                    >
+                        { depts.map(dept => (
+                            <MenuItem key={dept} onClick={handleCloseDept}>{dept}</MenuItem>
+                        ))}
+                    </Menu>
+                </div>
+            </div>
+
+            {/* function to display currently applied filters */}
+            <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px'}}>
+                {filters && <div>{
+                    Object.entries(filters).map(filter => {
+                        return (
+                            <div key={filter}>
+                                {/* <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p> */}
+                                    {(() => {
+                                        // if the filter is an array, then traverse it's indexes
+                                        //otherwise just return it
+                                        if (Array.isArray(filter[1])) {
+                                            return(
+                                                <div key={filter[1]}>{
+                                                    filter[1].map((f) => (
+                                                        <Button key={f} style={{color: 'black', fontSize: '18px'}}>
+                                                            {filter[0]}:{f}
+                                                            <Close id={filter[0]+':'+f} onClick={removeFilter}/>
+                                                        </Button>
+                                                    ))
+                                                }</div>
+                                            )
+                                        } else {
+                                            //console.log(filters)
+                                            //console.log('here')
+                                            //console.log(filter[0])
+                                            //return(<p key={filter[1]} style={{color: 'black'}}>{filter[1]}</p>)
+                                            if (filter[1] != null) {
+                                                return(<Button key={filter[1]} style={{color: 'black', fontSize: '18px'}}>
+                                                            {filter[0]}:{filter[1]}
+                                                            <Close id={filter[0]+':'+filter[1]} onClick={removeFilter}/>
+                                                        </Button>
+                                                )
+                                            }
+                                            
+                                            
+                                        }
+                                    })()}
+                            </div>
+                        )
+                    })
+                }</div>}
+            </div>
+
+            <Button onClick = {fetchCourses} variant='contained' color='primary'>
+                Search Courses
+            </Button>
+
+            {/* function to display the fetched data in a table */}
+            {(() => {
+                if (courses.length > 0) {
+                    return (
+                        <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', maxHeight: '400px', maxWidth:'85%'}}>
+                            <TableContainer component={Paper}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Course&nbsp;code</TableCell>
+                                            <TableCell>Credits</TableCell>
+                                            <TableCell>Title</TableCell>
+                                            <TableCell>Description</TableCell>
+                                            <TableCell>Semester</TableCell>
+                                            <TableCell>Department</TableCell>
+                                            <TableCell>Pre-requisites</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        { courses.map(course => (
+                                            <TableRow
+                                                key={course.cCode}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                                <TableCell>{course.cCode}</TableCell>
+                                                <TableCell>{course.creditWeight}</TableCell>
+                                                <TableCell>{course.name}</TableCell>
+                                                <TableCell>{course.description}</TableCell>
+                                                <TableCell>{course.semesters}</TableCell>
+                                                <TableCell>{course.department}</TableCell>
+                                                <TableCell>{course.prereqs}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </div>
+                    )
+                }
+            })()}
+        </div>
+
+        {/* CREATE GRAPH SECTION */}
+        <div id="create-graphs" style={{height: height}}>
+            <h1>Create Graphs</h1>
+            
+            <Button onClick = {addGraph} variant='contained' color='primary' style={{margin: '5px'}}>
+                Generate Graph
+            </Button>
+
+            <Button onClick = {clearGraph} variant='contained' color='primary' style={{margin: '5px'}}>
+                Clear Graph
+            </Button>
+                    
+            <Typography>Graph of CIS*3760</Typography>
+
+            {/*Graph div*/}
+            <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px'}}>
+                {(() => {
+                    //function to create the tree graph
+                    if (graph != null) {
+                        return (
+                            <Tree
+                                data={graph}
+                                pathFunc='step'
+                                orientation='vertical'
+                                separation={{siblings: 2, nonSiblings: 2 }}
+                                collapsible='true'
+                                zoom='0.25'
+                                translate={{x:450, y:200}}
+                            />
+                        )
+                    }
+                })()}
+            </div>
+        
+        </div>
+
+      </Main>
+
+      </ThemeProvider>
+    </Box>
   );
 }
 
