@@ -32,5 +32,6 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/privat
 sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048   ## generate Diffie-Hellman group
 sudo ufw app list       ## adjust firewall
 
+npm i -D jest
 
 

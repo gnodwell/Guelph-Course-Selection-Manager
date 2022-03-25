@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, request
 import json
 from flask_cors import CORS, cross_origin
+import dataToGraph as courseGraphs
+import createMajorGraphs as majorGraphs
+import createSubjectGraphs as subjectGraphs
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -83,9 +86,9 @@ def getDepartments():
         data = json.load(f)
 
         #loop through department
-        for department in data:
-            #loop through courses in department
-            for course in department['title']:
+        for subject in data:
+            #loop through courses in subject
+            for course in subject['title']:
                 res.add(course['department'])
 
         res.remove(None)
@@ -94,9 +97,32 @@ def getDepartments():
 @app.route('/api/createCourseGraph', methods=['POST'])
 @cross_origin()
 def createCourseGraph():
-    
-    department = request.get_json()
+    a = 'stub'
+    # courseGraphs.generateDataset('CIS*3760')
 
+@app.route('/api/createMajorGraph', methods=['POST'])
+@cross_origin()
+def createMajorGraph():
+
+    #get the major
+    major = request.get_json()
+
+    #create graph
+    graphJson = majorGraphs.createMajorMinorGraph(major['major'])
+
+    return jsonify(graphJson)
+
+@app.route('/api/createSubjectGraph', methods=['POST'])
+@cross_origin()
+def createSubjectGraph():
+
+    #get the subject
+    subject = request.get_json()
+
+    #create graph
+    graphJson = subjectGraphs.generateDataset(subject['subject'])
+
+    return jsonify(graphJson)
 
 if __name__ == '__main__':
     context = ('/etc/ssl/certs/nginx-selfsigned.crt','/etc/ssl/private/nginx-selfsigned.key')
