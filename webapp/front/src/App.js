@@ -564,10 +564,10 @@ function App() {
                         onClose={handleCloseLv}
                         TransitionComponent={Zoom}
                     >
-                        <MenuItem onClick={handleCloseLv} value='1'>1000</MenuItem>
-                        <MenuItem onClick={handleCloseLv} value='2'>2000</MenuItem>
-                        <MenuItem onClick={handleCloseLv} value='3'>3000</MenuItem>
-                        <MenuItem onClick={handleCloseLv} value='4'>4000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='1000'>1000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='2000'>2000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='3000'>3000</MenuItem>
+                        <MenuItem onClick={handleCloseLv} value='4000'>4000</MenuItem>
                     </Menu>
 
                     <Button
