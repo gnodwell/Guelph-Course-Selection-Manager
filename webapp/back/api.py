@@ -33,14 +33,14 @@ def filter():
                     
 
                     #if filter comes in as a list, then loop through the list
-                    if isinstance(v, list):
+                    if isinstance(v, list) and len(v) > 0:
                         addFlag2 = False
                         for vItem in v:
                             #special case for if key is for course level
                             if k.lower() == 'level':
                                 levelIndex = course['cCode'].find('*')
 
-                                if course['cCode'][levelIndex+1] == vItem:
+                                if len(vItem) > 0 and course['cCode'][levelIndex+1] == vItem[0]:
                                     addFlag2 = True
                                     break
 
@@ -55,12 +55,12 @@ def filter():
                             break
 
                     #else, just check filter
-                    else:
+                    elif not isinstance(v, list):
                         #special case for if key is for course level
                         if k.lower() == 'level':
                             levelIndex = course['cCode'].find('*')
 
-                            if course['cCode'][levelIndex+1] != v:
+                            if len(v) > 0 and course['cCode'][levelIndex+1] != v[0]:
                                 add = False
                                 break
                         #if course does not match the filter value, don't add course
