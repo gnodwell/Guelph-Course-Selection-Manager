@@ -43,8 +43,9 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/ma
 import { Close } from '@mui/icons-material/';
 
 import Tree from 'react-d3-tree';
+import { Graph } from 'react-d3-graph'
 
-import data from './Data/mockdataset.json';
+import data1 from './Data/mockdataset.json';
 
 import {
   Route,
@@ -306,7 +307,7 @@ function App() {
 
   //function to update the graph div
   function addGraph() {
-      setGraphData(data)
+      setGraphData(data1)
   }
 
   //function to clear the graph div
@@ -349,6 +350,36 @@ function App() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  // graph payload (with minimalist structure)
+const data = {
+    nodes: [{ id: "Harry" }, { id: "Sally" }, { id: "Alice" }],
+    links: [
+      { source: "Harry", target: "Sally" },
+      { source: "Harry", target: "Alice" },
+    ],
+  };
+  
+  // the graph configuration, just override the ones you need
+  const myConfig = {
+    nodeHighlightBehavior: true,
+    node: {
+      color: "lightgreen",
+      size: 120,
+      highlightStrokeColor: "blue",
+    },
+    link: {
+      highlightColor: "lightblue",
+    },
+  };
+  
+  const onClickNode = function(nodeId) {
+    window.alert(`Clicked node ${nodeId}`);
+  };
+  
+  const onClickLink = function(source, target) {
+    window.alert(`Clicked link between ${source} and ${target}`);
   };
 
   return (
@@ -712,6 +743,17 @@ function App() {
                     }
                 })()}
             </div>
+
+            <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
+                <Graph
+                id="graph-id" // id is mandatory
+                data={data}
+                config={myConfig}
+                onClickNode={onClickNode}
+                onClickLink={onClickLink}
+                />
+            </div>
+            
         
         </div>
 
