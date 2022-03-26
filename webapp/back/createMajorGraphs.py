@@ -150,17 +150,15 @@ def createMajorMinorGraph(majorCode):
     Returns:
         Dict: d3 graph in json format
     """
-    print(majorCode)
     if not majorCode:
         return {}
-    print('a')
+        
     #search folder for file with major
     majorJson = searchFiles('includes/', '(' + majorCode + ')')
-    print(majorJson)
     if not majorJson:
         return {}
 
-    print('b')
+
     #open file and load data
     with open('includes/' + majorJson, 'r', encoding='utf-8') as f:
         data = json.load(f)
