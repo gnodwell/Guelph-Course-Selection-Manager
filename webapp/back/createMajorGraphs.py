@@ -98,7 +98,7 @@ def getColor(course):
         return 'yellow'
     elif (course[levelIndex+1] == '3'):
         return 'green'
-    else:
+    elif (course[levelIndex+1] == '4'):
         return 'purple'
 
 def createGraphJson(courses, relations):
@@ -139,10 +139,10 @@ def createGraphJson(courses, relations):
         
         #add its prereqs to json
         for prereq in prereqsList:
-            
+            nodeColor = getColor(prereq)
             #add prereq as a node if it doesn't already exist
             if not isDup(graphJson, prereq):
-                nodeColor = getColor(prereq)
+                
                 graphJson['nodes'].append({
                     'id': prereq,
                     'color': nodeColor
@@ -151,8 +151,14 @@ def createGraphJson(courses, relations):
 
             #add the links
             graphJson['links'].append({
+<<<<<<< HEAD
                 'source': course,
                 'target': prereq
+=======
+                'color': nodeColor,
+                'source': prereq,
+                'target': course
+>>>>>>> 3451f99bffbfbfacc7d1226637571c042d09414a
             })
 
     return graphJson
