@@ -406,10 +406,9 @@ function App() {
         gravity: -500,
     },
     node: {
-      color: "lightgreen",
       fontSize: 15,
       size: 200,
-      highlightStrokeColor: "red",
+      highlightStrokeColor: "blue",
       highlightFontSize: 17,
     },
     link: {
@@ -507,14 +506,16 @@ function App() {
         
       <Main open={open}>
         <DrawerHeader />
-        <div id="home" style={{height: height}}>
+        {/* style={{height: height}} */}
+        <div id="home">
           
           <h1>University Course Utility</h1>
           <Typography>Navigate to pages using the menu bar!</Typography>
         </div>
 
         {/* COURSE SEARCH SECTION */}
-        <div id="course-search" style={{height: height}}>
+        {/* style={{height: height}} */}
+        <div id="course-search">
             <h1>Course Search</h1>
 
             <Typography variant='h5'>Select the filters you would like to apply for course search</Typography>
@@ -767,25 +768,26 @@ function App() {
         </div>
 
         {/* CREATE GRAPH SECTION */}
-        <div id="create-graphs" style={{height: height}}>
+        {/* style={{height: height}} */}
+        <div id="create-graphs">
             <h1>Create Graphs</h1>
             
             <Button onClick = {addGraph} variant='contained' color='primary' style={{margin: '5px'}}>
-                Generate Graph
+                Generate Course Graph
             </Button>
 
             <Button onClick = {clearGraph} variant='contained' color='primary' style={{margin: '5px'}}>
-                Clear Graph
+                Clear Course Graph
             </Button>
                     
             <Typography>Graph of CIS*3760</Typography>
 
             {/*Graph div*/}
-            <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
-                {(() => {
-                    //function to create the tree graph
-                    if (graph !== null) {
-                        return (
+            {(() => {
+                //function to create the tree graph
+                if (graph !== null) {
+                    return (
+                        <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
                             <Tree
                                 data={graph}
                                 pathFunc='step'
@@ -795,10 +797,13 @@ function App() {
                                 zoom='0.25'
                                 translate={{x:450, y:200}}
                             />
-                        )
-                    }
-                })()}
-            </div>
+                        </div>
+                    )
+                }
+            })()}
+            
+            <br></br>
+            <br></br>
 
             <Typography variant='body1'>Select a university</Typography>
                 
@@ -832,7 +837,7 @@ function App() {
 
                     {/* Button for creating subject graph */}
                     <Button type='submit' variant='contained' color='primary' style={{margin: '5px'}}>
-                        Generate Graph
+                        Generate Subject Graph
                     </Button>
                 </form>
 
@@ -873,7 +878,7 @@ function App() {
                     </label>
                     <br></br>
                     <Button type='submit' variant='contained' color='primary' style={{margin: '5px'}}>
-                        Generate Graph
+                        Generate Major Graph
                     </Button>
                 </form>
             </div>
