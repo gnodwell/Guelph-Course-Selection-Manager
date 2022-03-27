@@ -89,6 +89,18 @@ def getMajorMinorCourses(data, majorMinor):
 
     return coursesToGraph
 
+def getColor(course):
+    levelIndex = course.find('*')
+
+    if (course[levelIndex+1] == '1'):
+        return 'red'
+    elif (course[levelIndex+1] == '2'):
+        return 'yellow'
+    elif (course[levelIndex+1] == '3'):
+        return 'green'
+    else:
+        return 'purple'
+
 def createGraphJson(courses, relations):
     """creates a graph in the d3 json format
 
@@ -118,8 +130,10 @@ def createGraphJson(courses, relations):
 
         #add course as a node if it doesn't already exist
         if not isDup(graphJson, course):
+            nodeColor = getColor(course)
             graphJson['nodes'].append({
                 'id': course,
+                'color': nodeColor
                 # 'name': course
             })
         
@@ -128,8 +142,10 @@ def createGraphJson(courses, relations):
             
             #add prereq as a node if it doesn't already exist
             if not isDup(graphJson, prereq):
+                nodeColor = getColor(prereq)
                 graphJson['nodes'].append({
                     'id': prereq,
+                    'color': nodeColor
                     # 'name': prereq
                 })
 

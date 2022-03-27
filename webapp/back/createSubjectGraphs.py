@@ -105,7 +105,10 @@ def generateDataset(subject, uni="guelph"):
         relations = json.load(f)
 
     if subject not in relations:
-        return {}
+        return {
+            'links': [],
+            'nodes': []
+        }
 
     subject = subject.upper()
     graphJSON = createGraphJSON(relations[subject])

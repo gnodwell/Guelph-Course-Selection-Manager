@@ -163,7 +163,6 @@ function App() {
 
   const getSubjectGraph = async(event) => {
     event.preventDefault()
-    console.log(event.target.elements.subjectField.value)
     const obj = {
         'subject': event.target.elements.subjectField.value,
         'uni': uni
@@ -184,8 +183,6 @@ function App() {
 
   const getMajorGraph = async(event) => {
     event.preventDefault()
-    console.log(event.target.elements.majorField.value)
-
     const obj = {
         'major': event.target.elements.majorField.value
     }
@@ -199,7 +196,7 @@ function App() {
         }
     })
     .then(response => response.json()
-    .then(foundData => {console.log(foundData); setMajorGraph(foundData)}))
+    .then(foundData => {setMajorGraph(foundData)}))
     .catch(error => console.log(error))
   }
 
