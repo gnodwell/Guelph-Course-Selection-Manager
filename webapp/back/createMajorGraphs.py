@@ -151,14 +151,9 @@ def createGraphJson(courses, relations):
 
             #add the links
             graphJson['links'].append({
-<<<<<<< HEAD
-                'source': course,
-                'target': prereq
-=======
                 'color': nodeColor,
                 'source': prereq,
                 'target': course
->>>>>>> 3451f99bffbfbfacc7d1226637571c042d09414a
             })
 
     return graphJson
