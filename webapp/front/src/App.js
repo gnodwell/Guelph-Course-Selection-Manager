@@ -120,9 +120,9 @@ function App() {
   const [anchorElLv, setAnchorElLv] = useState(null)
   const [anchorElDept, setAnchorElDept] = useState(null)
   const [depts, setDepts] = useState([])
-  const [subject, setSubject] = useState({'subject': ''})
+  //const [subject, setSubject] = useState({'subject': ''})
   const [subjectGraph, setSubjectGraph] = useState(null)
-  const [major, setMajor] = useState({'subject': ''})
+  //const [major, setMajor] = useState({'subject': ''})
   const [majorGraph, setMajorGraph] = useState(null)
   const [uni, setUni] = useState('guelph')
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -135,48 +135,72 @@ function App() {
   }, [])
 
   const getDepartments = async() => {
-      fetch('http://127.0.0.1:5000/api/getDepartments', {
-          method: 'GET',
-          referrerPolicy: 'unsafe-url'
-      })
-      .then(res => res.json())
-      .then(foundData => setDepts(foundData))
-      .catch(error => console.log(error))
+    fetch('http://127.0.0.1:5000/api/getDepartments', {
+        method: 'GET',
+        referrerPolicy: 'unsafe-url'
+    })
+    .then(res => res.json())
+    .then(foundData => setDepts(foundData))
+    .catch(error => console.log(error))
   }
 
   const fetchCourses = async() => {
-      console.log(filters)
-      
-      //if server is taking a long time to fetch then run the api locally
-      fetch('http://127.0.0.1:5000/api', {
-          method: 'POST',
-          body: JSON.stringify(filters),
-          referrerPolicy: "unsafe-url",
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      })
-      .then(response => response.json())
-      .then(foundData => setCourses(foundData))
-      .catch(error => console.log(error))
+    console.log(filters)
+    
+    //if server is taking a long time to fetch then run the api locally
+    fetch('http://127.0.0.1:5000/api', {
+        method: 'POST',
+        body: JSON.stringify(filters),
+        referrerPolicy: "unsafe-url",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(foundData => setCourses(foundData))
+    .catch(error => console.log(error))
   }
 
-  const getSubjectGraph = async() => {
-      console.log(subject)
-      console.log(subjectGraph)
+  const getSubjectGraph = async(event) => {
+    event.preventDefault()
+    console.log(event.target.elements.subjectField.value)
+    const obj = {
+        'subject': event.target.elements.subjectField.value,
+        'uni': uni
+    }
 
-      fetch('http://127.0.0.1:5000/api/createSubjectGraph', {
-          method: 'POST',
-          body: JSON.stringify(subject),
-          referrerPolicy: "unsafe-url",
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      })
-      .then(response => response.json())
-      .then(foundData => {console.log(foundData)
-          setSubjectGraph(foundData)})
-      .catch(error => console.log(error))
+    fetch('http://127.0.0.1:5000/api/createSubjectGraph', {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        referrerPolicy: "unsafe-url",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(foundData => {setSubjectGraph(foundData)})
+    .catch(error => console.log(error))
+  }
+
+  const getMajorGraph = async(event) => {
+    event.preventDefault()
+    console.log(event.target.elements.majorField.value)
+
+    const obj = {
+        'major': event.target.elements.majorField.value
+    }
+
+    fetch('http://127.0.0.1:5000/api/createMajorGraph', {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        referrerPolicy: 'unsafe-url',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json()
+    .then(foundData => {console.log(foundData); setMajorGraph(foundData)}))
+    .catch(error => console.log(error))
   }
 
   const handleChange = (event) => {
@@ -193,20 +217,6 @@ function App() {
           }
       }
       
-  }
-
-  const handleSubjectChange = (event) => {
-    //console.log(event.target.value)
-    if (event.target.value === "") {
-        setSubject(values => ({...values, [event.target.name]: ''}))
-    } else if (event.target.value !== '' && event.target.value !== null) {
-        setSubject(values => ({...values, [event.target.name]: event.target.value}))
-    }
-  }
-
-  const handleMajorChange = (event) => {
-      event.preventDefault()
-      console.log(event.target.elements.majorField.value)
   }
 
   const handleCloseSem = (event) => {
@@ -346,10 +356,6 @@ function App() {
       setUni(event.target.value)
   }
 
-  //creating a state
-  
-    
-
   //function to update the graph div
   function addGraph() {
       setGraphData(data1)
@@ -365,9 +371,6 @@ function App() {
   }
 
   const classes = useStyles();
-
-  //menu functionality
-  
   
   const handleClose = () => {
     setAnchorEl(null)
@@ -385,9 +388,6 @@ function App() {
   
   const theme = useTheme();
 
-
-  
-
   const handleDrawerOpen = () => {
     setOpen(true);
   }
@@ -399,13 +399,13 @@ function App() {
   const myConfig = {
     nodeHighlightBehavior: true,
     highlightOpacity: 0.1,
-    initialZoom: 0.5,
-    height: 1300,
-    width: 1300,
+    initialZoom: 1,
+    height: 400,
+    width: 800,
     directed: true,
     d3: {
         linkLength: 90,
-        gravity: -400,
+        gravity: -500,
     },
     node: {
       color: "lightgreen",
@@ -418,7 +418,6 @@ function App() {
       highlightColor: "red",
     },
   };
-  
   
   const onClickNode = function(nodeId) {
     window.alert(`Clicked node ${nodeId}`);
@@ -805,16 +804,17 @@ function App() {
             })()}
 
             <div style={{margin: '10px'}}>
-                <form>
+                <form onSubmit={getSubjectGraph}>
                     <label>
                         <Typography variant='body1'>Subject Name</Typography>
                         <input
+                            id='subjectField'
                             className='input_field'
                             type='text'
                             name='subject'
-                            value={subject.subject || ""}
+                            //value={subject.subject || ""}
                             placeholder='CIS'
-                            onChange={handleSubjectChange}
+                            //onChange={handleSubjectChange}
                         />
                     </label>
 
@@ -835,7 +835,7 @@ function App() {
                     if (subjectGraph !== null && subjectGraph.nodes.length !== 0 && subjectGraph.links.length !== 0) {
                         return (
                             <Graph
-                            id="graph-id" // id is mandatory
+                            id="graph-id-1" // id is mandatory
                             data={subjectGraph}
                             config={myConfig}
                             onClickNode={onClickNode}
@@ -850,14 +850,14 @@ function App() {
             </div>
 
             <div style={{margin: '10px'}}>
-                <form onSubmit={handleMajorChange}>
+                <form onSubmit={getMajorGraph}>
                     <label>
                         <Typography variant='body1'>Major Name</Typography>
                         <input
                             id='majorField'
                             className='input_field'
                             type='text'
-                            name='major'
+                            //name='major'
                             placeholder='CS'
                         />
                     </label>
@@ -866,6 +866,25 @@ function App() {
                         Generate Graph
                     </Button>
                 </form>
+            </div>
+
+            <div style={{backgroundColor: 'white'}}>
+                {(() => {
+                    if (majorGraph !== null && majorGraph.nodes.length !== 0 && majorGraph.links.length !== 0) {
+                        return (
+                            <Graph
+                            id="graph-id-2" // id is mandatory
+                            data={majorGraph}
+                            config={myConfig}
+                            onClickNode={onClickNode}
+                            onClickLink={onClickLink}
+                            />
+                        )
+                        
+                    } else {
+                        return(<></>)
+                    }
+                })()}
             </div>
             
             

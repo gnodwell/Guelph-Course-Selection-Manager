@@ -67,19 +67,10 @@ def createGraphJSON(subject):
         for p in prereqs:
             if p not in seen:
                 seen.add(p)
-<<<<<<< HEAD
                 nodeColor = getColor(p)
-                nodes.append(
-                    {
-                        "id": p,
-                        "color": nodeColor
-                    }
-                )
-=======
                 # if p has the subject's code then it will be circle, else it will be a square
-                node = {"id": p} if getBaseCode(p) == subjectCode else {"id": p, "symbolType": "square"}
+                node = {"id": p, "color": nodeColor} if getBaseCode(p) == subjectCode else {"id": p, "symbolType": "square"}
                 nodes.append(node)
->>>>>>> 900af1eef3d8461e781413e577584ba002998c8b
 
             links.append(
                 {

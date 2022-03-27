@@ -79,7 +79,7 @@
 /* css */
 html {
   scroll-behavior: smooth;
-  height: 3000px;
+  height: 2000px;
 }
 
 #home {
@@ -92,11 +92,4 @@ html {
 
 #create-graphs {
   padding: 65px 0px 0px 0px;
-}
-
-#graph-id-graph-container-zoomable {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  transform: translate(80px, 50px);
 }
