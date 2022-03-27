@@ -1,6 +1,8 @@
 import json
 import re
 
+from createMajorGraphs import getBaseCode
+
 def getNodes(prereqs):
     """get all the to-be-added-node prereqs from string
 
@@ -50,6 +52,7 @@ def createGraphJSON(subject):
     seen = set()
 
     for course in subject:
+        subjectCode = getBaseCode(course)
         if course not in seen:
             seen.add(course)
             nodeColor = getColor(course)
@@ -64,6 +67,7 @@ def createGraphJSON(subject):
         for p in prereqs:
             if p not in seen:
                 seen.add(p)
+<<<<<<< HEAD
                 nodeColor = getColor(p)
                 nodes.append(
                     {
@@ -71,6 +75,11 @@ def createGraphJSON(subject):
                         "color": nodeColor
                     }
                 )
+=======
+                # if p has the subject's code then it will be circle, else it will be a square
+                node = {"id": p} if getBaseCode(p) == subjectCode else {"id": p, "symbolType": "square"}
+                nodes.append(node)
+>>>>>>> 900af1eef3d8461e781413e577584ba002998c8b
 
             links.append(
                 {
@@ -84,11 +93,12 @@ def createGraphJSON(subject):
         "links": links
     }
 
-def generateDataset(subject):
+def generateDataset(subject, uni="guelph"):
     """create graph json to be passed to front-end
 
     Args:
         subject (String): subject to build
+        uni (String): uni to use - either guelph or waterloo
 
     Returns:
         Dict: d3 graph in json format
@@ -100,8 +110,11 @@ def generateDataset(subject):
         }
 
     #open relations.json and load it in
-    with open('relations.json', 'r', encoding='utf-8') as f:
+    with open(f"relations_{uni}.json", 'r', encoding='utf-8') as f:
         relations = json.load(f)
+
+    if subject not in relations:
+        return {}
 
     subject = subject.upper()
     graphJSON = createGraphJSON(relations[subject])
@@ -113,4 +126,4 @@ def generateDataset(subject):
     return graphJSON
 
 if __name__ == "__main__":
-    generateDataset('CIS')
+    generateDataset('CIS', "guelph")

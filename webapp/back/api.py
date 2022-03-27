@@ -120,7 +120,7 @@ def createSubjectGraph():
     subject = request.get_json()
 
     #create graph
-    graphJson = subjectGraphs.generateDataset(subject['subject'])
+    graphJson = subjectGraphs.generateDataset(subject['subject'], subject['uni'])
 
     return jsonify(graphJson)
 

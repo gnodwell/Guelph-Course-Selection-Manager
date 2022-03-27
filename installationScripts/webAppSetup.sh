@@ -22,6 +22,8 @@ npm install -g create-react-app
 
 pip install -U Flask
 
+pip install pytest
+
 pip install uwsgi
 
 ## get updates and install nginx
