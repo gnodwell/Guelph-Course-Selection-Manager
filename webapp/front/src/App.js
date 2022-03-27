@@ -125,32 +125,50 @@ function App() {
   //const [major, setMajor] = useState({'subject': ''})
   const [majorGraph, setMajorGraph] = useState(null)
   const [uni, setUni] = useState('guelph')
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const [page, setPage] = React.useState('Home')
+  //const [page, setPage] = React.useState('Home')
   const [graph, setGraphData] = useState(null)
   const [open, setOpen] = React.useState(false);
 
-  useEffect( async () => {
-      await getDepartments()
+  useEffect(() => {
+    async function getDepartments () {
+        await
+        fetch('https://131.104.49.104/api/getDepartments', {
+            method: 'GET',
+            referrerPolicy: 'unsafe-url'
+        })
+        .then(res => res.json())
+        .then(foundData => setDepts(foundData))
+        .catch(error => console.log(error))
+    }
+    getDepartments()
   }, [])
 
-  const getDepartments = async() => {
-    fetch('http://127.0.0.1:5000/api/getDepartments', {
-        method: 'GET',
-        referrerPolicy: 'unsafe-url'
-    })
-    .then(res => res.json())
-    .then(foundData => setDepts(foundData))
-    .catch(error => console.log(error))
-  }
+  
 
-  const fetchCourses = async() => {
-    console.log(filters)
+  const fetchCourses = async(event) => {
+    event.preventDefault()
+    
+    //splitting the coreqs and prereqs
+    const prereqs = event.target.elements.prereqField.value===''?[]:event.target.elements.prereqField.value.split(',')
+    const coreqs = event.target.elements.coreqField.value===''?[]:event.target.elements.coreqField.value.split(',')
+
+    const obj = {
+        'cCode': event.target.elements.courseCodeField.value,
+        'coreqs': coreqs,
+        'creditWeight': filters.creditWeight?filters.creditWeight: '',
+        'department': filters.department?filters.department: '',
+        'name': event.target.elements.courseNameField.value,
+        'prereqs': prereqs,
+        'semesters': filters.semesters?filters.semesters: '',
+        'level': filters.level?filters.level: ''
+    }
+
+    setFilters(obj)
     
     //if server is taking a long time to fetch then run the api locally
-    fetch('http://127.0.0.1:5000/api', {
+    fetch('https://131.104.49.104/api', {
         method: 'POST',
-        body: JSON.stringify(filters),
+        body: JSON.stringify(obj),
         referrerPolicy: "unsafe-url",
         headers: {
             'Content-Type': 'application/json'
@@ -168,7 +186,7 @@ function App() {
         'uni': uni
     }
 
-    fetch('http://127.0.0.1:5000/api/createSubjectGraph', {
+    fetch('https://131.104.49.104/api/createSubjectGraph', {
         method: 'POST',
         body: JSON.stringify(obj),
         referrerPolicy: "unsafe-url",
@@ -187,7 +205,7 @@ function App() {
         'major': event.target.elements.majorField.value
     }
 
-    fetch('http://127.0.0.1:5000/api/createMajorGraph', {
+    fetch('https://131.104.49.104/api/createMajorGraph', {
         method: 'POST',
         body: JSON.stringify(obj),
         referrerPolicy: 'unsafe-url',
@@ -200,21 +218,21 @@ function App() {
     .catch(error => console.log(error))
   }
 
-  const handleChange = (event) => {
-      const name = event.target.name
-      const value = event.target.value
-      console.log(value)
-      //allows user to enter multiple courses separated by commas
-      if (value !== "" && value !== null) {
-          if (name === 'prereqs' || name === 'coreqs') {
-              const vals = value.split(",")
-              setFilters(values => ({...values, [name]: vals}))
-          } else {
-              setFilters(values => ({...values, [name]: value}))
-          }
-      }
+//   const handleChange = (event) => {
+//       const name = event.target.name
+//       const value = event.target.value
+
+//       //allows user to enter multiple courses separated by commas
+//       if (value !== "" && value !== null) {
+//           if (name === 'prereqs' || name === 'coreqs') {
+//               const vals = value.split(",")
+//               setFilters(values => ({...values, [name]: vals}))
+//           } else {
+//               setFilters(values => ({...values, [name]: value}))
+//           }
+//       }
       
-  }
+//   }
 
   const handleCloseSem = (event) => {
       //add the semester to the filters
@@ -274,25 +292,23 @@ function App() {
   }
 
   const removeFilter = (event)  => {
-      console.log(event.currentTarget.id)
       const arr = event.currentTarget.id.split(":")
-      console.log(arr)
 
       const tempObj = filters
-      console.log(tempObj)
       const tempFilters = tempObj[arr[0]]
-      console.log(tempFilters)
-
 
       if (Array.isArray(tempFilters)) {
-          if(tempFilters.includes(arr[1])){
-              var newFilters = tempFilters.filter((f) => {return f !== arr[1]})
+          if (tempFilters.length > 0) {
+            if(tempFilters.includes(arr[1])){
+                var newFilters = tempFilters.filter((f) => {return f !== arr[1]})
+            }
+            setFilters(values => ({...values, [arr[0]]: newFilters}))
+          } else {
+            setFilters(values => ({...values, [arr[0]]: null}))
           }
-          setFilters(values => ({...values, [arr[0]]: newFilters}))
       } else {
           setFilters(values => ({...values, [arr[0]]: null}))
       }
-      
   }
 
   function updateFilters (event, mode) {
@@ -348,8 +364,6 @@ function App() {
   }
 
   const changeUni = (event) => {
-      console.log(event.target.value)
-      console.log(event.target)
       setUni(event.target.value)
   }
 
@@ -363,25 +377,12 @@ function App() {
       setGraphData(null)
   }
 
-  const handleCloseGraph = async(event) => {
-      
-  }
-
   const classes = useStyles();
-  
-  const handleClose = () => {
-    setAnchorEl(null)
-  };
 
-  const openMenu = (event) => {
-    setAnchorEl(event.currentTarget)
-  };
-
-
-  const updatePage = (event) => {
-    const newPage = event.target.to.split("/")
-    setPage(newPage)
-  }
+//   const updatePage = (event) => {
+//     const newPage = event.target.to.split("/")
+//     setPage(newPage)
+//   }
   
   const theme = useTheme();
 
@@ -522,149 +523,154 @@ function App() {
 
             <div  style={{margin: '5px'}}>
                 {/* form to send set filters and fetch courses */}
-                <form className='flex_div'>
+                <form className='flex_div' onSubmit={fetchCourses}>
                     <label className='flex_item_md'>
                         <Typography variant='body1'>Course Name</Typography>
                         <input
+                            id='courseNameField'
                             className='input_field'
                             type='text'
                             name="name"
-                            value={filters.name || ""}
                             placeholder='ex: Software Engineering'
-                            onChange={handleChange}
                         />
                     </label>
 
                     <label className='flex_item_sm'>
                         <Typography variant='body1'>Course Code</Typography>
                         <input
+                            id='courseCodeField'
                             className='input_field'
                             type='text'
                             name="cCode"
-                            value={filters.cCode || ""}
                             placeholder='ex: CIS*3760'
-                            onChange={handleChange}
                         />
                     </label>
                     
                     <label className='flex_item_sm'>
                         <Typography variant='body1'>Course Pre-requisites</Typography>
                         <input
+                            id='prereqField'
                             className='input_field'
                             type='text'
                             name="prereqs"
-                            value={filters.prereqs || ""}
                             placeholder='ex: CIS*2750, CIS*3750'
-                            onChange={handleChange}
                         />
                     </label>
                     
                     <label className='flex_item_sm'>
                         <Typography variant='body1'>Course Co-requisites</Typography>
                         <input
+                            id='coreqField'
                             className='input_field'
                             type='text'
                             name="coreqs"
-                            value={filters.coreqs || ""}
                             placeholder='ex: CIS*2750, CIS*3750'
-                            onChange={handleChange}
                         />
                     </label>
+
+                    {/* div to select the semester and credit filter */}
+                    <div>
+                        <Button
+                            id='semester-button'
+                            style={{color: 'white', margin: '5px'}}
+                            variant='contained'
+                            color='secondary'
+                            onClick={openMenuSem}
+                        >
+                            Semester
+                            <ArrowDropDown style={{fill: 'white'}}/>
+                        </Button>
+                        <Menu
+                            id='semester-menu'
+                            anchorEl={anchorElSem}
+                            open={Boolean(anchorElSem)}
+                            onClose={handleCloseSem}
+                            TransitionComponent={Zoom}
+                        >
+                            <MenuItem onClick={handleCloseSem}>Fall</MenuItem>
+                            <MenuItem onClick={handleCloseSem}>Summer</MenuItem>
+                            <MenuItem onClick={handleCloseSem}>Winter</MenuItem>
+                        </Menu>
+
+                        <Button
+                            id='credit-button'
+                            style={{color: 'white', margin: '5px'}}
+                            variant='contained'
+                            color='secondary'
+                            onClick={openMenuCr}
+                        >
+                            Credit Weight
+                            <ArrowDropDown style={{fill: 'white'}}/>
+                        </Button>
+                        <Menu
+                            id='credit-menu'
+                            anchorEl={anchorElCr}
+                            open={Boolean(anchorElCr)}
+                            onClose={handleCloseCr}
+                            TransitionComponent={Zoom}
+                        >
+                            <MenuItem onClick={handleCloseCr}>0.25</MenuItem>
+                            <MenuItem onClick={handleCloseCr}>0.50</MenuItem>
+                            <MenuItem onClick={handleCloseCr}>0.75</MenuItem>
+                            <MenuItem onClick={handleCloseCr}>1.00</MenuItem>
+                            <MenuItem onClick={handleCloseCr}>1.25</MenuItem>
+                            <MenuItem onClick={handleCloseCr}>1.50</MenuItem>
+                        </Menu>
+
+                        <Button
+                            id='level-button'
+                            style={{color: 'white', margin: '5px'}}
+                            variant='contained'
+                            color='secondary'
+                            onClick={openMenuLv}
+                        >
+                            Course Level
+                            <ArrowDropDown style={{fill: 'white'}}/>
+                        </Button>
+                        <Menu
+                            id='level-menu'
+                            anchorEl={anchorElLv}
+                            open={Boolean(anchorElLv)}
+                            onClose={handleCloseLv}
+                            TransitionComponent={Zoom}
+                        >
+                            <MenuItem onClick={handleCloseLv} value='1000'>1000</MenuItem>
+                            <MenuItem onClick={handleCloseLv} value='2000'>2000</MenuItem>
+                            <MenuItem onClick={handleCloseLv} value='3000'>3000</MenuItem>
+                            <MenuItem onClick={handleCloseLv} value='4000'>4000</MenuItem>
+                        </Menu>
+
+                        <Button
+                            id='dept-button'
+                            style={{color: 'white', margin: '5px'}}
+                            variant='contained'
+                            color='secondary'
+                            onClick={openMenuDept}
+                        >
+                            Department
+                            <ArrowDropDown style={{fill: 'white'}}/>
+                        </Button>
+                        <Menu
+                            id='dept-menu'
+                            anchorEl={anchorElDept}
+                            open={Boolean(anchorElDept)}
+                            onClose={handleCloseDept}
+                            TransitionComponent={Zoom}
+                        >
+                            { depts.map(dept => (
+                                <MenuItem key={dept} onClick={handleCloseDept}>{dept}</MenuItem>
+                            ))}
+                        </Menu>
+                        
+                        <br></br>
+
+                        <Button type='submit' variant='contained' color='primary'>
+                            Search Courses
+                        </Button>
+                    </div>
+
                 </form>
-                {/* div to select the semester and credit filter */}
-                <div>
-                    <Button
-                        id='semester-button'
-                        style={{color: 'white', margin: '5px'}}
-                        variant='contained'
-                        color='secondary'
-                        onClick={openMenuSem}
-                    >
-                        Semester
-                        <ArrowDropDown style={{fill: 'white'}}/>
-                    </Button>
-                    <Menu
-                        id='semester-menu'
-                        anchorEl={anchorElSem}
-                        open={Boolean(anchorElSem)}
-                        onClose={handleCloseSem}
-                        TransitionComponent={Zoom}
-                    >
-                        <MenuItem onClick={handleCloseSem}>Fall</MenuItem>
-                        <MenuItem onClick={handleCloseSem}>Summer</MenuItem>
-                        <MenuItem onClick={handleCloseSem}>Winter</MenuItem>
-                    </Menu>
-
-                    <Button
-                        id='credit-button'
-                        style={{color: 'white', margin: '5px'}}
-                        variant='contained'
-                        color='secondary'
-                        onClick={openMenuCr}
-                    >
-                        Credit Weight
-                        <ArrowDropDown style={{fill: 'white'}}/>
-                    </Button>
-                    <Menu
-                        id='credit-menu'
-                        anchorEl={anchorElCr}
-                        open={Boolean(anchorElCr)}
-                        onClose={handleCloseCr}
-                        TransitionComponent={Zoom}
-                    >
-                        <MenuItem onClick={handleCloseCr}>0.25</MenuItem>
-                        <MenuItem onClick={handleCloseCr}>0.50</MenuItem>
-                        <MenuItem onClick={handleCloseCr}>0.75</MenuItem>
-                        <MenuItem onClick={handleCloseCr}>1.00</MenuItem>
-                        <MenuItem onClick={handleCloseCr}>1.25</MenuItem>
-                        <MenuItem onClick={handleCloseCr}>1.50</MenuItem>
-                    </Menu>
-
-                    <Button
-                        id='level-button'
-                        style={{color: 'white', margin: '5px'}}
-                        variant='contained'
-                        color='secondary'
-                        onClick={openMenuLv}
-                    >
-                        Course Level
-                        <ArrowDropDown style={{fill: 'white'}}/>
-                    </Button>
-                    <Menu
-                        id='level-menu'
-                        anchorEl={anchorElLv}
-                        open={Boolean(anchorElLv)}
-                        onClose={handleCloseLv}
-                        TransitionComponent={Zoom}
-                    >
-                        <MenuItem onClick={handleCloseLv} value='1000'>1000</MenuItem>
-                        <MenuItem onClick={handleCloseLv} value='2000'>2000</MenuItem>
-                        <MenuItem onClick={handleCloseLv} value='3000'>3000</MenuItem>
-                        <MenuItem onClick={handleCloseLv} value='4000'>4000</MenuItem>
-                    </Menu>
-
-                    <Button
-                        id='dept-button'
-                        style={{color: 'white', margin: '5px'}}
-                        variant='contained'
-                        color='secondary'
-                        onClick={openMenuDept}
-                    >
-                        Department
-                        <ArrowDropDown style={{fill: 'white'}}/>
-                    </Button>
-                    <Menu
-                        id='dept-menu'
-                        anchorEl={anchorElDept}
-                        open={Boolean(anchorElDept)}
-                        onClose={handleCloseDept}
-                        TransitionComponent={Zoom}
-                    >
-                        { depts.map(dept => (
-                            <MenuItem key={dept} onClick={handleCloseDept}>{dept}</MenuItem>
-                        ))}
-                    </Menu>
-                </div>
+                
             </div>
 
             {/* function to display currently applied filters */}
@@ -677,16 +683,27 @@ function App() {
                                         // if the filter is an array, then traverse it's indexes
                                         //otherwise just return it
                                         if (Array.isArray(filter[1])) {
-                                            return(
-                                                <div key={filter[1]}>{
-                                                    filter[1].map((f) => (
-                                                        <Button key={f} style={{color: 'white', fontSize: '18px', margin: '5px'}} color='info' variant='contained'>
-                                                            {filter[0]}:{f}
-                                                            <Close id={filter[0]+':'+f} onClick={removeFilter}/>
+                                            if (filter[1].length > 0) {
+                                                return(
+                                                    <div key={filter[1]}>{
+                                                        filter[1].map((f) => (
+                                                            <Button key={f} style={{color: 'white', fontSize: '18px', margin: '5px'}} color='info' variant='contained'>
+                                                                {filter[0]}:{f}
+                                                                <Close id={filter[0]+':'+f} onClick={removeFilter}/>
+                                                            </Button>
+                                                        ))
+                                                    }</div>
+                                                )
+                                            } else {
+                                                return(
+                                                    <div key={filter[1]}>{
+                                                        <Button key={filter[1]} style={{color: 'white', fontSize: '18px', margin: '5px'}} color='info' variant='contained'>
+                                                            {filter[0]}:{filter[1][0]}
+                                                            <Close id={filter[0]+':'+filter[1]} onClick={removeFilter}/>
                                                         </Button>
-                                                    ))
-                                                }</div>
-                                            )
+                                                    }</div>
+                                                )
+                                            }
                                         } else {
                                             if (filter[1] !== null) {
                                                 return(<Button key={filter[1]} style={{color: 'white', fontSize: '18px', margin: '5px'}} color='info' variant='contained'>
@@ -705,9 +722,7 @@ function App() {
                 }</div>}
             </div>
 
-            <Button onClick = {fetchCourses} variant='contained' color='primary'>
-                Search Courses
-            </Button>
+            
 
             {/* function to display the fetched data in a table */}
             {(() => {
@@ -809,9 +824,7 @@ function App() {
                             className='input_field'
                             type='text'
                             name='subject'
-                            //value={subject.subject || ""}
                             placeholder='CIS'
-                            //onChange={handleSubjectChange}
                         />
                     </label>
 
