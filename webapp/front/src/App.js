@@ -396,6 +396,7 @@ function App() {
 
   const myConfig = {
     nodeHighlightBehavior: true,
+    highlightDegree: 1,
     highlightOpacity: 0.1,
     initialZoom: 1,
     height: 400,
@@ -412,7 +413,8 @@ function App() {
       highlightFontSize: 17,
     },
     link: {
-      highlightColor: "red",
+      highlightColor: "black",
+      color: 'black'
     },
   };
   

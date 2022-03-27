@@ -33,11 +33,13 @@ def getColor(course):
     if (course[levelIndex+1] == '1'):
         return 'red'
     elif (course[levelIndex+1] == '2'):
-        return 'yellow'
+        return 'blue'
     elif (course[levelIndex+1] == '3'):
         return 'green'
     elif (course[levelIndex+1] == '4'):
         return 'purple'
+    else:
+        return 'orange'
 
 def createGraphJSON(subject):
     """iterates through all courses in subject and adds nodes of its prereqs
@@ -65,12 +67,12 @@ def createGraphJSON(subject):
             
         prereqs = getNodes(subject[course]['prereqs'])
         for p in prereqs:
-            nodeColor = getColor(p)
+            # nodeColor = getColor(p)
             if p not in seen:
                 seen.add(p)
                 
                 # if p has the subject's code then it will be circle, else it will be a square
-                node = {"id": p, "color": nodeColor} if getBaseCode(p) == subjectCode else {"id": p, "color": nodeColor, "symbolType": "square"}
+                node = {"id": p, "color": getColor(p)} if getBaseCode(p) == subjectCode else {"id": p, "color": getColor(p), "symbolType": "square"}
                 nodes.append(node)
 
             links.append(
