@@ -120,18 +120,27 @@ function App() {
   const [anchorElLv, setAnchorElLv] = useState(null)
   const [anchorElDept, setAnchorElDept] = useState(null)
   const [depts, setDepts] = useState([])
+  const [subject, setSubject] = useState({'subject': ''})
+  const [subjectGraph, setSubjectGraph] = useState(null)
+  const [major, setMajor] = useState({'subject': ''})
+  const [majorGraph, setMajorGraph] = useState(null)
+  const [uni, setUni] = useState('guelph')
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [page, setPage] = React.useState('Home')
+  const [graph, setGraphData] = useState(null)
+  const [open, setOpen] = React.useState(false);
 
   useEffect( async () => {
       await getDepartments()
   }, [])
 
   const getDepartments = async() => {
-      fetch('https://131.104.49.104/api/getDepartments', {
+      fetch('http://127.0.0.1:5000/api/getDepartments', {
           method: 'GET',
           referrerPolicy: 'unsafe-url'
       })
       .then(res => res.json())
-      .then(data => setDepts(data))
+      .then(foundData => setDepts(foundData))
       .catch(error => console.log(error))
   }
 
@@ -139,7 +148,7 @@ function App() {
       console.log(filters)
       
       //if server is taking a long time to fetch then run the api locally
-      fetch('https://131.104.49.104/api', {
+      fetch('http://127.0.0.1:5000/api', {
           method: 'POST',
           body: JSON.stringify(filters),
           referrerPolicy: "unsafe-url",
@@ -148,16 +157,34 @@ function App() {
           }
       })
       .then(response => response.json())
-      .then(data => setCourses(data))
+      .then(foundData => setCourses(foundData))
       .catch(error => console.log(error))
-  };
+  }
+
+  const getSubjectGraph = async() => {
+      console.log(subject)
+      console.log(subjectGraph)
+
+      fetch('http://127.0.0.1:5000/api/createSubjectGraph', {
+          method: 'POST',
+          body: JSON.stringify(subject),
+          referrerPolicy: "unsafe-url",
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      })
+      .then(response => response.json())
+      .then(foundData => {console.log(foundData)
+          setSubjectGraph(foundData)})
+      .catch(error => console.log(error))
+  }
 
   const handleChange = (event) => {
       const name = event.target.name
       const value = event.target.value
       console.log(value)
       //allows user to enter multiple courses separated by commas
-      if (value != "" && value != null) {
+      if (value !== "" && value !== null) {
           if (name === 'prereqs' || name === 'coreqs') {
               const vals = value.split(",")
               setFilters(values => ({...values, [name]: vals}))
@@ -168,9 +195,23 @@ function App() {
       
   }
 
+  const handleSubjectChange = (event) => {
+    //console.log(event.target.value)
+    if (event.target.value === "") {
+        setSubject(values => ({...values, [event.target.name]: ''}))
+    } else if (event.target.value !== '' && event.target.value !== null) {
+        setSubject(values => ({...values, [event.target.name]: event.target.value}))
+    }
+  }
+
+  const handleMajorChange = (event) => {
+      event.preventDefault()
+      console.log(event.target.elements.majorField.value)
+  }
+
   const handleCloseSem = (event) => {
       //add the semester to the filters
-      if (event.currentTarget.innerText != "") {
+      if (event.currentTarget.innerText !== "") {
           updateFilters(event, 1)
       }
       setAnchorElSem(null)
@@ -178,7 +219,7 @@ function App() {
 
   const handleCloseCr = (event) => {
       //add the credit weight to the filters
-      if (event.currentTarget.innerText != "") {
+      if (event.currentTarget.innerText !== "") {
           updateFilters(event, 2)
       }
       setAnchorElCr(null)
@@ -186,7 +227,7 @@ function App() {
 
   const handleCloseLv = (event) => {
       //add the level to the filters
-      if (event.currentTarget.value != null) {
+      if (event.currentTarget.value !== null) {
           updateFilters(event, 3)
       }
       setAnchorElLv(null)
@@ -194,7 +235,7 @@ function App() {
 
   const handleCloseDept = (event) => {
       //add the department to the filters
-      if (event.currentTarget.innerText != null && event.currentTarget.innerText != "") {
+      if (event.currentTarget.innerText !== null && event.currentTarget.innerText !== "") {
           updateFilters(event, 4)
       }
       setAnchorElDept(null)
@@ -238,10 +279,8 @@ function App() {
 
       if (Array.isArray(tempFilters)) {
           if(tempFilters.includes(arr[1])){
-              var newFilters = tempFilters.filter((f) => {return f != arr[1]})
-              //tempFilters.pop(arr[1])
+              var newFilters = tempFilters.filter((f) => {return f !== arr[1]})
           }
-          //console.log(tempFilters)
           setFilters(values => ({...values, [arr[0]]: newFilters}))
       } else {
           setFilters(values => ({...values, [arr[0]]: null}))
@@ -301,8 +340,14 @@ function App() {
       }
   }
 
+  const changeUni = (event) => {
+      console.log(event.target.value)
+      console.log(event.target)
+      setUni(event.target.value)
+  }
+
   //creating a state
-  const [graph, setGraphData] = useState(null)
+  
     
 
   //function to update the graph div
@@ -322,8 +367,7 @@ function App() {
   const classes = useStyles();
 
   //menu functionality
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const [page, setPage] = React.useState('Home')
+  
   
   const handleClose = () => {
     setAnchorEl(null)
@@ -342,37 +386,39 @@ function App() {
   const theme = useTheme();
 
 
-  const [open, setOpen] = React.useState(false);
+  
 
   const handleDrawerOpen = () => {
     setOpen(true);
-  };
+  }
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
+  }
 
-  // graph payload (with minimalist structure)
-const data = {
-    nodes: [{ id: "Harry" }, { id: "Sally" }, { id: "Alice" }],
-    links: [
-      { source: "Harry", target: "Sally" },
-      { source: "Harry", target: "Alice" },
-    ],
-  };
-  
-  // the graph configuration, just override the ones you need
   const myConfig = {
     nodeHighlightBehavior: true,
+    highlightOpacity: 0.1,
+    initialZoom: 0.5,
+    height: 1300,
+    width: 1300,
+    directed: true,
+    d3: {
+        linkLength: 90,
+        gravity: -400,
+    },
     node: {
       color: "lightgreen",
-      size: 120,
-      highlightStrokeColor: "blue",
+      fontSize: 15,
+      size: 200,
+      highlightStrokeColor: "red",
+      highlightFontSize: 17,
     },
     link: {
-      highlightColor: "lightblue",
+      highlightColor: "red",
     },
   };
+  
   
   const onClickNode = function(nodeId) {
     window.alert(`Clicked node ${nodeId}`);
@@ -631,7 +677,6 @@ const data = {
                     Object.entries(filters).map(filter => {
                         return (
                             <div key={filter}>
-                                {/* <p key={filter[0]} style={{color: 'black'}}>{filter[0]}:</p> */}
                                     {(() => {
                                         // if the filter is an array, then traverse it's indexes
                                         //otherwise just return it
@@ -647,7 +692,7 @@ const data = {
                                                 }</div>
                                             )
                                         } else {
-                                            if (filter[1] != null) {
+                                            if (filter[1] !== null) {
                                                 return(<Button key={filter[1]} style={{color: 'white', fontSize: '18px', margin: '5px'}} color='info' variant='contained'>
                                                             {filter[0]}:{filter[1]}
                                                             <Close id={filter[0]+':'+filter[1]} onClick={removeFilter}/>
@@ -728,7 +773,7 @@ const data = {
             <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
                 {(() => {
                     //function to create the tree graph
-                    if (graph != null) {
+                    if (graph !== null) {
                         return (
                             <Tree
                                 data={graph}
@@ -744,17 +789,86 @@ const data = {
                 })()}
             </div>
 
-            <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
-                <Graph
-                id="graph-id" // id is mandatory
-                data={data}
-                config={myConfig}
-                onClickNode={onClickNode}
-                onClickLink={onClickLink}
-                />
+            <Typography variant='body1'>Select a university</Typography>
+                
+            <Button id='guelph-button' onClick = {changeUni} variant='contained' color='primary' style={{margin: '5px'}} value='guelph'>
+                Guelph
+            </Button>
+
+            <Button id='waterloo-button' onClick = {changeUni} variant='contained' color='primary' style={{margin: '5px'}} value='waterloo'>
+                Waterloo
+            </Button>
+            {(() => {
+                return(
+                    <Typography variant='h5'>Selected University: UNIVERSITY OF {uni.toUpperCase()}</Typography>
+                )
+            })()}
+
+            <div style={{margin: '10px'}}>
+                <form>
+                    <label>
+                        <Typography variant='body1'>Subject Name</Typography>
+                        <input
+                            className='input_field'
+                            type='text'
+                            name='subject'
+                            value={subject.subject || ""}
+                            placeholder='CIS'
+                            onChange={handleSubjectChange}
+                        />
+                    </label>
+
+                    <br></br>
+
+                    {/* Button for creating subject graph */}
+                    <Button type='submit' variant='contained' color='primary' style={{margin: '5px'}}>
+                        Generate Graph
+                    </Button>
+                </form>
+
+                
+                
             </div>
             
-        
+            <div style={{backgroundColor: 'white'}}>
+                {(() => {
+                    if (subjectGraph !== null && subjectGraph.nodes.length !== 0 && subjectGraph.links.length !== 0) {
+                        return (
+                            <Graph
+                            id="graph-id" // id is mandatory
+                            data={subjectGraph}
+                            config={myConfig}
+                            onClickNode={onClickNode}
+                            onClickLink={onClickLink}
+                            />
+                        )
+                        
+                    } else {
+                        return(<></>)
+                    }
+                })()}
+            </div>
+
+            <div style={{margin: '10px'}}>
+                <form onSubmit={handleMajorChange}>
+                    <label>
+                        <Typography variant='body1'>Major Name</Typography>
+                        <input
+                            id='majorField'
+                            className='input_field'
+                            type='text'
+                            name='major'
+                            placeholder='CS'
+                        />
+                    </label>
+                    <br></br>
+                    <Button type='submit' variant='contained' color='primary' style={{margin: '5px'}}>
+                        Generate Graph
+                    </Button>
+                </form>
+            </div>
+            
+            
         </div>
 
       </Main>

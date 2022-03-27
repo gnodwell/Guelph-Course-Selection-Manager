@@ -25,6 +25,18 @@ def getNodes(prereqs):
 
     return reqsList
 
+def getColor(course):
+    levelIndex = course.find('*')
+
+    if (course[levelIndex+1] == '1'):
+        return 'red'
+    elif (course[levelIndex+1] == '2'):
+        return 'yellow'
+    elif (course[levelIndex+1] == '3'):
+        return 'green'
+    else:
+        return 'purple'
+
 def createGraphJSON(subject):
     """iterates through all courses in subject and adds nodes of its prereqs
 
@@ -40,19 +52,23 @@ def createGraphJSON(subject):
     for course in subject:
         if course not in seen:
             seen.add(course)
+            nodeColor = getColor(course)
             nodes.append(
                 {
-                    "id": course
+                    "id": course,
+                    "color": nodeColor
                 }
             )
-
+            
         prereqs = getNodes(subject[course]['prereqs'])
         for p in prereqs:
             if p not in seen:
                 seen.add(p)
+                nodeColor = getColor(p)
                 nodes.append(
                     {
                         "id": p,
+                        "color": nodeColor
                     }
                 )
 
@@ -77,8 +93,11 @@ def generateDataset(subject):
     Returns:
         Dict: d3 graph in json format
     """
-    if not subject:
-        return {}
+    if not subject or subject == '':
+        return {
+            'links': [],
+            'nodes': []
+        }
 
     #open relations.json and load it in
     with open('relations.json', 'r', encoding='utf-8') as f:
