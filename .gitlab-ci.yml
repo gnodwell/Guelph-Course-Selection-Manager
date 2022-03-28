@@ -45,7 +45,6 @@ unit-test-job:   # This job runs in the test stage.
     # - python3 testFunctions.py
 
 front-end-test-job:
-  image: jsdom
   stage: test
   script:
     - cd webapp
