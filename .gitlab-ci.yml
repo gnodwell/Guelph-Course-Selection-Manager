@@ -47,6 +47,9 @@ unit-test-job:   # This job runs in the test stage.
 front-end-test-job:
   stage: test
   script:
+    - cd installationScripts
+    - ./webAppSetup.sh
+    - cd ..
     - cd webapp
     - cd front
     - npm run test
