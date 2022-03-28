@@ -67,7 +67,7 @@ back-end-test-job:
   stage: test
   script:
   - cd installationScripts
-  - ./webappSetup.sh
+  - ./webAppSetup.sh
   - cd ..
   - cd webapp
   - cd back
