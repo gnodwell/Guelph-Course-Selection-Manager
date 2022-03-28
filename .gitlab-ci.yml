@@ -32,8 +32,6 @@ stages:          # List of stages for jobs, and their order of execution
     
 
 before_script:
-  image: python3.8
-  script:
     - apt-get update -q -y
     - apt-get install -y python-pip
     - python -V
