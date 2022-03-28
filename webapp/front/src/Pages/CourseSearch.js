@@ -6,25 +6,33 @@ import Button from '@mui/material/Button';
 import { ArrowDropDown, Close } from '@mui/icons-material/';
 import Zoom from '@mui/material/Zoom';
 import { Menu, MenuItem, TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material/';
-
-
-
-
-
-
-
+import Container from '@mui/material/Container';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
 
 function CourseSearch() {
 
     const [courses, setCourses] = useState([])
     const [filters, setFilters] = useState({})
+    const [nameValue, setValueName] = useState('')
+    const [codeValue, setValueCode] = useState('')
+    const [prereqValue, setValuePreReq] = useState('')
+    const [coreqValue, setValueCoReq] = useState('')
+    const [semValue, setValueSem] = useState('')
+    const [creditValue, setValueCredit] = useState('')
+    const [levelValue, setValueLevel] = useState('')
+    const [deptValue, setValueDept] = useState('')
+
+
     const [anchorElSem, setAnchorElSem] = useState(null)
     const [anchorElCr, setAnchorElCr] = useState(null)
     const [anchorElLv, setAnchorElLv] = useState(null)
     const [anchorElDept, setAnchorElDept] = useState(null)
     const [depts, setDepts] = useState([])
-
     
     // useEffect(() => {async function getDepartments () {
     //     await
@@ -38,6 +46,7 @@ function CourseSearch() {
     // }
     // getDepartments()
     // }, [])
+
     useEffect(() => {async function getDepartments () {
         try {
             await
@@ -62,16 +71,29 @@ function CourseSearch() {
     const fetchCourses = async(event) => {
         event.preventDefault()
         
+        console.log("Search name: ", nameValue);
+        console.log(filters);
         //splitting the coreqs and prereqs
-        const prereqs = event.target.elements.prereqField.value===''?[]:event.target.elements.prereqField.value.split(',')
-        const coreqs = event.target.elements.coreqField.value===''?[]:event.target.elements.coreqField.value.split(',')
+        
+        var prereqs = []     
+        var coreqs = []
+
+        if(prereqValue != null && prereqValue != '') {
+            prereqs = prereqValue.split(',');
+            
+        }
+        if(coreqValue != null && coreqValue != '') {
+            coreqs = coreqValue.split(',');
+        }
+        
+        console.log("prereqs: ", prereqs);
     
         const obj = {
-            'cCode': event.target.elements.courseCodeField.value,
+            'cCode': codeValue,
             'coreqs': coreqs,
             'creditWeight': filters.creditWeight?filters.creditWeight: '',
             'department': filters.department?filters.department: '',
-            'name': event.target.elements.courseNameField.value,
+            'name': nameValue,
             'prereqs': prereqs,
             'semesters': filters.semesters?filters.semesters: '',
             'level': filters.level?filters.level: ''
@@ -141,6 +163,48 @@ function CourseSearch() {
         setAnchorElDept(event.currentTarget)
     }
 
+
+    //*SEARCH HANDLERS
+    const handleNameChange = (event) => {
+        setValueName(event.target.value);
+    }
+
+    const handleCodeChange = (event) => {
+        setValueCode(event.target.value);
+    }
+
+    const handleCoReqChange = (event) => {
+        setValueCoReq(event.target.value);
+    }
+
+    const handlePreReqChange = (event) => {
+        setValuePreReq(event.target.value);
+    }
+
+    const handleSemChange = (event) => {
+        console.log(event.target.value)
+        setValueSem(event.target.value);
+        console.log(semValue)
+        updateFilters(event, 1);
+
+       
+    }
+
+    const handleCreditChange = (event) => {
+        setValueCredit(event.target.value);
+        updateFilters(event, 2);
+    }
+
+    const handleLevelChange = (event) => {
+        setValueLevel(event.target.value);
+        updateFilters(event, 3);
+    }
+
+    const handleDeptChange = (event) => {
+        setValueDept(event.target.value);
+        updateFilters(event, 4);
+    }
+
 //   const handleChange = (event) => {
 //       const name = event.target.name
 //       const value = event.target.value
@@ -163,28 +227,29 @@ function CourseSearch() {
         var isIn = 0
         if (mode === 1) {
             if (filters.semesters === undefined) {
-                setFilters(values => ({...values, ['semesters']: [event.target.innerText]}))
+                console.log(event.target.value);
+                setFilters(values => ({...values, ['semesters']: [event.target.value]}))
             } else {
                 //check if filter already exists
-                isIn = checkIfInArray(filters.semesters, event.target.innerText)
+                isIn = checkIfInArray(filters.semesters, semValue)
                 
                 if (isIn === 0) {
-                    setFilters(values => ({...values, ['semesters']: [...filters.semesters, event.target.innerText]}))
+                    setFilters(values => ({...values, ['semesters']: [...filters.semesters, semValue]}))
                 }
             }
         } else if (mode === 2) {
             if (filters.creditWeight === undefined) {
-                setFilters(values => ({...values, ['creditWeight']: [event.target.innerText]}))
+                setFilters(values => ({...values, ['creditWeight']: [event.target.value]}))
             } else {
                 //check if filter already exists
-                isIn = checkIfInArray(filters.creditWeight, event.target.innerText)
+                isIn = checkIfInArray(filters.creditWeight, event.target.value)
   
                 if (isIn === 0) {
-                    setFilters(values => ({...values, ['creditWeight']: [...filters.creditWeight, event.target.innerText]}))
+                    setFilters(values => ({...values, ['creditWeight']: [...filters.creditWeight, creditValue]}))
                 }
             }
         } else if (mode === 3) {
-            const val = event.target.value?.toString()
+            const val = event.target.value
             if (filters.level === undefined) {
                 setFilters(values => ({...values, ['level']: [val]}))
             } else {
@@ -196,7 +261,7 @@ function CourseSearch() {
                 }
             }
         } else if (mode === 4) {
-            const val = event.target.innerText
+            const val = event.target.value
             if (filters.department === undefined) {
                 setFilters(values => ({...values, ['department']: [val]}))
             } else {
@@ -240,167 +305,210 @@ function CourseSearch() {
     }
 
     return (
-        <div className="courseSearch">
-              <h1>Course Search</h1>
-
-            <Typography variant='h5'>Select the filters you would like to apply for course search</Typography>
-
+        //* 🔍COURSE SEARCH SECTION
+        <div id="course-search">
             <br></br>
 
-            <div  style={{margin: '5px'}}>
-                {/* form to send set filters and fetch courses */}
-                <form className='flex_div' onSubmit={fetchCourses}>
-                    <label className='flex_item_md'>
-                        <Typography variant='body1'>Course Name</Typography>
-                        <input
-                            id='courseNameField'
-                            className='input_field'
-                            type='text'
-                            name="name"
-                            placeholder='ex: Software Engineering'
-                        />
-                    </label>
-
-                    <label className='flex_item_sm'>
-                        <Typography variant='body1'>Course Code</Typography>
-                        <input
-                            id='courseCodeField'
-                            className='input_field'
-                            type='text'
-                            name="cCode"
-                            placeholder='ex: CIS*3760'
-                        />
-                    </label>
+            <Box sx = {{
+                    backgroundColor: '#D5E7F2',
+                    color: 'black',
+                    borderRadius: '3%',
                     
-                    <label className='flex_item_sm'>
-                        <Typography variant='body1'>Course Pre-requisites</Typography>
-                        <input
-                            id='prereqField'
-                            className='input_field'
-                            type='text'
-                            name="prereqs"
-                            placeholder='ex: CIS*2750, CIS*3750'
-                        />
-                    </label>
+            }}>
+                <Box sx = {{
+                    backgroundColor: '#D5E7F2',
+                    color: 'black',
+                    borderRadius: '3%',
                     
-                    <label className='flex_item_sm'>
-                        <Typography variant='body1'>Course Co-requisites</Typography>
-                        <input
-                            id='coreqField'
-                            className='input_field'
-                            type='text'
-                            name="coreqs"
-                            placeholder='ex: CIS*2750, CIS*3750'
-                        />
-                    </label>
+                    p: 2,
 
-                    {/* div to select the semester and credit filter */}
-                    <div>
-                        <Button
-                            id='semester-button'
-                            style={{color: 'white', margin: '5px'}}
-                            variant='contained'
-                            color='secondary'
-                            onClick={openMenuSem}
-                        >
-                            Semester
-                            <ArrowDropDown style={{fill: 'white'}}/>
-                        </Button>
-                        <Menu
-                            id='semester-menu'
-                            anchorEl={anchorElSem}
-                            open={Boolean(anchorElSem)}
-                            onClose={handleCloseSem}
-                            TransitionComponent={Zoom}
-                        >
-                            <MenuItem onClick={handleCloseSem}>Fall</MenuItem>
-                            <MenuItem onClick={handleCloseSem}>Summer</MenuItem>
-                            <MenuItem onClick={handleCloseSem}>Winter</MenuItem>
-                        </Menu>
+                }}>
+                    <h2>🔍Course Search</h2>
+                    <Typography variant='h6'>Select the filters you would like to apply for course search</Typography>
+                    <div  style={{margin: '5px'}}>
+                        {/* form to send set filters and fetch courses */}
+                        <form className='flex_div' onSubmit={fetchCourses}>
+                            <label className='flex_item_md'>
+                                <Typography variant='body1'>Course Name</Typography>
+                                <TextField 
+                                    value={nameValue == null ? '' : nameValue}
+                                    onChange={handleNameChange}
+                                    id='courseNameField'
+                                    className='input_field'
+                                    type='text'
+                                    name="name"
+                                    placeholder='ex: Software Engineering'
+                                />
+                            </label>
 
-                        <Button
-                            id='credit-button'
-                            style={{color: 'white', margin: '5px'}}
-                            variant='contained'
-                            color='secondary'
-                            onClick={openMenuCr}
-                        >
-                            Credit Weight
-                            <ArrowDropDown style={{fill: 'white'}}/>
-                        </Button>
-                        <Menu
-                            id='credit-menu'
-                            anchorEl={anchorElCr}
-                            open={Boolean(anchorElCr)}
-                            onClose={handleCloseCr}
-                            TransitionComponent={Zoom}
-                        >
-                            <MenuItem onClick={handleCloseCr}>0.25</MenuItem>
-                            <MenuItem onClick={handleCloseCr}>0.50</MenuItem>
-                            <MenuItem onClick={handleCloseCr}>0.75</MenuItem>
-                            <MenuItem onClick={handleCloseCr}>1.00</MenuItem>
-                            <MenuItem onClick={handleCloseCr}>1.25</MenuItem>
-                            <MenuItem onClick={handleCloseCr}>1.50</MenuItem>
-                        </Menu>
+                            <label className='flex_item_sm'>
+                                <Typography variant='body1'>Course Code</Typography>
+                                <TextField
+                                    value={codeValue == null ? '' : codeValue}
+                                    onChange={handleCodeChange}
+                                    id='courseCodeField'
+                                    className='input_field'
+                                    type='text'
+                                    name="cCode"
+                                    placeholder='ex: CIS*3760'
+                                />
+                            </label>
+                            
+                            <label className='flex_item_sm'>
+                                <Typography variant='body1'>Course Pre-requisites</Typography>
+                                <TextField
+                                    value={prereqValue || ''}
+                                    onChange={handlePreReqChange}
 
-                        <Button
-                            id='level-button'
-                            style={{color: 'white', margin: '5px'}}
-                            variant='contained'
-                            color='secondary'
-                            onClick={openMenuLv}
-                        >
-                            Course Level
-                            <ArrowDropDown style={{fill: 'white'}}/>
-                        </Button>
-                        <Menu
-                            id='level-menu'
-                            anchorEl={anchorElLv}
-                            open={Boolean(anchorElLv)}
-                            onClose={handleCloseLv}
-                            TransitionComponent={Zoom}
-                        >
-                            <MenuItem onClick={handleCloseLv} value='1000'>1000</MenuItem>
-                            <MenuItem onClick={handleCloseLv} value='2000'>2000</MenuItem>
-                            <MenuItem onClick={handleCloseLv} value='3000'>3000</MenuItem>
-                            <MenuItem onClick={handleCloseLv} value='4000'>4000</MenuItem>
-                        </Menu>
+                                    id='prereqField'
+                                    className='input_field'
+                                    type='text'
+                                    name="prereqs"
+                                    placeholder='ex: CIS*2750, CIS*3750'
+                                />
+                            </label>
+                            
+                            <label className='flex_item_sm'>
+                                <Typography variant='body1'>Course Co-requisites</Typography>
+                                <TextField
+                                    value={coreqValue == null ? '' : coreqValue}
+                                    onChange={handleCoReqChange}
+                                    id='coreqField'
+                                    className='input_field'
+                                    type='text'
+                                    name="coreqs"
+                                    placeholder='ex: CIS*2750, CIS*3750'
+                                />
+                            </label>
 
-                        <Button
-                            id='dept-button'
-                            style={{color: 'white', margin: '5px'}}
-                            variant='contained'
-                            color='secondary'
-                            onClick={openMenuDept}
-                        >
-                            Department
-                            <ArrowDropDown style={{fill: 'white'}}/>
-                        </Button>
-                        <Menu
-                            id='dept-menu'
-                            anchorEl={anchorElDept}
-                            open={Boolean(anchorElDept)}
-                            onClose={handleCloseDept}
-                            TransitionComponent={Zoom}
-                        >
-                            { depts.map(dept => (
-                                <MenuItem key={dept} onClick={handleCloseDept}>{dept}</MenuItem>
-                            ))}
-                        </Menu>
+                            {/* div to select the semester and credit filter */}
+                            <div>
+                             
+
+                                {/* SEMESTER SELECT MENU */}
+                                <Box sx = {{
+                                    backgroundColor: '#D5E7F2', color: 'black', borderRadius: '3%',
+                                    p: 0.7,
+                                }}>
+                                    <FormControl fullWidth size='small' margin='dense'>
+                                        <InputLabel id="semester-select-label">Semester</InputLabel>
+                                        <Select
+                                            value = {semValue == null ? '' : semValue}
+                                            labelId='semester-select-label'
+                                            id='dept-menu2'
+                                            label="Semester" 
+                                            onChange={handleSemChange}
+                                        >
+                                            <MenuItem value="Fall">Fall</MenuItem>
+                                            <MenuItem value="Summer">Summer</MenuItem>
+                                            <MenuItem value="Winter">Winter</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+
+                                {/* CREDIT WEIGHT SELECT MENU */}
+                                <Box sx = {{
+                                    backgroundColor: '#D5E7F2', color: 'black', borderRadius: '3%',
+                                    p: 0.7,
+                                }}>
+                                    <FormControl fullWidth size='small' margin='dense'>
+                                        <InputLabel id="credit-select-label">Credit Weight</InputLabel>
+                                        <Select
+                                            
+                                            value = {creditValue == null ? '' : creditValue}
+                                            labelId='credit-select-label'
+                                            id='dept-menu2'
+                                            label="Credit Weight" 
+                                            onChange={handleCreditChange}
+                                        >
+                                            <MenuItem value='0.25'>0.25</MenuItem>
+                                            <MenuItem value='0.50'>0.50</MenuItem>
+                                            <MenuItem value='0.75'>0.75</MenuItem>
+                                            <MenuItem value='1.00'>1.00</MenuItem>
+                                            <MenuItem value='1.25'>1.25</MenuItem>
+                                            <MenuItem value='1.50'>1.50</MenuItem>
+                                            {/* <MenuItem value={0.25}>0.25</MenuItem>
+                                            <MenuItem value={0.50}>0.50</MenuItem>
+                                            <MenuItem value={0.75}>0.75</MenuItem>
+                                            <MenuItem value={1.00}>1.00</MenuItem>
+                                            <MenuItem value={1.25}>1.25</MenuItem>
+                                            <MenuItem value={1.50}>1.50</MenuItem> */}
+
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+
+                                {/* COURSE LEVEL SELECT MENU */}
+                                <Box sx = {{
+                                    backgroundColor: '#D5E7F2', color: 'black', borderRadius: '3%',
+                                    p: 0.7,
+                                }}>
+                                    <FormControl fullWidth size='small' margin='dense'>
+                                        <InputLabel id="level-select-label">Course Level</InputLabel>
+                                        <Select
+
+                                            value= {levelValue == null ? '' : levelValue}
+                                            labelId='level-select-label'
+                                            id='dept-menu2'
+                                            label="Course Level" 
+                                            onChange={handleLevelChange}
+                                        >
+                                            <MenuItem value='1000'>1000</MenuItem>
+                                            <MenuItem value='2000'>2000</MenuItem>
+                                            <MenuItem value='3000'>3000</MenuItem>
+                                            <MenuItem value='4000'>4000</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+
+                                {/* DEPARTMENT SELECT MENU */}
+                                <Box sx = {{
+                                    backgroundColor: '#D5E7F2', color: 'black', borderRadius: '3%',
+                                    p: 0.7,
+                                }}>
+                                    <FormControl fullWidth size='small' margin='dense'>
+                                        <InputLabel id="dept-select-label">Department</InputLabel>
+                                        <Select
+                                            value= {deptValue == null ? '' : deptValue}
+                                            labelId='dept-select-label'
+                                            id='dept-menu2'
+                                            label="Department" 
+                                            onChange={handleDeptChange}
+                                        >
+                                            { depts.map(dept => (
+                                            <MenuItem key={dept} value={dept == null ? '' : dept}>{dept}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                                
+                                
+                                
+                                <br></br>
+                                <Box sx = {{
+                                    backgroundColor: '#D5E7F2',
+                                    color: 'black',
+                                    borderRadius: '3%',
+                                    
+                                    p: 0.7,
+
+                                }}>
+                                    <Button onClick ={fetchCourses} variant='outlined' color='primary' >
+                                    Search Courses
+                                    </Button>
+                                </Box>                
+                                
+                            </div>
+
+                        </form>
                         
-                        <br></br>
-
-                        <Button type='submit' variant='contained' color='primary'>
-                            Search Courses
-                        </Button>
                     </div>
 
-                </form>
-                
-            </div>
+                </Box>
+            </Box>
 
-            {/* function to display currently applied filters */}
-            <div style={{backgroundColor: '#001e3c', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px', maxHeight: '240px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
+             {/* function to display currently applied filters */}
+             <div style={{backgroundColor: '#001e3c', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px', maxHeight: '240px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
                 {filters && <div>{
                     Object.entries(filters).map(filter => {
                         return (
