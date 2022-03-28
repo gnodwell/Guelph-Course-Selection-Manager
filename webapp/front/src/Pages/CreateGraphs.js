@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-
 import Tree from 'react-d3-tree';
 import { Graph } from 'react-d3-graph'
-
-
-
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
-
-
 import data1 from '../Data/mockdataset.json';
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 function CreateGraphs() {
 
@@ -19,10 +16,12 @@ function CreateGraphs() {
     const [uni, setUni] = useState('guelph')
     const [subjectGraph, setSubjectGraph] = useState(null)
     const [majorGraph, setMajorGraph] = useState(null)
+    const [courseInfo, setCourseInfo] = useState(null)
+    const [open, setOpen] = useState(false)
 
-    
-
-    
+    const handleClose = () => {
+        setOpen(false)
+    }
     
     const changeUni = (event) => {
         setUni(event.target.value)
@@ -46,7 +45,6 @@ function CreateGraphs() {
         .then(foundData => {setSubjectGraph(foundData)})
         .catch(error => console.log(error))
     }
-
 
     const myConfig = {
         nodeHighlightBehavior: true,
@@ -73,7 +71,26 @@ function CreateGraphs() {
     };
 
     const onClickNode = function(nodeId) {
-        window.alert(`Clicked node ${nodeId}`);
+        const obj = {
+            'cCode': nodeId,
+            'uni': uni
+        }
+
+        setOpen(true)
+
+        fetch('https://131.104.49.104/api/getCourseInfo', {
+            method: 'POST',
+            body: JSON.stringify(obj),
+            referrerPolicy: 'unsafe-url',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(foundData => {setCourseInfo(foundData)})
+       // .then(foundData => setCourseInfo(foundData))
+        .catch(error => console.log(error))
+        // window.alert(`Clicked node ${nodeId}`);
     };
 
     const onClickLink = function(source, target) {
@@ -106,8 +123,6 @@ function CreateGraphs() {
     function clearGraph() {
         setGraphData(null)
     }
-
-    
 
     return (
         <div className="createGraphs">
@@ -146,6 +161,7 @@ function CreateGraphs() {
             <br></br>
             <br></br>
 
+            {/* buttons for selecting the university */}
             <Typography variant='body1'>Select a university</Typography>
                 
             <Button id='guelph-button' onClick = {changeUni} variant='contained' color='primary' style={{margin: '5px'}} value='guelph'>
@@ -155,12 +171,15 @@ function CreateGraphs() {
             <Button id='waterloo-button' onClick = {changeUni} variant='contained' color='primary' style={{margin: '5px'}} value='waterloo'>
                 Waterloo
             </Button>
+
+            {/* function to tell the user which university is selected */}
             {(() => {
                 return(
                     <Typography variant='h5'>Selected University: UNIVERSITY OF {uni.toUpperCase()}</Typography>
                 )
             })()}
 
+            {/* form for the subject graph */}
             <div style={{margin: '10px'}}>
                 <form onSubmit={getSubjectGraph}>
                     <label>
@@ -186,6 +205,7 @@ function CreateGraphs() {
                 
             </div>
             
+            {/* graph for the subject */}
             <div style={{backgroundColor: 'white'}}>
                 {(() => {
                     if (subjectGraph !== null && subjectGraph.nodes.length !== 0 && subjectGraph.links.length !== 0) {
@@ -205,6 +225,7 @@ function CreateGraphs() {
                 })()}
             </div>
 
+            {/* form for the major */}
             <div style={{margin: '10px'}}>
                 <form onSubmit={getMajorGraph}>
                     <label>
@@ -224,6 +245,7 @@ function CreateGraphs() {
                 </form>
             </div>
 
+            {/* graph for the major */}
             <div style={{backgroundColor: 'white'}}>
                 {(() => {
                     if (majorGraph !== null && majorGraph.nodes.length !== 0 && majorGraph.links.length !== 0) {
@@ -243,7 +265,44 @@ function CreateGraphs() {
                 })()}
             </div>
             
-            
+            {/* alert for node information */}
+            <div>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {'Course Information'}
+                    </DialogTitle>
+                    <DialogContent>
+                            {(() => {
+                                if (courseInfo !== null) {
+                                    return(
+                                        <div key={courseInfo}>{
+                                            Object.entries(courseInfo).map(info => {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>{info[0]}:{info[1]}</Typography>
+                                                    </div>
+                                                )
+                                            })
+                                        }</div>
+                                    )
+                                } else {
+                                    return(
+                                        <Typography component={'span'}>No course information to show</Typography>
+                                    )
+                                }
+                            })()}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Close</Button>
+                    </DialogActions>
+
+                </Dialog>
+            </div>
 
 
         </div>

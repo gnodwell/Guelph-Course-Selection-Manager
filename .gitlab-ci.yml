@@ -31,6 +31,11 @@ stages:          # List of stages for jobs, and their order of execution
 #     # - echo "Compile complete."
     
 
+before_script:
+    - apt-get update -q -y
+    - apt-get install -y python3-pip
+    - python3 -V
+
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
@@ -43,6 +48,27 @@ unit-test-job:   # This job runs in the test stage.
     # - cd tests
     # - npx playwright test
     # - python3 testFunctions.py
+
+front-end-test-job:
+  stage: test
+  script:
+    - cd installationScripts
+    - ./webAppSetup.sh
+    - cd ..
+    - cd webapp
+    - cd front
+    - npm run test
+
+
+back-end-test-job:
+  stage: test
+  script:
+  - cd installationScripts
+  - ./webAppSetup.sh
+  - cd ..
+  - cd webapp
+  - cd back
+  - python3 createMajorGraphs.test.py
 
 # lint-test-job:   # This job also runs in the test stage.
 #   stage: test    # It can run at the same time as unit-test-job (in parallel).

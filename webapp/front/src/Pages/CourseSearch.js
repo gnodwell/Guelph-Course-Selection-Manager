@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { ArrowDropDown, Close } from '@mui/icons-material/';
@@ -47,26 +46,24 @@ function CourseSearch() {
     // getDepartments()
     // }, [])
 
-    useEffect(() => {async function getDepartments () {
-        try {
-            await
-            fetch('https://131.104.49.104/api/getDepartments', {
-                method: 'GET',
-             referrerPolicy: 'unsafe-url'
-            })
-            .then(res => res.json())
-            .then(foundData => setDepts(foundData))
-            .catch(error => console.log(error))
+    useEffect(() => {
+        async function getDepartments () {
+            try {
+                await
+                fetch('https://131.104.49.104/api/getDepartments', {
+                    method: 'GET',
+                referrerPolicy: 'unsafe-url'
+                })
+                .then(res => res.json())
+                .then(foundData => setDepts(foundData))
+                .catch(error => console.log(error))
+            }
+            catch (e) {
+                console.log(e)
+            }
         }
-        catch (e) {
-            console.log(e)
-        }
-    }
-    getDepartments()
-        
+        getDepartments()
     }, [])
-
-    
 
     const fetchCourses = async(event) => {
         event.preventDefault()
@@ -220,7 +217,6 @@ function CourseSearch() {
 //       }
       
 //   }
-
 
     function updateFilters (event, mode) {
         //updating either the semester, credit or level attr. based on the mode
