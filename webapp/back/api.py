@@ -5,6 +5,7 @@ import dataToGraph as courseGraphs
 import createMajorGraphs as majorGraphs
 import createSubjectGraphs as subjectGraphs
 from getCourseInfo import getCourseInfo
+from dataToGraph import generateDataset
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -107,8 +108,14 @@ def getCourse():
 @app.route('/api/createCourseGraph', methods=['POST'])
 @cross_origin()
 def createCourseGraph():
-    a = 'stub'
-    # courseGraphs.generateDataset('CIS*3760')
+    
+    #get the major
+    course = request.get_json()
+
+    #create graph
+    graphJson = generateDataset(course['course'])
+
+    return jsonify(graphJson)
 
 @app.route('/api/createMajorGraph', methods=['POST'])
 @cross_origin()
