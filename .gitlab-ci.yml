@@ -58,9 +58,6 @@ front-end-test-job:
     - cd webapp
     - cd front
     - npm run test
-    - cd ..
-    - cd back
-    - python3 createMajorGraphs.test.py
 
 
 back-end-test-job:
