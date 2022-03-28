@@ -112,9 +112,11 @@ def generateDataset(course):
             data = major['title']
     graphJSON = createGraphJSON(course, data)
 
-    file = json.dumps(graphJSON, indent=4)
-    with open("graph.json", "w") as f:
-        f.write(file)
+    return graphJSON
+
+    # file = json.dumps(graphJSON, indent=4)
+    # with open("graph.json", "w") as f:
+    #     f.write(file)
 
 if __name__ == "__main__":
     generateDataset('CIS*3760')

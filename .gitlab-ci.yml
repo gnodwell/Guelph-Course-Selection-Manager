@@ -59,6 +59,17 @@ front-end-test-job:
     - cd front
     - npm run test
 
+
+back-end-test-job:
+  stage: test
+  script:
+  - cd installationScripts
+  - ./webAppSetup.sh
+  - cd ..
+  - cd webapp
+  - cd back
+  - python3 createMajorGraphs.test.py
+
 # lint-test-job:   # This job also runs in the test stage.
 #   stage: test    # It can run at the same time as unit-test-job (in parallel).
 #   script:
