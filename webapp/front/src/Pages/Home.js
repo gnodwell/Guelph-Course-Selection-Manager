@@ -1,4 +1,3 @@
-import logo from '../logo.svg';
 import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material/';
 
@@ -178,12 +177,9 @@ import { Typography } from '@mui/material/';
 
 function Home() {
     return (
-        <div className="homePage">
-            <h2>Home Page</h2>
-
-            <img src={logo} className="App-logo" alt="logo" />
-
-            <Typography>Navigate to pages using the menu bar!</Typography>
+        <div className="home">
+          <h1>University Course Utility</h1>
+          <Typography>Navigate to pages using the menu bar!</Typography>
         </div>
     );
 }

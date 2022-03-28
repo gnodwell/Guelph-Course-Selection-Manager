@@ -15,6 +15,8 @@ npm install @material-ui/icons
 
 npm install react-router-dom
 
+npm install --save-dev @babel/preset-env @babel/preset-react @testing-library/jest-dom @testing-library/react jest
+
 
 npm install react-d3-tree
 
