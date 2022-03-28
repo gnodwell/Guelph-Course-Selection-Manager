@@ -33,7 +33,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 before_script:
     - apt-get update -q -y
-    - apt-get install -y python-pip
+    - apt-get install -y python3-pip
     - python -V
 
 unit-test-job:   # This job runs in the test stage.
