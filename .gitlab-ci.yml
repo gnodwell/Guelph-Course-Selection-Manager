@@ -48,6 +48,8 @@ front-end-test-job:
   image: jsdom
   stage: test
   script:
+    - cd webapp
+    - cd front
     - npm run test
 
 # lint-test-job:   # This job also runs in the test stage.
