@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 import dataToGraph as courseGraphs
 import createMajorGraphs as majorGraphs
 import createSubjectGraphs as subjectGraphs
+from getCourseInfo import getCourseInfo
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -93,6 +94,15 @@ def getDepartments():
 
         res.remove(None)
         return jsonify(list(res))
+
+@app.route('/api/getCourseInfo', methods=['POST'])
+@cross_origin()
+def getCourse():
+    #get the course
+    req = request.get_json()
+
+    return getCourseInfo(req['cCode'], req['uni'])
+
 
 @app.route('/api/createCourseGraph', methods=['POST'])
 @cross_origin()
