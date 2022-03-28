@@ -32,12 +32,11 @@ stages:          # List of stages for jobs, and their order of execution
     
 
 before_script:
-  - apt-get -qq update && apt-get -qq install -y python
-  - apt-get -qq update
-  - apt-get -qq install -y python python-virtualenv python-pip
-  - virtualenv venv
-  - . venv/bin/activate
-  - python -V
+  image: python3.8
+  script:
+    - apt-get update -q -y
+    - apt-get install -y python-pip
+    - python -V
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
