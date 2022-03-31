@@ -1,7 +1,7 @@
 import json
 import re
 
-from createMajorGraphs import getBaseCode
+from createMajorGraphs import getBaseCode, getColor
 
 def getNodes(prereqs):
     """get all the to-be-added-node prereqs from string
@@ -27,19 +27,6 @@ def getNodes(prereqs):
 
     return reqsList
 
-def getColor(course):
-    levelIndex = course.find('*')
-
-    if (course[levelIndex+1] == '1'):
-        return 'red'
-    elif (course[levelIndex+1] == '2'):
-        return 'blue'
-    elif (course[levelIndex+1] == '3'):
-        return 'green'
-    elif (course[levelIndex+1] == '4'):
-        return 'purple'
-    else:
-        return 'orange'
 
 def createGraphJSON(subject):
     """iterates through all courses in subject and adds nodes of its prereqs
@@ -50,7 +37,7 @@ def createGraphJSON(subject):
     Returns:
         Dictionary: graph dataset for front-end
     """
-    nodes, links = [], []
+    nodes, edges = [], []
     seen = set()
 
     for course in subject:
@@ -60,32 +47,34 @@ def createGraphJSON(subject):
             nodeColor = getColor(course)
             nodes.append(
                 {
-                    "id": course,
-                    "color": nodeColor
+                    'id': course,
+                    'text': course,
+                    'color': nodeColor
                 }
             )
             
         prereqs = getNodes(subject[course]['prereqs'])
         for p in prereqs:
-            # nodeColor = getColor(p)
+            nodeColor = getColor(p)
             if p not in seen:
                 seen.add(p)
                 
                 # if p has the subject's code then it will be circle, else it will be a square
-                node = {"id": p, "color": getColor(p)} if getBaseCode(p) == subjectCode else {"id": p, "color": getColor(p), "symbolType": "square"}
+                node = {"id": p, 'text': p,  "color": nodeColor} if getBaseCode(p) == subjectCode else {"id": p, 'text': p, "color": nodeColor, "symbolType": "square"}
                 nodes.append(node)
 
-            links.append(
+            edges.append(
                 {
-                    "color": nodeColor,
-                    "source": course,
-                    "target": p
+                    'id': course + '-' + p,
+                    'from': p,
+                    'to': course,
+                    'color': nodeColor
                 }
             )
 
     return {
         "nodes": nodes,
-        "links": links
+        "edges": edges
     }
 
 def generateDataset(subject, uni="guelph"):

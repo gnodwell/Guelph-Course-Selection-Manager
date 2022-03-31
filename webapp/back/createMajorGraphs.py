@@ -93,15 +93,15 @@ def getColor(course):
     levelIndex = course.find('*')
 
     if (course[levelIndex+1] == '1'):
-        return 'red'
+        return '#2A9D8F'
     elif (course[levelIndex+1] == '2'):
-        return 'blue'
+        return '#E9C46A'
     elif (course[levelIndex+1] == '3'):
-        return 'green'
+        return '#F4A261'
     elif (course[levelIndex+1] == '4'):
-        return 'purple'
+        return '#E76F51'
     else:
-        return 'orange'
+        return '#76CD65'
 
 def createGraphJson(courses, relations):
     """creates a graph in the d3 json format
@@ -117,7 +117,7 @@ def createGraphJson(courses, relations):
     #initialize json
     graphJson = {
         'nodes':[],
-        'links':[]
+        'edges':[]
     }
 
     #loop through courses to add to graph
@@ -135,27 +135,30 @@ def createGraphJson(courses, relations):
             nodeColor = getColor(course)
             graphJson['nodes'].append({
                 'id': course,
+                'text': course,
                 'color': nodeColor
                 # 'name': course
             })
         
         #add its prereqs to json
         for prereq in prereqsList:
-            # nodeColor = getColor(prereq)
+            nodeColor = getColor(prereq)
             #add prereq as a node if it doesn't already exist
             if not isDup(graphJson, prereq):
                 
                 graphJson['nodes'].append({
                     'id': prereq,
-                    'color': getColor(prereq)
+                    'text': prereq,
+                    'color': nodeColor
                     # 'name': prereq
                 })
 
             #add the links
-            graphJson['links'].append({
-                'color': nodeColor,
-                'source': course,
-                'target': prereq
+            graphJson['edges'].append({
+                'id': course + '-' + prereq,
+                'from': prereq,
+                'to': course,
+                'color': nodeColor
             })
 
     return graphJson
