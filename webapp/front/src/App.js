@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import './App.css';
 import Home from './Pages/Home';
 import CreateGraphs from './Pages/CreateGraphs';
@@ -29,9 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { makeStyles } from "@material-ui/core/styles";
 import {ThemeProvider} from '@mui/styles';
-
-
-
+import { BrowserRouter, Link, Route, Routes, Switch } from 'react-router-dom';
 var body = document.body, html = document.documentElement;
 var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
 
@@ -113,12 +111,12 @@ function App() {
   }
 
   return (
-    
-    <Box sx={{ display: 'flex', backgroundColor: '#0a1929', color: 'white'}}>
-      
+      <Box sx={{ height: "100vh", display: 'flex', backgroundColor: '#0a1929', color: 'white'}} >
+
       <ThemeProvider theme={theme}>
       <CssBaseline />
-      
+      <Fragment>
+      <BrowserRouter>
         <AppBar className= {classes.root} position="fixed" open={open}>
           <Toolbar>
             <IconButton
@@ -156,63 +154,49 @@ function App() {
         <Divider />
 
 
-        <List>
-          {/* SCROLL TO HOME */}
-          <a href="#home">
-            <ListItem button key={"Home"} onClick={handleDrawerClose}>
+          <List>
+            {/* SCROLL TO HOME */}
+            <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
               <ListItemText primary={"Home"} />
             </ListItem>
-          </a>
+        
 
-          {/* SCROLL TO COURSE SEARCH */}
-          <a href="#course-search">
-            <ListItem button key={"Course Search"} onClick={handleDrawerClose}>
-              <ListItemIcon>
-                <SearchIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Course Search"} />
-            </ListItem>
-          </a>
-
-          {/* SCROLL TO CREATE GRAPHS*/}
-          <a href="#create-graphs">
-            <ListItem button key={"Course Graph"} onClick={handleDrawerClose}>
-              <ListItemIcon>
-                <AnalyticsIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Course Graph"} />
-            </ListItem>
-          </a>  
-
-        </List>
-      </Drawer>
+            {/* SCROLL TO COURSE SEARCH */}
+              <ListItem button component={Link} to="/CourseSearch" onClick={handleDrawerClose}>
+                <ListItemIcon>
+                  <SearchIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Course Search"} />
+              </ListItem>
       
-          
+
+            {/* SCROLL TO CREATE GRAPHS*/}
+              <ListItem button key={"Course Graph"} component={Link} to="/CreateGraphs" onClick={handleDrawerClose}>
+                <ListItemIcon>
+                  <AnalyticsIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Course Graph"} />
+              </ListItem>
+          </List>
+      </Drawer>
+
       <Main open={open}>
-        <DrawerHeader />
-        <div>
-            <Home />
-        </div>
 
-        {/* COURSE SEARCH SECTION */}
-        {/* style={{height: height}} */}
-        <div id="course-search">
-            <CourseSearch />
-        </div>
-
-        {/* CREATE GRAPH SECTION */}
-        {/* style={{height: height}} */}
-        <div id="create-graphs">
-            <CreateGraphs />
-        </div>
+      <Routes>
+        <Route exact path='/' element={<Home/>}></Route>
+        <Route exact path='/CourseSearch' element={<CourseSearch/>}></Route>
+        <Route exact path='/CreateGraphs' element={<CreateGraphs/>}></Route>
+      </Routes>
 
       </Main>
 
+      </BrowserRouter>
+      </Fragment>
       </ThemeProvider>
-    </Box>
+      </Box>
   );
 }
 

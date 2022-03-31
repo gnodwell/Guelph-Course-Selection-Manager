@@ -11,6 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 
 
 function CourseSearch() {
@@ -32,19 +33,6 @@ function CourseSearch() {
     const [anchorElLv, setAnchorElLv] = useState(null)
     const [anchorElDept, setAnchorElDept] = useState(null)
     const [depts, setDepts] = useState([])
-    
-    // useEffect(() => {async function getDepartments () {
-    //     await
-    //     fetch('http://127.0.0.1:5000/api/getDepartments', {
-    //         method: 'GET',
-    //         referrerPolicy: 'unsafe-url'
-    //     })
-    //     .then(res => res.json())
-    //     .then(foundData => setDepts(foundData))
-    //     .catch(error => console.log(error))
-    // }
-    // getDepartments()
-    // }, [])
 
     useEffect(() => {
         async function getDepartments () {
@@ -88,12 +76,12 @@ function CourseSearch() {
         const obj = {
             'cCode': codeValue,
             'coreqs': coreqs,
-            'creditWeight': filters.creditWeight?filters.creditWeight: '',
-            'department': filters.department?filters.department: '',
+            'creditWeight': creditValue,
+            'department': deptValue,
             'name': nameValue,
             'prereqs': prereqs,
-            'semesters': filters.semesters?filters.semesters: '',
-            'level': filters.level?filters.level: ''
+            'semesters': semValue,
+            'level': levelValue
         }
     
         setFilters(obj)
@@ -128,40 +116,7 @@ function CourseSearch() {
         setAnchorElCr(null)
     }
 
-    const handleCloseLv = (event) => {
-        //add the level to the filters
-        if (event.currentTarget.value !== null) {
-            updateFilters(event, 3)
-        }
-        setAnchorElLv(null)
-    }
-
-    const handleCloseDept = (event) => {
-        //add the department to the filters
-        if (event.currentTarget.innerText !== null && event.currentTarget.innerText !== "") {
-            updateFilters(event, 4)
-        }
-        setAnchorElDept(null)
-    }
-
-    const openMenuSem = (event) => {
-        setAnchorElSem(event.currentTarget)
-    }
-
-    const openMenuCr = (event) => {
-        setAnchorElCr(event.currentTarget)
-    }
-
-    const openMenuLv = (event) => {
-        setAnchorElLv(event.currentTarget)
-    }
-
-    const openMenuDept = (event) => {
-        setAnchorElDept(event.currentTarget)
-    }
-
-
-    //*SEARCH HANDLERS
+    //*COURSE SEARCH HANDLERS
     const handleNameChange = (event) => {
         setValueName(event.target.value);
     }
@@ -183,8 +138,6 @@ function CourseSearch() {
         setValueSem(event.target.value);
         console.log(semValue)
         updateFilters(event, 1);
-
-       
     }
 
     const handleCreditChange = (event) => {
@@ -201,22 +154,6 @@ function CourseSearch() {
         setValueDept(event.target.value);
         updateFilters(event, 4);
     }
-
-//   const handleChange = (event) => {
-//       const name = event.target.name
-//       const value = event.target.value
-
-//       //allows user to enter multiple courses separated by commas
-//       if (value !== "" && value !== null) {
-//           if (name === 'prereqs' || name === 'coreqs') {
-//               const vals = value.split(",")
-//               setFilters(values => ({...values, [name]: vals}))
-//           } else {
-//               setFilters(values => ({...values, [name]: value}))
-//           }
-//       }
-      
-//   }
 
     function updateFilters (event, mode) {
         //updating either the semester, credit or level attr. based on the mode
@@ -302,26 +239,26 @@ function CourseSearch() {
 
     return (
         //* 🔍COURSE SEARCH SECTION
-        <div id="course-search">
-            <br></br>
-
+        
+        <div id="course-search" >
+            <Divider variant="middle" />
             <Box sx = {{
                     backgroundColor: '#D5E7F2',
                     color: 'black',
-                    borderRadius: '3%',
+                    borderRadius: 3,
+                    p: 2,
                     
             }}>
+                <h2>🔍Course Search</h2>
+                <Divider variant="middle" />
                 <Box sx = {{
                     backgroundColor: '#D5E7F2',
                     color: 'black',
-                    borderRadius: '3%',
-                    
-                    p: 2,
+                    borderRadius: 9,
+                    p: 1,
 
                 }}>
-                    <h2>🔍Course Search</h2>
-                    <Typography variant='h6'>Select the filters you would like to apply for course search</Typography>
-                    <div  style={{margin: '5px'}}>
+                    <div style={{margin: '5px'}}>
                         {/* form to send set filters and fetch courses */}
                         <form className='flex_div' onSubmit={fetchCourses}>
                             <label className='flex_item_md'>
@@ -379,8 +316,6 @@ function CourseSearch() {
 
                             {/* div to select the semester and credit filter */}
                             <div>
-                             
-
                                 {/* SEMESTER SELECT MENU */}
                                 <Box sx = {{
                                     backgroundColor: '#D5E7F2', color: 'black', borderRadius: '3%',
@@ -394,7 +329,8 @@ function CourseSearch() {
                                             id='dept-menu2'
                                             label="Semester" 
                                             onChange={handleSemChange}
-                                        >
+                                        >   
+                                            <MenuItem value="">All</MenuItem>
                                             <MenuItem value="Fall">Fall</MenuItem>
                                             <MenuItem value="Summer">Summer</MenuItem>
                                             <MenuItem value="Winter">Winter</MenuItem>
@@ -416,7 +352,8 @@ function CourseSearch() {
                                             id='dept-menu2'
                                             label="Credit Weight" 
                                             onChange={handleCreditChange}
-                                        >
+                                        >   
+                                            <MenuItem value="">All</MenuItem>
                                             <MenuItem value='0.25'>0.25</MenuItem>
                                             <MenuItem value='0.50'>0.50</MenuItem>
                                             <MenuItem value='0.75'>0.75</MenuItem>
@@ -448,7 +385,8 @@ function CourseSearch() {
                                             id='dept-menu2'
                                             label="Course Level" 
                                             onChange={handleLevelChange}
-                                        >
+                                        >   
+                                            <MenuItem value="">All</MenuItem>
                                             <MenuItem value='1000'>1000</MenuItem>
                                             <MenuItem value='2000'>2000</MenuItem>
                                             <MenuItem value='3000'>3000</MenuItem>
@@ -470,7 +408,8 @@ function CourseSearch() {
                                             id='dept-menu2'
                                             label="Department" 
                                             onChange={handleDeptChange}
-                                        >
+                                        >   
+                                            <MenuItem value="">All</MenuItem>
                                             { depts.map(dept => (
                                             <MenuItem key={dept} value={dept == null ? '' : dept}>{dept}</MenuItem>
                                             ))}
@@ -479,19 +418,69 @@ function CourseSearch() {
                                 </Box>
                                 
                                 
-                                
                                 <br></br>
                                 <Box sx = {{
                                     backgroundColor: '#D5E7F2',
                                     color: 'black',
                                     borderRadius: '3%',
-                                    
                                     p: 0.7,
 
                                 }}>
                                     <Button onClick ={fetchCourses} variant='outlined' color='primary' >
                                     Search Courses
                                     </Button>
+
+                                    
+
+                                    {/* function to display the fetched data in a table */}
+                                    {(() => {
+                                        if (courses.length > 0) {
+                                            return (
+                                                <Box sx = {{
+                                                    backgroundColor: '#D5E7F2',
+                                                    color: 'black',
+                                                    borderRadius: '3%',
+                                                    p: 0.7,
+                                                    paddingTop: 5
+                                                }}>
+                                                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                                                        <TableContainer sx={{ maxHeight: 800 }} backgroundColor='#D5E7F2'>
+                                                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                                                <TableHead>
+                                                                    <TableRow>
+                                                                        <TableCell>Course&nbsp;code</TableCell>
+                                                                        <TableCell>Credits</TableCell>
+                                                                        <TableCell>Title</TableCell>
+                                                                        <TableCell>Description</TableCell>
+                                                                        <TableCell>Semester</TableCell>
+                                                                        <TableCell>Department</TableCell>
+                                                                        <TableCell>Pre-requisites</TableCell>
+                                                                    </TableRow>
+                                                                </TableHead>
+                                                                <TableBody>
+                                                                    { courses.map(course => (
+                                                                        <TableRow
+                                                                            key={course.cCode}
+                                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                        >
+                                                                            <TableCell>{course.cCode}</TableCell>
+                                                                            <TableCell>{course.creditWeight}</TableCell>
+                                                                            <TableCell>{course.name}</TableCell>
+                                                                            <TableCell>{course.description}</TableCell>
+                                                                            <TableCell>{course.semesters}</TableCell>
+                                                                            <TableCell>{course.department}</TableCell>
+                                                                            <TableCell>{course.prereqs}</TableCell>
+                                                                        </TableRow>
+                                                                    ))}
+                                                                </TableBody>
+                                                            </Table>
+                                                        </TableContainer>
+                                                    </Paper>
+                                                </Box>
+                                                
+                                            )
+                                        }
+                                    })()}
                                 </Box>                
                                 
                             </div>
@@ -503,7 +492,7 @@ function CourseSearch() {
                 </Box>
             </Box>
 
-             {/* function to display currently applied filters */}
+             {/* function to display currently applied filters
              <div style={{backgroundColor: '#001e3c', margin: '10px', overflowY: 'scroll', width: '80%', borderRadius: '7px', maxHeight: '240px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
                 {filters && <div>{
                     Object.entries(filters).map(filter => {
@@ -550,48 +539,9 @@ function CourseSearch() {
                         )
                     })
                 }</div>}
-            </div>
+            </div> */}
 
-            {/* function to display the fetched data in a table */}
-            {(() => {
-                if (courses.length > 0) {
-                    return (
-                        <div style={{backgroundColor: 'white', margin: '10px', overflowY: 'scroll', maxHeight: '400px', maxWidth:'85%'}}>
-                            <TableContainer component={Paper}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Course&nbsp;code</TableCell>
-                                            <TableCell>Credits</TableCell>
-                                            <TableCell>Title</TableCell>
-                                            <TableCell>Description</TableCell>
-                                            <TableCell>Semester</TableCell>
-                                            <TableCell>Department</TableCell>
-                                            <TableCell>Pre-requisites</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        { courses.map(course => (
-                                            <TableRow
-                                                key={course.cCode}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell>{course.cCode}</TableCell>
-                                                <TableCell>{course.creditWeight}</TableCell>
-                                                <TableCell>{course.name}</TableCell>
-                                                <TableCell>{course.description}</TableCell>
-                                                <TableCell>{course.semesters}</TableCell>
-                                                <TableCell>{course.department}</TableCell>
-                                                <TableCell>{course.prereqs}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </div>
-                    )
-                }
-            })()}
+            
         </div>
     );
 }
