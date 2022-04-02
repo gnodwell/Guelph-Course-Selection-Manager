@@ -15,30 +15,43 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 function CreateGraphs() {
 
-    const graphRef = useRef(null)
+    const subjectGraphRef = useRef(null)
+    const majorGraphRef = useRef(null)
     const [graph, setGraphData] = useState(null)
     const [uni, setUni] = useState('guelph')
     const [subjectGraph, setSubjectGraph] = useState({'nodes': [], 'edges': []})
-    const [majorGraph, setMajorGraph] = useState(null)
+    const [majorGraph, setMajorGraph] = useState({'nodes': [], 'edges': []})
     const [courseInfo, setCourseInfo] = useState(null)
-    const [open, setOpen] = useState(false)
+    const [openSubject, setOpenSubject] = useState(false)
+    const [openMajor, setOpenMajor] = useState(false)
     const [openInfo, setOpenInfo] = useState(false)
     const [subject, setSubject] = useState('')
 
     useEffect(() => {
         //scroll to centre the dialog
         if(subjectGraph !== null && subjectGraph.nodes.length !== 0) {
-            const child = graphRef.current.children[0]
+            const child = subjectGraphRef.current.children[0]
             const scrollOptions = {
-                left: (child.offsetWidth - graphRef.current.offsetWidth) / 2,
-                top: (child.offsetHeight - graphRef.current.offsetHeight) / 2
+                left: (child.offsetWidth - subjectGraphRef.current.offsetWidth) / 2,
+                top: (child.offsetHeight - subjectGraphRef.current.offsetHeight) / 2
             }
-            graphRef.current.scroll(scrollOptions)
+            subjectGraphRef.current.scroll(scrollOptions)
+        } else if(majorGraph !== null && majorGraph.nodes.length !== 0) {
+            const child = majorGraphRef.current.children[0]
+            const scrollOptions = {
+                left: (child.offsetWidth - majorGraphRef.current.offsetWidth) / 2,
+                top: (child.offsetHeight - majorGraphRef.current.offsetHeight) / 2
+            }
+            majorGraphRef.current.scroll(scrollOptions)
         }
-    }, [subjectGraph])
+    }, [subjectGraph, majorGraph])
 
-    const handleClose = () => {
-        setOpen(false)
+    const handleMajorClose = () => {
+        setOpenMajor(false)
+    }
+
+    const handleSubjectClose = () => {
+        setOpenSubject(false)
     }
 
     const handleCloseInfo = () => {
@@ -51,8 +64,7 @@ function CreateGraphs() {
 
     const getSubjectGraph = async(event) => {
         event.preventDefault()
-        setOpen(true)
-        //setOpenInfo(false)
+        setOpenSubject(true)
         const obj = {
             'subject': event.target.elements.subjectField.value,
             'uni': uni
@@ -72,29 +84,29 @@ function CreateGraphs() {
         setSubject(event.target.elements.subjectField.value)
     }
 
-    const myConfig = {
-        nodeHighlightBehavior: true,
-        highlightDegree: 1,
-        highlightOpacity: 0.1,
-        initialZoom: 1,
-        height: 400,
-        width: 800,
-        directed: true,
-        d3: {
-            linkLength: 90,
-            gravity: -500,
-        },
-        node: {
-          fontSize: 15,
-          size: 200,
-          highlightStrokeColor: "blue",
-          highlightFontSize: 17,
-        },
-        link: {
-          highlightColor: "black",
-          color: 'black'
-        },
-    };
+    // const myConfig = {
+    //     nodeHighlightBehavior: true,
+    //     highlightDegree: 1,
+    //     highlightOpacity: 0.1,
+    //     initialZoom: 1,
+    //     height: 400,
+    //     width: 800,
+    //     directed: true,
+    //     d3: {
+    //         linkLength: 90,
+    //         gravity: -500,
+    //     },
+    //     node: {
+    //       fontSize: 15,
+    //       size: 200,
+    //       highlightStrokeColor: "blue",
+    //       highlightFontSize: 17,
+    //     },
+    //     link: {
+    //       highlightColor: "black",
+    //       color: 'black'
+    //     },
+    // };
 
     const onClickNode = function(nodeId) {
         const obj = {
@@ -123,6 +135,7 @@ function CreateGraphs() {
 
     const getMajorGraph = async(event) => {
         event.preventDefault()
+        setOpenMajor(true)
         const obj = {
             'major': event.target.elements.majorField.value
         }
@@ -223,36 +236,8 @@ function CreateGraphs() {
                     <Button type='submit' variant='contained' color='primary' style={{margin: '5px'}}>
                         Generate Subject Graph
                     </Button>
-                </form>
-
-                
-                
+                </form>      
             </div>
-            
-            {/* graph for the subject */}
-            {/* <div style={{backgroundColor: 'white'}}>
-                {(() => {
-                    if (subjectGraph !== null && subjectGraph.nodes.length !== 0 && subjectGraph.links.length !== 0) {
-                        return (
-                            <Graph
-                            id="graph-id-1" // id is mandatory
-                            data={subjectGraph}
-                            config={myConfig}
-                            onClickNode={onClickNode}
-                            onClickLink={onClickLink}
-                            />
-                        )
-                        
-                    } else {
-                        return(<></>)
-                    }
-                })()}
-            </div> */}
-            {/* <div style={{backgroundColor: 'white', height: '600px', borderRadius: '7px', border: '2px solid #194472'}}>
-                
-            </div> */}
-            
-            
 
             {/* form for the major */}
             <div style={{margin: '10px'}}>
@@ -263,7 +248,6 @@ function CreateGraphs() {
                             id='majorField'
                             className='input_field'
                             type='text'
-                            //name='major'
                             placeholder='CS'
                         />
                     </label>
@@ -273,104 +257,21 @@ function CreateGraphs() {
                     </Button>
                 </form>
             </div>
-
-            {/* graph for the major */}
-            {/* <div style={{backgroundColor: 'white'}}>
-                {(() => {
-                    if (majorGraph !== null && majorGraph.nodes.length !== 0 && majorGraph.links.length !== 0) {
-                        return (
-                            <Graph
-                            id="graph-id-2" // id is mandatory
-                            data={majorGraph}
-                            config={myConfig}
-                            onClickNode={onClickNode}
-                            onClickLink={onClickLink}
-                            />
-                        )
-                        
-                    } else {
-                        return(<></>)
-                    }
-                })()}
-            </div> */}
-            <div style={{backgroundColor: 'white', height: '600px', borderRadius: '7px', border: '2px solid #194472'}}>
-                {(() => {
-                    //console.log(windowWidth)
-                    //console.log(window.innerWidth)
-                    if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined) && 
-                    (subjectGraph.edges !== null && subjectGraph.edges.length !== 0 && subjectGraph.edges !== undefined)) {
-                        return(
-                            <TransformWrapper
-                                wheel={{step: 1.5}}
-                                // options={{
-                                //     maxScale: 1,
-                                //     limitToBounds: false,
-                                // }}
-                                initialScale={1}
-                            >
-                                <TransformComponent>
-                                    <Canvas
-                                        maxWidth={800}
-                                        maxHeight={600}
-                                        //zoom={0.2}
-                                        nodes={subjectGraph.nodes}
-                                        edges={subjectGraph.edges}
-                                        node = {(node) => (
-
-                                            <Node
-                                                style = {{fill: node.properties.color}}
-                                            />
-                                        )}
-
-                                        edge = {(edge) => (
-                                            <Edge
-                                                style = {{stroke: edge.properties.color}}
-                                            />
-                                        )}
-                                    />
-                                </TransformComponent>
-                            </TransformWrapper>
-                            
-                        )
-                    }
-                    
-                })()}
-            </div>
             
-            
-            {/* alert for node information */}
+            {/* Dialog for displaying subject graph */}
             <div>
                 <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
+                    open={openSubject}
+                    onClose={handleSubjectClose}
+                    aria-labelledby="subject-alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                     fullWidth={true}
                     maxWidth='xl'
                 >
-                    <DialogTitle id="alert-dialog-title" className='center'>
+                    <DialogTitle id="subject-alert-dialog-title" className='center'>
                     Graph of {subject}
                     </DialogTitle>
-                    <DialogContent id='subject-dialog' ref={graphRef}>
-                            {/* {(() => {
-                                if (courseInfo !== null) {
-                                    return(
-                                        <div key={courseInfo}>{
-                                            Object.entries(courseInfo).map(info => {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>{info[0]}:{info[1]}</Typography>
-                                                    </div>
-                                                )
-                                            })
-                                        }</div>
-                                    )
-                                } else {
-                                    return(
-                                        <Typography component={'span'}>No course information to show</Typography>
-                                    )
-                                }
-                            })()} */}
+                    <DialogContent id='subject-dialog' ref={subjectGraphRef}>
                             {(() => {
                                 if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined) && 
                                 (subjectGraph.edges !== null && subjectGraph.edges.length !== 0 && subjectGraph.edges !== undefined)) {
@@ -398,14 +299,65 @@ function CreateGraphs() {
                                                 />
                                             </TransformComponent>
                                         </TransformWrapper>
-                                        
                                     )
                                 }
-                                
                             })()}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Close</Button>
+                        <Button onClick={handleSubjectClose}>Close</Button>
+                    </DialogActions>
+
+                </Dialog>
+            </div>
+
+            {/* Dialog for displaying major graph */}
+            <div>
+                <Dialog
+                    open={openMajor}
+                    onClose={handleMajorClose}
+                    aria-labelledby="major-alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth={true}
+                    maxWidth='xl'
+                >
+                    <DialogTitle id="major-alert-dialog-title" className='center'>
+                    Graph of {subject}
+                    </DialogTitle>
+                    <DialogContent id='major-dialog' ref={majorGraphRef}>
+                            {(() => {
+                                if((majorGraph.nodes !== null && majorGraph.nodes.length !== 0 && majorGraph.nodes !== undefined) && 
+                                (majorGraph.edges !== null && majorGraph.edges.length !== 0 && majorGraph.edges !== undefined)) {
+                                    return(
+                                        <TransformWrapper
+                                            wheel={{step: 0.2}}
+                                            centerOnInit={true}
+                                        >
+                                            <TransformComponent>
+                                                <Canvas
+                                                    zoom={0.2}
+                                                    nodes={majorGraph.nodes}
+                                                    edges={majorGraph.edges}
+                                                    node = {(node) => (
+                                                        <Node
+                                                            onClick={() => onClickNode(node.properties.id)}
+                                                            style = {{fill: node.properties.color}}
+                                                        />
+                                                    )}
+                                                    edge = {(edge) => (
+                                                        <Edge
+                                                            style = {{stroke: edge.properties.color}}
+                                                        />
+                                                    )}
+                                                />
+                                            </TransformComponent>
+                                        </TransformWrapper>
+                                        
+                                    )
+                                }
+                            })()}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleMajorClose}>Close</Button>
                     </DialogActions>
 
                 </Dialog>

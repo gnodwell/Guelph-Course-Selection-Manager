@@ -113,7 +113,7 @@ function App() {
   }
 
   return (
-      <Box sx={{ height: "200vh", display: 'flex', backgroundColor: '#0a1929', color: 'white'}} >
+      <Box sx={{ height: "100vh", display: 'flex', backgroundColor: '#0a1929', color: 'white'}} >
 
       <ThemeProvider theme={theme}>
       <CssBaseline />
