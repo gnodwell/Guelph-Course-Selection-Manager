@@ -173,12 +173,18 @@ def createMajorMinorGraph(majorCode):
         Dict: d3 graph in json format
     """
     if not majorCode:
-        return {}
+        return {
+            'edges': [],
+            'nodes': []
+            }
         
     #search folder for file with major
     majorJson = searchFiles('includes/', '(' + majorCode + ')')
     if not majorJson:
-        return {}
+        return {
+            'edges': [],
+            'nodes': []
+            }
 
 
     #open file and load data

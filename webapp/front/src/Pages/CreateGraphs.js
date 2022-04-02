@@ -1,26 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
-import { Graph } from 'react-d3-graph'
+import { useRef } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import data1 from '../Data/mockdataset.json';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Canvas } from 'reaflow';
+import { Node } from 'reaflow';
+import { Edge } from 'reaflow';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 function CreateGraphs() {
 
+    const graphRef = useRef(null)
     const [graph, setGraphData] = useState(null)
     const [uni, setUni] = useState('guelph')
-    const [subjectGraph, setSubjectGraph] = useState(null)
+    const [subjectGraph, setSubjectGraph] = useState({'nodes': [], 'edges': []})
     const [majorGraph, setMajorGraph] = useState(null)
     const [courseInfo, setCourseInfo] = useState(null)
     const [open, setOpen] = useState(false)
+    const [openInfo, setOpenInfo] = useState(false)
+    const [subject, setSubject] = useState('')
+
+    useEffect(() => {
+        //scroll to centre the dialog
+        if(subjectGraph !== null && subjectGraph.nodes.length !== 0) {
+            const child = graphRef.current.children[0]
+            const scrollOptions = {
+                left: (child.offsetWidth - graphRef.current.offsetWidth) / 2,
+                top: (child.offsetHeight - graphRef.current.offsetHeight) / 2
+            }
+            graphRef.current.scroll(scrollOptions)
+        }
+    }, [subjectGraph])
 
     const handleClose = () => {
         setOpen(false)
+    }
+
+    const handleCloseInfo = () => {
+        setOpenInfo(false)
     }
     
     const changeUni = (event) => {
@@ -29,6 +51,8 @@ function CreateGraphs() {
 
     const getSubjectGraph = async(event) => {
         event.preventDefault()
+        setOpen(true)
+        //setOpenInfo(false)
         const obj = {
             'subject': event.target.elements.subjectField.value,
             'uni': uni
@@ -44,6 +68,8 @@ function CreateGraphs() {
         .then(response => response.json())
         .then(foundData => {setSubjectGraph(foundData)})
         .catch(error => console.log(error))
+
+        setSubject(event.target.elements.subjectField.value)
     }
 
     const myConfig = {
@@ -76,7 +102,7 @@ function CreateGraphs() {
             'uni': uni
         }
 
-        setOpen(true)
+        setOpenInfo(true)
 
         fetch('https://131.104.49.104/api/getCourseInfo', {
             method: 'POST',
@@ -88,14 +114,12 @@ function CreateGraphs() {
         })
         .then(response => response.json())
         .then(foundData => {setCourseInfo(foundData)})
-       // .then(foundData => setCourseInfo(foundData))
         .catch(error => console.log(error))
-        // window.alert(`Clicked node ${nodeId}`);
     };
 
-    const onClickLink = function(source, target) {
-        window.alert(`Clicked link between ${source} and ${target}`);
-    };
+    //const onClickLink = function(source, target) {
+    //    window.alert(`Clicked link between ${source} and ${target}`);
+    //};
 
     const getMajorGraph = async(event) => {
         event.preventDefault()
@@ -115,7 +139,7 @@ function CreateGraphs() {
         .then(foundData => {setMajorGraph(foundData)}))
         .catch(error => console.log(error))
     }
-    
+
     function addGraph() {
         setGraphData(data1)
     }
@@ -125,7 +149,7 @@ function CreateGraphs() {
     }
 
     return (
-        <div className="createGraphs">
+        <div id="create-graphs">
            <h1>Create Graphs</h1>
             
             <Button onClick = {addGraph} variant='contained' color='primary' style={{margin: '5px'}}>
@@ -206,7 +230,7 @@ function CreateGraphs() {
             </div>
             
             {/* graph for the subject */}
-            <div style={{backgroundColor: 'white'}}>
+            {/* <div style={{backgroundColor: 'white'}}>
                 {(() => {
                     if (subjectGraph !== null && subjectGraph.nodes.length !== 0 && subjectGraph.links.length !== 0) {
                         return (
@@ -223,7 +247,12 @@ function CreateGraphs() {
                         return(<></>)
                     }
                 })()}
-            </div>
+            </div> */}
+            {/* <div style={{backgroundColor: 'white', height: '600px', borderRadius: '7px', border: '2px solid #194472'}}>
+                
+            </div> */}
+            
+            
 
             {/* form for the major */}
             <div style={{margin: '10px'}}>
@@ -246,7 +275,7 @@ function CreateGraphs() {
             </div>
 
             {/* graph for the major */}
-            <div style={{backgroundColor: 'white'}}>
+            {/* <div style={{backgroundColor: 'white'}}>
                 {(() => {
                     if (majorGraph !== null && majorGraph.nodes.length !== 0 && majorGraph.links.length !== 0) {
                         return (
@@ -263,7 +292,51 @@ function CreateGraphs() {
                         return(<></>)
                     }
                 })()}
+            </div> */}
+            <div style={{backgroundColor: 'white', height: '600px', borderRadius: '7px', border: '2px solid #194472'}}>
+                {(() => {
+                    //console.log(windowWidth)
+                    //console.log(window.innerWidth)
+                    if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined) && 
+                    (subjectGraph.edges !== null && subjectGraph.edges.length !== 0 && subjectGraph.edges !== undefined)) {
+                        return(
+                            <TransformWrapper
+                                wheel={{step: 1.5}}
+                                // options={{
+                                //     maxScale: 1,
+                                //     limitToBounds: false,
+                                // }}
+                                initialScale={1}
+                            >
+                                <TransformComponent>
+                                    <Canvas
+                                        maxWidth={800}
+                                        maxHeight={600}
+                                        //zoom={0.2}
+                                        nodes={subjectGraph.nodes}
+                                        edges={subjectGraph.edges}
+                                        node = {(node) => (
+
+                                            <Node
+                                                style = {{fill: node.properties.color}}
+                                            />
+                                        )}
+
+                                        edge = {(edge) => (
+                                            <Edge
+                                                style = {{stroke: edge.properties.color}}
+                                            />
+                                        )}
+                                    />
+                                </TransformComponent>
+                            </TransformWrapper>
+                            
+                        )
+                    }
+                    
+                })()}
             </div>
+            
             
             {/* alert for node information */}
             <div>
@@ -272,12 +345,14 @@ function CreateGraphs() {
                     onClose={handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
+                    fullWidth={true}
+                    maxWidth='xl'
                 >
-                    <DialogTitle id="alert-dialog-title">
-                        {'Course Information'}
+                    <DialogTitle id="alert-dialog-title" className='center'>
+                    Graph of {subject}
                     </DialogTitle>
-                    <DialogContent>
-                            {(() => {
+                    <DialogContent id='subject-dialog' ref={graphRef}>
+                            {/* {(() => {
                                 if (courseInfo !== null) {
                                     return(
                                         <div key={courseInfo}>{
@@ -295,10 +370,82 @@ function CreateGraphs() {
                                         <Typography component={'span'}>No course information to show</Typography>
                                     )
                                 }
+                            })()} */}
+                            {(() => {
+                                if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined) && 
+                                (subjectGraph.edges !== null && subjectGraph.edges.length !== 0 && subjectGraph.edges !== undefined)) {
+                                    return(
+                                        <TransformWrapper
+                                            wheel={{step: 0.2}}
+                                            centerOnInit={true}
+                                        >
+                                            <TransformComponent>
+                                                <Canvas
+                                                    zoom={0.2}
+                                                    nodes={subjectGraph.nodes}
+                                                    edges={subjectGraph.edges}
+                                                    node = {(node) => (
+                                                        <Node
+                                                            onClick={() => onClickNode(node.properties.id)}
+                                                            style = {{fill: node.properties.color}}
+                                                        />
+                                                    )}
+                                                    edge = {(edge) => (
+                                                        <Edge
+                                                            style = {{stroke: edge.properties.color}}
+                                                        />
+                                                    )}
+                                                />
+                                            </TransformComponent>
+                                        </TransformWrapper>
+                                        
+                                    )
+                                }
+                                
                             })()}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Close</Button>
+                    </DialogActions>
+
+                </Dialog>
+            </div>
+
+            <div>
+                <Dialog
+                    open={openInfo}
+                    onClose={handleCloseInfo}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth={true}
+                    maxWidth='md'
+                >
+                    <DialogTitle className='center'>
+                    Course Information
+                    </DialogTitle>
+                    <DialogContent>
+                        {(() => {
+                            if (courseInfo !== null) {
+                                return(
+                                    <div key={courseInfo}>{
+                                        Object.entries(courseInfo).map(info => {
+                                            return(
+                                                <div key={info[0]}>
+                                                    <Typography component={'span'}>{info[0]}:{info[1]}</Typography>
+                                                </div>
+                                            )
+                                        })
+                                    }</div>
+                                )
+                            } else {
+                                return(
+                                    <Typography component={'span'}>No course information to show</Typography>
+                                )
+                            }
+                        })()}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseInfo}>Close</Button>
                     </DialogActions>
 
                 </Dialog>

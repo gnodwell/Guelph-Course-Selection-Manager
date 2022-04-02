@@ -89,7 +89,7 @@ def generateDataset(subject, uni="guelph"):
     """
     if not subject or subject == '':
         return {
-            'links': [],
+            'edges': [],
             'nodes': []
         }
 
@@ -99,7 +99,7 @@ def generateDataset(subject, uni="guelph"):
 
     if subject not in relations:
         return {
-            'links': [],
+            'edges': [],
             'nodes': []
         }
 
