@@ -38,7 +38,7 @@ function CourseSearch() {
         async function getDepartments () {
             try {
                 await
-                fetch('https://131.104.49.104/api/getDepartments', {
+                fetch('http://127.0.0.1:5000/api/getDepartments', {
                     method: 'GET',
                     referrerPolicy: 'unsafe-url',
                 })
@@ -87,7 +87,7 @@ function CourseSearch() {
         setFilters(obj)
         
         //if server is taking a long time to fetch then run the api locally
-        fetch('https://131.104.49.104/api', {
+        fetch('http://127.0.0.1:5000/api', {
             method: 'POST',
             body: JSON.stringify(obj),
             referrerPolicy: "unsafe-url",

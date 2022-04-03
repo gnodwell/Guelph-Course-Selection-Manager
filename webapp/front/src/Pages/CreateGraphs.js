@@ -429,11 +429,101 @@ function CreateGraphs() {
                                 return(
                                     <div key={courseInfo}>{
                                         Object.entries(courseInfo).map(info => {
-                                            return(
-                                                <div key={info[0]}>
-                                                    <Typography component={'span'}>{info[0]}:{info[1]}</Typography>
-                                                </div>
-                                            )
+                                            if (info[1] == null) {
+                                                return;
+                                            }
+                                            else if (info[0] == 'cCode') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Course Code'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'creditWeight') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Credit Weight'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'department') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Department'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'description') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Description'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'lec') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Lectures'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'location') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Location'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'name') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Course Name'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'prereqs') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Prerequisites'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else if (info[0] == 'semesters') {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {'Semesters Offered'}: {info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            else 
+                                            {
+                                                return(
+                                                    <div key={info[0]}>
+                                                        <Typography component={'span'}>
+                                                            {info[0]}:{info[1]}
+                                                        </Typography>
+                                                    </div>
+                                                )
+                                            }
+                                            
                                         })
                                     }</div>
                                 )
