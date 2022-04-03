@@ -12,6 +12,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import fetch from 'cross-fetch';
 
 
 function CourseSearch() {
@@ -27,20 +28,19 @@ function CourseSearch() {
     const [levelValue, setValueLevel] = useState('')
     const [deptValue, setValueDept] = useState('')
 
-
     const [anchorElSem, setAnchorElSem] = useState(null)
     const [anchorElCr, setAnchorElCr] = useState(null)
     const [anchorElLv, setAnchorElLv] = useState(null)
     const [anchorElDept, setAnchorElDept] = useState(null)
     const [depts, setDepts] = useState([])
 
-    useEffect(() => {
+    useEffect(async () => {
         async function getDepartments () {
             try {
                 await
                 fetch('https://131.104.49.104/api/getDepartments', {
                     method: 'GET',
-                referrerPolicy: 'unsafe-url'
+                    referrerPolicy: 'unsafe-url',
                 })
                 .then(res => res.json())
                 .then(foundData => setDepts(foundData))
@@ -50,28 +50,28 @@ function CourseSearch() {
                 console.log(e)
             }
         }
-        getDepartments()
+        await getDepartments()
     }, [])
 
     const fetchCourses = async(event) => {
         event.preventDefault()
         
-        console.log("Search name: ", nameValue);
-        console.log(filters);
+        //console.log("Search name: ", nameValue);
+        //console.log(filters);
         //splitting the coreqs and prereqs
         
         var prereqs = []     
         var coreqs = []
 
-        if(prereqValue != null && prereqValue != '') {
+        if(prereqValue !== null && prereqValue !== '') {
             prereqs = prereqValue.split(',');
             
         }
-        if(coreqValue != null && coreqValue != '') {
+        if(coreqValue !== null && coreqValue !== '') {
             coreqs = coreqValue.split(',');
         }
         
-        console.log("prereqs: ", prereqs);
+        //console.log("prereqs: ", prereqs);
     
         const obj = {
             'cCode': codeValue,
@@ -134,9 +134,9 @@ function CourseSearch() {
     }
 
     const handleSemChange = (event) => {
-        console.log(event.target.value)
+        //console.log(event.target.value)
         setValueSem(event.target.value);
-        console.log(semValue)
+        //console.log(semValue)
         updateFilters(event, 1);
     }
 
@@ -160,7 +160,7 @@ function CourseSearch() {
         var isIn = 0
         if (mode === 1) {
             if (filters.semesters === undefined) {
-                console.log(event.target.value);
+                //console.log(event.target.value);
                 setFilters(values => ({...values, ['semesters']: [event.target.value]}))
             } else {
                 //check if filter already exists
@@ -437,14 +437,14 @@ function CourseSearch() {
                                         if (courses.length > 0) {
                                             return (
                                                 <Box sx = {{
-                                                    backgroundColor: '#D5E7F2',
+                                                    backgroundcolor: '#D5E7F2',
                                                     color: 'black',
                                                     borderRadius: '3%',
                                                     p: 0.7,
                                                     paddingTop: 5
                                                 }}>
                                                     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                                                        <TableContainer sx={{ maxHeight: 800 }} backgroundColor='#D5E7F2'>
+                                                        <TableContainer sx={{ maxHeight: 800 }} backgroundcolor='#D5E7F2'>
                                                             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                                                 <TableHead>
                                                                     <TableRow>
@@ -478,6 +478,19 @@ function CourseSearch() {
                                                     </Paper>
                                                 </Box>
                                                 
+                                            )
+                                        } else {
+                                            return(
+                                                <Box sx = {{
+                                                    backgroundcolor: '#D5E7F2',
+                                                    color: 'black',
+                                                    borderRadius: '3%',
+                                                    p: 0.7,
+                                                    paddingTop: 5
+                                                }}>
+                                                    <Typography>No courses found</Typography>
+                                                </Box>
+                                        
                                             )
                                         }
                                     })()}

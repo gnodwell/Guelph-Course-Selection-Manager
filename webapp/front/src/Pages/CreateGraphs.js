@@ -20,23 +20,29 @@ function CreateGraphs() {
     const [graph, setGraphData] = useState(null)
     const [uni, setUni] = useState('guelph')
     const [subjectGraph, setSubjectGraph] = useState({'nodes': [], 'edges': []})
+    const [droppedGraph, setDroppedGraph] = useState({'nodes': [], 'edges': []})
     const [majorGraph, setMajorGraph] = useState({'nodes': [], 'edges': []})
     const [courseInfo, setCourseInfo] = useState(null)
     const [openSubject, setOpenSubject] = useState(false)
     const [openMajor, setOpenMajor] = useState(false)
     const [openInfo, setOpenInfo] = useState(false)
+    const [openDropped, setOpenDropped] = useState(false)
     const [subject, setSubject] = useState('')
+    const [major, setMajor] = useState('')
+    //const [nodes, setNodes] = 
+    const [currNodeId, setCurrNodeId] = useState('')
 
     useEffect(() => {
         //scroll to centre the dialog
-        if(subjectGraph !== null && subjectGraph.nodes.length !== 0) {
+        //console.log(subjectGraph)
+        if(subjectGraph !== null && subjectGraph.nodes.length !== 0 && openSubject) {
             const child = subjectGraphRef.current.children[0]
             const scrollOptions = {
                 left: (child.offsetWidth - subjectGraphRef.current.offsetWidth) / 2,
                 top: (child.offsetHeight - subjectGraphRef.current.offsetHeight) / 2
             }
             subjectGraphRef.current.scroll(scrollOptions)
-        } else if(majorGraph !== null && majorGraph.nodes.length !== 0) {
+        } else if(majorGraph !== null && majorGraph.nodes.length !== 0 && openMajor) {
             const child = majorGraphRef.current.children[0]
             const scrollOptions = {
                 left: (child.offsetWidth - majorGraphRef.current.offsetWidth) / 2,
@@ -45,6 +51,10 @@ function CreateGraphs() {
             majorGraphRef.current.scroll(scrollOptions)
         }
     }, [subjectGraph, majorGraph])
+
+    const handleDroppedClose = () => {
+        setOpenDropped(false)
+    }
 
     const handleMajorClose = () => {
         setOpenMajor(false)
@@ -63,6 +73,7 @@ function CreateGraphs() {
     }
 
     const getSubjectGraph = async(event) => {
+        
         event.preventDefault()
         setOpenSubject(true)
         const obj = {
@@ -84,55 +95,6 @@ function CreateGraphs() {
         setSubject(event.target.elements.subjectField.value)
     }
 
-    // const myConfig = {
-    //     nodeHighlightBehavior: true,
-    //     highlightDegree: 1,
-    //     highlightOpacity: 0.1,
-    //     initialZoom: 1,
-    //     height: 400,
-    //     width: 800,
-    //     directed: true,
-    //     d3: {
-    //         linkLength: 90,
-    //         gravity: -500,
-    //     },
-    //     node: {
-    //       fontSize: 15,
-    //       size: 200,
-    //       highlightStrokeColor: "blue",
-    //       highlightFontSize: 17,
-    //     },
-    //     link: {
-    //       highlightColor: "black",
-    //       color: 'black'
-    //     },
-    // };
-
-    const onClickNode = function(nodeId) {
-        const obj = {
-            'cCode': nodeId,
-            'uni': uni
-        }
-
-        setOpenInfo(true)
-
-        fetch('https://131.104.49.104/api/getCourseInfo', {
-            method: 'POST',
-            body: JSON.stringify(obj),
-            referrerPolicy: 'unsafe-url',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(foundData => {setCourseInfo(foundData)})
-        .catch(error => console.log(error))
-    };
-
-    //const onClickLink = function(source, target) {
-    //    window.alert(`Clicked link between ${source} and ${target}`);
-    //};
-
     const getMajorGraph = async(event) => {
         event.preventDefault()
         setOpenMajor(true)
@@ -151,6 +113,64 @@ function CreateGraphs() {
         .then(response => response.json()
         .then(foundData => {setMajorGraph(foundData)}))
         .catch(error => console.log(error))
+
+        setMajor(event.target.elements.majorField.value)
+    }
+
+    const onClickNode = function(nodeId) {
+        console.log(nodeId)
+        const obj = {
+            'cCode': nodeId,
+            'uni': uni
+        }
+
+        setOpenInfo(true)
+        setCurrNodeId(nodeId)
+
+        fetch('https://131.104.49.104/api/getCourseInfo', {
+            method: 'POST',
+            body: JSON.stringify(obj),
+            referrerPolicy: 'unsafe-url',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(foundData => {setCourseInfo(foundData)})
+        .catch(error => console.log(error))
+    };
+
+    const dropCourse = () => {
+        if (openSubject) {
+            
+            const obj = {
+                'graph': subjectGraph,
+                'course': currNodeId
+            }
+
+            setSubjectGraph({'nodes': [], 'edges': []})
+
+            fetch("https://131.104.49.104/api/dropCourseGraph", {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                referrerPolicy: 'unsafe-url',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(foundData => setSubjectGraph(foundData))
+            .catch(error => console.log(error))
+            
+        } else if (openMajor) {
+            const obj = {
+                'graph': majorGraph,
+                'course': courseInfo.cCode
+            }
+        }
+        
+        setOpenInfo(false)
+        
     }
 
     function addGraph() {
@@ -259,60 +279,75 @@ function CreateGraphs() {
             </div>
             
             {/* Dialog for displaying subject graph */}
-            <div>
-                <Dialog
-                    open={openSubject}
-                    onClose={handleSubjectClose}
-                    aria-labelledby="subject-alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    fullWidth={true}
-                    maxWidth='xl'
-                >
-                    <DialogTitle id="subject-alert-dialog-title" className='center'>
-                    Graph of {subject}
-                    </DialogTitle>
-                    <DialogContent id='subject-dialog' ref={subjectGraphRef}>
-                            {(() => {
-                                if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined) && 
-                                (subjectGraph.edges !== null && subjectGraph.edges.length !== 0 && subjectGraph.edges !== undefined)) {
-                                    return(
-                                        <TransformWrapper
-                                            wheel={{step: 0.2}}
-                                            centerOnInit={true}
-                                        >
-                                            <TransformComponent>
-                                                <Canvas
-                                                    zoom={0.2}
-                                                    nodes={subjectGraph.nodes}
-                                                    edges={subjectGraph.edges}
-                                                    node = {(node) => (
-                                                        <Node
-                                                            onClick={() => onClickNode(node.properties.id)}
-                                                            style = {{fill: node.properties.color}}
+            {(() => {
+                return(
+                    <div>
+                        <Dialog
+                            keepMounted
+                            open={openSubject}
+                            onClose={handleSubjectClose}
+                            aria-labelledby="subject-alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            fullWidth={true}
+                            maxWidth='xl'
+                        >
+                            <DialogTitle id="subject-alert-dialog-title" className='center'>
+                                {(() => {
+                                    if (subjectGraph.nodes.length !== 0) {
+                                        return(
+                                            'Graph of ' + subject
+                                        )
+                                    } else {
+                                        return(
+                                            'No graph to display'
+                                        )
+                                    }
+                                })()}
+                            </DialogTitle>
+                            <DialogContent id='subject-dialog' ref={subjectGraphRef}>
+                                    {(() => {
+                                        if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined)) {
+                                            return(
+                                                <TransformWrapper
+                                                    wheel={{step: 0.2}}
+                                                    centerOnInit={true}
+                                                >
+                                                    <TransformComponent>
+                                                        <Canvas
+                                                            zoom={0.2}
+                                                            nodes={subjectGraph.nodes}
+                                                            edges={subjectGraph.edges}
+                                                            node = {(node) => (
+                                                                <Node
+                                                                    onClick={() => {onClickNode(node.properties.id)}}
+                                                                    style = {{fill: node.properties.color}}
+                                                                />
+                                                            )}
+                                                            edge = {(edge) => (
+                                                                <Edge
+                                                                    style = {{stroke: edge.properties.color}}
+                                                                />
+                                                            )}
                                                         />
-                                                    )}
-                                                    edge = {(edge) => (
-                                                        <Edge
-                                                            style = {{stroke: edge.properties.color}}
-                                                        />
-                                                    )}
-                                                />
-                                            </TransformComponent>
-                                        </TransformWrapper>
-                                    )
-                                }
-                            })()}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleSubjectClose}>Close</Button>
-                    </DialogActions>
+                                                    </TransformComponent>
+                                                </TransformWrapper>
+                                            )
+                                        }
+                                    })()}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleSubjectClose}>Close</Button>
+                            </DialogActions>
 
-                </Dialog>
-            </div>
+                        </Dialog>
+                    </div>
+                )
+            })()}
 
             {/* Dialog for displaying major graph */}
             <div>
                 <Dialog
+                    keepMounted
                     open={openMajor}
                     onClose={handleMajorClose}
                     aria-labelledby="major-alert-dialog-title"
@@ -321,12 +356,21 @@ function CreateGraphs() {
                     maxWidth='xl'
                 >
                     <DialogTitle id="major-alert-dialog-title" className='center'>
-                    Graph of {subject}
+                        {(() => {
+                            if (majorGraph.nodes.length !== 0) {
+                                return(
+                                    'Graph of ' + major
+                                )
+                            } else {
+                                return(
+                                    'No graph to display'
+                                )
+                            }
+                        })()}
                     </DialogTitle>
                     <DialogContent id='major-dialog' ref={majorGraphRef}>
                             {(() => {
-                                if((majorGraph.nodes !== null && majorGraph.nodes.length !== 0 && majorGraph.nodes !== undefined) && 
-                                (majorGraph.edges !== null && majorGraph.edges.length !== 0 && majorGraph.edges !== undefined)) {
+                                if((majorGraph.nodes !== null && majorGraph.nodes.length !== 0 && majorGraph.nodes !== undefined)) {
                                     return(
                                         <TransformWrapper
                                             wheel={{step: 0.2}}
@@ -363,8 +407,10 @@ function CreateGraphs() {
                 </Dialog>
             </div>
 
+            {/* Dialog for displaying course information */}
             <div>
                 <Dialog
+                    keepMounted
                     open={openInfo}
                     onClose={handleCloseInfo}
                     aria-labelledby="alert-dialog-title"
@@ -377,7 +423,9 @@ function CreateGraphs() {
                     </DialogTitle>
                     <DialogContent>
                         {(() => {
-                            if (courseInfo !== null) {
+                            console.log(courseInfo)
+                            if (courseInfo !== null && Object.keys(courseInfo).length !== 0) {
+                                console.log("here")
                                 return(
                                     <div key={courseInfo}>{
                                         Object.entries(courseInfo).map(info => {
@@ -391,18 +439,20 @@ function CreateGraphs() {
                                 )
                             } else {
                                 return(
-                                    <Typography component={'span'}>No course information to show</Typography>
+                                    <div style={{textAlign: 'center'}}>
+                                        <Typography component={'span'}>No course information to display</Typography>
+                                    </div>
                                 )
                             }
                         })()}
                     </DialogContent>
                     <DialogActions>
+                        <Button onClick={dropCourse}>Drop Course</Button>
                         <Button onClick={handleCloseInfo}>Close</Button>
                     </DialogActions>
 
                 </Dialog>
             </div>
-
 
         </div>
     );
