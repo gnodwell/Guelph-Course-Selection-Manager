@@ -118,10 +118,18 @@ function CreateGraphs() {
     }
 
     const onClickNode = function(nodeId) {
-        console.log(nodeId)
-        const obj = {
-            'cCode': nodeId,
-            'uni': uni
+        
+        let obj = {}
+        if(openSubject){
+            obj = {
+                'cCode': nodeId,
+                'uni': uni
+            }
+        } else {
+            obj = {
+                'cCode': nodeId,
+                'uni': 'guelph'
+            }
         }
 
         setOpenInfo(true)
@@ -163,10 +171,26 @@ function CreateGraphs() {
             .catch(error => console.log(error))
             
         } else if (openMajor) {
+
             const obj = {
                 'graph': majorGraph,
-                'course': courseInfo.cCode
+                'course': currNodeId
             }
+
+            setMajorGraph({'nodes': [], 'edges': []})
+
+            fetch("https://131.104.49.104/api/dropCourseGraph", {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                referrerPolicy: 'unsafe-url',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(foundData => setMajorGraph(foundData))
+            .catch(error => console.log(error))
+
         }
         
         setOpenInfo(false)
@@ -423,9 +447,9 @@ function CreateGraphs() {
                     </DialogTitle>
                     <DialogContent>
                         {(() => {
-                            console.log(courseInfo)
+                            //console.log(courseInfo)
                             if (courseInfo !== null && Object.keys(courseInfo).length !== 0) {
-                                console.log("here")
+                               //console.log("here")
                                 return(
                                     <div key={courseInfo}>{
                                         Object.entries(courseInfo).map(info => {
