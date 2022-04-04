@@ -137,8 +137,13 @@ def createSubjectGraph():
     #get the subject
     subject = request.get_json()
 
+    if ('waterloo' in subject['uni'].lower()):
+        uni = 'waterloo'
+    else:
+        uni = 'guelph'
+
     #create graph
-    graphJson = subjectGraphs.generateDataset(subject['subject'].upper(), subject['uni'])
+    graphJson = subjectGraphs.generateDataset(subject['subject'].upper(), uni)
 
     return jsonify(graphJson)
 
