@@ -1,26 +1,26 @@
-
-# W22_CIS3760_Team4 - Sprint 8
+# W22_CIS3760_Team4 - Sprint 9
 
   
 <!-- ABOUT SECTION -->
 
 ## About
 
-Sprint 8 involves adding the multi-university support to our web-application.
+Sprint 9 involves further refining and adding a "drop course" function to the graphing feature of our 
+project.
 
 
 
 ### Prerequisites
 
--NodeJS (https://nodejs.dev/)
--Python 3 (https://www.python.org/downloads/)
--PlayWright (https://playwright.dev/)
--PyGraphiz (https://pypi.org/project/pygraphviz/)
--NGINX
--React
--Bootstrap
--Flask
--jQuery
+- NodeJS (https://nodejs.dev/)
+- Python 3 (https://www.python.org/downloads/)
+- PlayWright (https://playwright.dev/)
+- PyGraphiz (https://pypi.org/project/pygraphviz/)
+- NGINX
+- React
+- Bootstrap
+- Flask
+- jQuery
 
 
 <!-- INSTALL SECTION -->
@@ -117,6 +117,10 @@ course data form the UofG course descriptions website.
   
 
 ##### To use the Web Application:
+
+NOTE: The ip address used in the examples below is for the demo server. This
+will need to be changed to your host's address in order for you to access the
+web application on your server.
 
 ###### Front-End:
 
