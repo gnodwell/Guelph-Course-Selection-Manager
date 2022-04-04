@@ -332,7 +332,6 @@ function CreateGraphs() {
                 </Box>
                 <Divider></Divider>
                 
-
                 {/* COURSE Graph TextField */}
                 <Box sx = {{paddingLeft: 1, paddingTop: 1}}>
                     <label className='flex_item_sm'>
