@@ -17,6 +17,9 @@ npm install react-router-dom
 
 npm install --save-dev @babel/preset-env @babel/preset-react @testing-library/jest-dom @testing-library/react jest
 
+
+npm i -D @playwright/test
+npx playwright install
 npx playwright install-deps
 
 
