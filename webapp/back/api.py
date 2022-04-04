@@ -114,7 +114,7 @@ def createCourseGraph():
     course = request.get_json()
 
     #create graph
-    graphJson = generateDataset(course['course'])
+    graphJson = generateDataset(course['course'].upper())
 
     return jsonify(graphJson)
 
@@ -138,7 +138,7 @@ def createSubjectGraph():
     subject = request.get_json()
 
     #create graph
-    graphJson = subjectGraphs.generateDataset(subject['subject'], subject['uni'])
+    graphJson = subjectGraphs.generateDataset(subject['subject'].upper(), subject['uni'])
 
     return jsonify(graphJson)
 
