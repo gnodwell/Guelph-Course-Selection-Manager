@@ -12,15 +12,15 @@ project.
 
 ### Prerequisites
 
--NodeJS (https://nodejs.dev/)
--Python 3 (https://www.python.org/downloads/)
--PlayWright (https://playwright.dev/)
--PyGraphiz (https://pypi.org/project/pygraphviz/)
--NGINX
--React
--Bootstrap
--Flask
--jQuery
+- NodeJS (https://nodejs.dev/)
+- Python 3 (https://www.python.org/downloads/)
+- PlayWright (https://playwright.dev/)
+- PyGraphiz (https://pypi.org/project/pygraphviz/)
+- NGINX
+- React
+- Bootstrap
+- Flask
+- jQuery
 
 
 <!-- INSTALL SECTION -->
