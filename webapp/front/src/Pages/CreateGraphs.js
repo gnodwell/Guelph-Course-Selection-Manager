@@ -98,6 +98,7 @@ function CreateGraphs() {
     }
 
     const getCourseGraph = async(event) => {
+        console.log(courseValue)
         event.preventDefault()
         setOpenCourse(true)
 
@@ -128,6 +129,9 @@ function CreateGraphs() {
             'subject': subjectValue,
             'uni': uni
         }
+
+        setSubjectGraph({'nodes': [], 'edges': []})
+
         fetch('https://131.104.49.104/api/createSubjectGraph', {
         method: 'POST',
         body: JSON.stringify(obj),
@@ -149,7 +153,9 @@ function CreateGraphs() {
         const obj = {
             'major': majorValue
         }
-    
+        
+        setMajorGraph({'nodes': [], 'edges': []})
+
         fetch('https://131.104.49.104/api/createMajorGraph', {
             method: 'POST',
             body: JSON.stringify(obj),

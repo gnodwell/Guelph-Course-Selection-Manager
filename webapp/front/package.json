@@ -29,7 +29,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set HTTPS=true && set NODE_TLS_REJECT_UNAUTHORIZED=0 && react-scripts start",
+    "start": "set HTTPS=true && react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject"
