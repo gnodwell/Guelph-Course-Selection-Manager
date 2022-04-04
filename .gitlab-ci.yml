@@ -57,7 +57,7 @@ front-end-test-job:
     - cd ..
     - cd webapp
     - cd front
-    - npm run test
+    - npx playwright test
 
 
 back-end-test-job:
