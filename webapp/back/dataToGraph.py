@@ -103,14 +103,26 @@ def generateDataset(course):
         course (String): course to build
     """
 
+
     with open('data.json', 'r') as f:
         data = json.load(f)
+    
+    currentMajor = ''
+    if (course.find('*') != -1 and (len(course) >= 7 and len(course) <= 8)):
+        currentMajor = course[:course.find('*')]
+    else:
+        return {'name': '', 'children': []}
 
-    currentMajor = course[:course.find('*')]
+    graphJSON = {'name': '', 'children': []}
+
     for major in data:
-        if getMajorCode(major['major']) == currentMajor:
-            data = major['title']
-    graphJSON = createGraphJSON(course, data)
+        if getMajorCode(major['major']).lower() == currentMajor.lower():
+            mData = major['title']
+
+    for c in mData:
+        if c['cCode'].lower() == course.lower():
+            graphJSON = createGraphJSON(course, mData)
+    
 
     return graphJSON
 
