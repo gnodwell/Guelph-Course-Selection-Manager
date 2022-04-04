@@ -3,7 +3,6 @@ import Tree from 'react-d3-tree';
 import { useRef } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import data1 from '../Data/mockdataset.json';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -17,24 +16,24 @@ function CreateGraphs() {
 
     const subjectGraphRef = useRef(null)
     const majorGraphRef = useRef(null)
-    const [graph, setGraphData] = useState(null)
+    const courseGraphRef = useRef(null)
     const [uni, setUni] = useState('guelph')
+    const [courseGraph, setCourseGraph] = useState({'name': '', 'children': []})
     const [subjectGraph, setSubjectGraph] = useState({'nodes': [], 'edges': []})
-    const [droppedGraph, setDroppedGraph] = useState({'nodes': [], 'edges': []})
     const [majorGraph, setMajorGraph] = useState({'nodes': [], 'edges': []})
     const [courseInfo, setCourseInfo] = useState(null)
+    const [openCourse, setOpenCourse] = useState(false)
     const [openSubject, setOpenSubject] = useState(false)
     const [openMajor, setOpenMajor] = useState(false)
     const [openInfo, setOpenInfo] = useState(false)
-    const [openDropped, setOpenDropped] = useState(false)
+    const [course, setCourse] = useState('')
     const [subject, setSubject] = useState('')
     const [major, setMajor] = useState('')
-    //const [nodes, setNodes] = 
     const [currNodeId, setCurrNodeId] = useState('')
 
     useEffect(() => {
         //scroll to centre the dialog
-        //console.log(subjectGraph)
+
         if(subjectGraph !== null && subjectGraph.nodes.length !== 0 && openSubject) {
             const child = subjectGraphRef.current.children[0]
             const scrollOptions = {
@@ -52,8 +51,8 @@ function CreateGraphs() {
         }
     }, [subjectGraph, majorGraph])
 
-    const handleDroppedClose = () => {
-        setOpenDropped(false)
+    const handleCourseClose = () => {
+        setOpenCourse(false)
     }
 
     const handleMajorClose = () => {
@@ -70,6 +69,29 @@ function CreateGraphs() {
     
     const changeUni = (event) => {
         setUni(event.target.value)
+    }
+
+    const getCourseGraph = async(event) => {
+        event.preventDefault()
+        setOpenCourse(true)
+
+        const obj = {
+            'course': event.target.elements.courseField.value
+        }
+
+        fetch('https://131.104.49.104/api/createCourseGraph', {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        referrerPolicy: "unsafe-url",
+        headers: {
+            'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(foundData => {setCourseGraph(foundData)})
+        .catch(error => console.log(error))
+
+        setCourse(event.target.elements.courseField.value)
     }
 
     const getSubjectGraph = async(event) => {
@@ -197,50 +219,62 @@ function CreateGraphs() {
         
     }
 
-    function addGraph() {
-        setGraphData(data1)
-    }
-
-    function clearGraph() {
-        setGraphData(null)
-    }
-
     return (
         <div id="create-graphs">
            <h1>Create Graphs</h1>
-            
-            <Button onClick = {addGraph} variant='contained' color='primary' style={{margin: '5px'}}>
-                Generate Course Graph
-            </Button>
 
-            <Button onClick = {clearGraph} variant='contained' color='primary' style={{margin: '5px'}}>
-                Clear Course Graph
-            </Button>
-                    
-            <Typography>Graph of CIS*3760</Typography>
-
-            {/*Graph div*/}
+            {/* Dialog displaying course graph*/}
             {(() => {
                 //function to create the tree graph
-                if (graph !== null) {
-                    return (
-                        <div style={{ width: '30em', height: '20em', backgroundColor: 'white', margin: '5px', borderStyle: 'solid', borderColor: 'white', borderWidth: '1px'}}>
-                            <Tree
-                                data={graph}
-                                pathFunc='step'
-                                orientation='vertical'
-                                separation={{siblings: 2, nonSiblings: 2 }}
-                                collapsible='true'
-                                zoom='0.25'
-                                translate={{x:450, y:200}}
-                            />
-                        </div>
-                    )
-                }
+                return(
+                    <div>
+                        <Dialog
+                            keepMounted
+                            open={openCourse}
+                            onClose={handleCourseClose}
+                            aria-labelledby="course-alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            fullWidth={true}
+                            maxWidth='xl'
+                        >
+                            <DialogTitle id="course-alert-dialog-title" className='center'>
+                                {(() => {
+                                    if (courseGraph.name !== '') {
+                                        return(
+                                            'Graph of ' + course
+                                        )
+                                    } else {
+                                        return(
+                                            'No graph to display'
+                                        )
+                                    }
+                                })()}
+                            </DialogTitle>
+                            <DialogContent id='course-dialog' ref={courseGraphRef} style={{height: '600px'}}>
+                                    {(() => {
+                                        if (courseGraph.name !== '') {
+                                            return (
+                                                <Tree
+                                                    data={courseGraph}
+                                                    pathFunc='step'
+                                                    orientation='vertical'
+                                                    separation={{siblings: 2, nonSiblings: 2 }}
+                                                    collapsible='true'
+                                                    zoom='0.25'
+                                                    translate={{x:450, y:200}}
+                                                />
+                                            )
+                                        }
+                                    })()}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCourseClose}>Close</Button>
+                            </DialogActions>
+
+                        </Dialog>
+                    </div>
+                )
             })()}
-            
-            <br></br>
-            <br></br>
 
             {/* buttons for selecting the university */}
             <Typography variant='body1'>Select a university</Typography>
@@ -260,6 +294,28 @@ function CreateGraphs() {
                 )
             })()}
 
+            {/* form for the course graph */}
+            <div style={{margin: '10px'}}>
+                <form onSubmit={getCourseGraph}>
+                    <label>
+                        <Typography variant='body1'>Course Name</Typography>
+                        <input
+                            id='courseField'
+                            className='input_field'
+                            type='text'
+                            placeholder='CIS*3760'
+                        />
+                    </label>
+
+                    <br></br>
+
+                    {/* Button for creating subject graph */}
+                    <Button type='submit' variant='contained' color='primary' style={{margin: '5px'}}>
+                        Generate Course Graph
+                    </Button>
+                </form>      
+            </div>
+
             {/* form for the subject graph */}
             <div style={{margin: '10px'}}>
                 <form onSubmit={getSubjectGraph}>
@@ -269,7 +325,6 @@ function CreateGraphs() {
                             id='subjectField'
                             className='input_field'
                             type='text'
-                            name='subject'
                             placeholder='CIS'
                         />
                     </label>
@@ -369,204 +424,211 @@ function CreateGraphs() {
             })()}
 
             {/* Dialog for displaying major graph */}
-            <div>
-                <Dialog
-                    keepMounted
-                    open={openMajor}
-                    onClose={handleMajorClose}
-                    aria-labelledby="major-alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    fullWidth={true}
-                    maxWidth='xl'
-                >
-                    <DialogTitle id="major-alert-dialog-title" className='center'>
-                        {(() => {
-                            if (majorGraph.nodes.length !== 0) {
-                                return(
-                                    'Graph of ' + major
-                                )
-                            } else {
-                                return(
-                                    'No graph to display'
-                                )
-                            }
-                        })()}
-                    </DialogTitle>
-                    <DialogContent id='major-dialog' ref={majorGraphRef}>
-                            {(() => {
-                                if((majorGraph.nodes !== null && majorGraph.nodes.length !== 0 && majorGraph.nodes !== undefined)) {
-                                    return(
-                                        <TransformWrapper
-                                            wheel={{step: 0.2}}
-                                            centerOnInit={true}
-                                        >
-                                            <TransformComponent>
-                                                <Canvas
-                                                    zoom={0.2}
-                                                    nodes={majorGraph.nodes}
-                                                    edges={majorGraph.edges}
-                                                    node = {(node) => (
-                                                        <Node
-                                                            onClick={() => onClickNode(node.properties.id)}
-                                                            style = {{fill: node.properties.color}}
+            {(() => {
+                return(
+                    <div>
+                        <Dialog
+                            keepMounted
+                            open={openMajor}
+                            onClose={handleMajorClose}
+                            aria-labelledby="major-alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            fullWidth={true}
+                            maxWidth='xl'
+                        >
+                            <DialogTitle id="major-alert-dialog-title" className='center'>
+                                {(() => {
+                                    if (majorGraph.nodes.length !== 0) {
+                                        return(
+                                            'Graph of ' + major
+                                        )
+                                    } else {
+                                        return(
+                                            'No graph to display'
+                                        )
+                                    }
+                                })()}
+                            </DialogTitle>
+                            <DialogContent id='major-dialog' ref={majorGraphRef}>
+                                    {(() => {
+                                        if((majorGraph.nodes !== null && majorGraph.nodes.length !== 0 && majorGraph.nodes !== undefined)) {
+                                            return(
+                                                <TransformWrapper
+                                                    wheel={{step: 0.2}}
+                                                    centerOnInit={true}
+                                                >
+                                                    <TransformComponent>
+                                                        <Canvas
+                                                            zoom={0.2}
+                                                            nodes={majorGraph.nodes}
+                                                            edges={majorGraph.edges}
+                                                            node = {(node) => (
+                                                                <Node
+                                                                    onClick={() => onClickNode(node.properties.id)}
+                                                                    style = {{fill: node.properties.color}}
+                                                                />
+                                                            )}
+                                                            edge = {(edge) => (
+                                                                <Edge
+                                                                    style = {{stroke: edge.properties.color}}
+                                                                />
+                                                            )}
                                                         />
-                                                    )}
-                                                    edge = {(edge) => (
-                                                        <Edge
-                                                            style = {{stroke: edge.properties.color}}
-                                                        />
-                                                    )}
-                                                />
-                                            </TransformComponent>
-                                        </TransformWrapper>
-                                        
-                                    )
-                                }
-                            })()}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleMajorClose}>Close</Button>
-                    </DialogActions>
+                                                    </TransformComponent>
+                                                </TransformWrapper>
+                                                
+                                            )
+                                        }
+                                    })()}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleMajorClose}>Close</Button>
+                            </DialogActions>
 
-                </Dialog>
-            </div>
-
+                        </Dialog>
+                    </div>
+                )
+            })()}
+            
             {/* Dialog for displaying course information */}
-            <div>
-                <Dialog
-                    keepMounted
-                    open={openInfo}
-                    onClose={handleCloseInfo}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    fullWidth={true}
-                    maxWidth='md'
-                >
-                    <DialogTitle className='center'>
-                    Course Information
-                    </DialogTitle>
-                    <DialogContent>
-                        {(() => {
-                            //console.log(courseInfo)
-                            if (courseInfo !== null && Object.keys(courseInfo).length !== 0) {
-                               //console.log("here")
-                                return(
-                                    <div key={courseInfo}>{
-                                        Object.entries(courseInfo).map(info => {
-                                            if (info[1] == null) {
-                                                return;
-                                            }
-                                            else if (info[0] == 'cCode') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Course Code'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'creditWeight') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Credit Weight'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'department') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Department'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'description') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Description'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'lec') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Lectures'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'location') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Location'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'name') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Course Name'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'prereqs') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Prerequisites'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else if (info[0] == 'semesters') {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {'Semesters Offered'}: {info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            else 
-                                            {
-                                                return(
-                                                    <div key={info[0]}>
-                                                        <Typography component={'span'}>
-                                                            {info[0]}:{info[1]}
-                                                        </Typography>
-                                                    </div>
-                                                )
-                                            }
-                                            
-                                        })
-                                    }</div>
-                                )
-                            } else {
-                                return(
-                                    <div style={{textAlign: 'center'}}>
-                                        <Typography component={'span'}>No course information to display</Typography>
-                                    </div>
-                                )
-                            }
-                        })()}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={dropCourse}>Drop Course</Button>
-                        <Button onClick={handleCloseInfo}>Close</Button>
-                    </DialogActions>
+            {(() => {
+                return (
+                    <div>
+                        <Dialog
+                            keepMounted
+                            open={openInfo}
+                            onClose={handleCloseInfo}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            fullWidth={true}
+                            maxWidth='md'
+                        >
+                            <DialogTitle className='center'>
+                            Course Information
+                            </DialogTitle>
+                            <DialogContent>
+                                {(() => {
+                                    if (courseInfo !== null && Object.keys(courseInfo).length !== 0) {
+                                        return(
+                                            <div key={courseInfo}>{
+                                                Object.entries(courseInfo).map(info => {
+                                                    if (info[1] === null) {
+                                                        return(<div key={info[0]}></div>);
+                                                    }
+                                                    else if (info[0] === 'cCode') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Course Code'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'creditWeight') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Credit Weight'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'department') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Department'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'description') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Description'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'lec') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Lectures'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'location') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Location'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'name') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Course Name'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'prereqs') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Prerequisites'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else if (info[0] === 'semesters') {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {'Semesters Offered'}: {info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    else 
+                                                    {
+                                                        return(
+                                                            <div key={info[0]}>
+                                                                <Typography component={'span'}>
+                                                                    {info[0]}:{info[1]}
+                                                                </Typography>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    
+                                                })
+                                            }</div>
+                                        )
+                                    } else {
+                                        return(
+                                            <div style={{textAlign: 'center'}}>
+                                                <Typography component={'span'}>No course information to display</Typography>
+                                            </div>
+                                        )
+                                    }
+                                })()}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={dropCourse}>Drop Course</Button>
+                                <Button onClick={handleCloseInfo}>Close</Button>
+                            </DialogActions>
 
-                </Dialog>
-            </div>
+                        </Dialog>
+                    </div>
+                )
+            })()}
+            
 
         </div>
     );
