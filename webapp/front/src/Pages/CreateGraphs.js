@@ -116,7 +116,7 @@ function CreateGraphs() {
         .then(foundData => {setCourseGraph(foundData)})
         .catch(error => console.log(error))
 
-        setCourse(event.target.elements.courseField.value)
+        setCourse(courseValue)
     }
 
     const getSubjectGraph = async(event) => {
