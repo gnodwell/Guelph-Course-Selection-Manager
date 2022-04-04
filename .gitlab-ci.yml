@@ -51,6 +51,7 @@ unit-test-job:   # This job runs in the test stage.
 
 front-end-test-job:
   stage: test
+  image: mcr.microsoft.com/playwright:focal
   script:
     - cd installationScripts
     - ./webAppSetup.sh
