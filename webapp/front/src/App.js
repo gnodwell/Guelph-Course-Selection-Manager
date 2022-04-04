@@ -158,7 +158,7 @@ function App() {
 
           <List>
             {/* SCROLL TO HOME */}
-            <ListItem button component={Link} to="/">
+            <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -167,7 +167,7 @@ function App() {
         
 
             {/* SCROLL TO COURSE SEARCH */}
-              <ListItem button component={Link} to="/CourseSearch" >
+              <ListItem button component={Link} to="/CourseSearch" onClick={handleDrawerClose}>
                 <ListItemIcon>
                   <SearchIcon />
                 </ListItemIcon>
@@ -176,7 +176,7 @@ function App() {
       
 
             {/* SCROLL TO CREATE GRAPHS*/}
-              <ListItem button key={"Course Graph"} component={Link} to="/CreateGraphs" >
+              <ListItem button key={"Course Graph"} component={Link} to="/CreateGraphs" onClick={handleDrawerClose}>
                 <ListItemIcon>
                   <AnalyticsIcon />
                 </ListItemIcon>

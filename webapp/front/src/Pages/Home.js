@@ -57,7 +57,7 @@ class Home extends Component {
     return (
  
       <div className="home">
-            //*MAIN BOX
+            {/* //*MAIN BOX */}
             <Box sx = {{
                     backgroundColor: '#0a1929',
                     color: 'white',

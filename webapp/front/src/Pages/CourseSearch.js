@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { ArrowDropDown, Close } from '@mui/icons-material/';
-import Zoom from '@mui/material/Zoom';
 import { Menu, MenuItem, TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material/';
-import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -38,7 +35,7 @@ function CourseSearch() {
         async function getDepartments () {
             try {
                 await
-                fetch('http://127.0.0.1:5000/api/getDepartments', {
+                fetch('https://131.104.49.104/api/getDepartments', {
                     method: 'GET',
                     referrerPolicy: 'unsafe-url',
                 })
@@ -87,7 +84,7 @@ function CourseSearch() {
         setFilters(obj)
         
         //if server is taking a long time to fetch then run the api locally
-        fetch('http://127.0.0.1:5000/api', {
+        fetch('https://131.104.49.104/api', {
             method: 'POST',
             body: JSON.stringify(obj),
             referrerPolicy: "unsafe-url",

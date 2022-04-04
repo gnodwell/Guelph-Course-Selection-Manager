@@ -93,6 +93,7 @@ function CreateGraphs() {
     }
     
     const changeUni = (event) => {
+        console.log(event.target.value)
         setUni(event.target.value)
     }
 
@@ -324,8 +325,8 @@ function CreateGraphs() {
                                 label="University" 
                                 onChange={changeUni}
                             >   
-                                <MenuItem value="University of Guelph">University of Guelph</MenuItem>
-                                <MenuItem value="University of Waterloo">University of Waterloo</MenuItem>
+                                <MenuItem value="guelph">University of Guelph</MenuItem>
+                                <MenuItem value="waterloo">University of Waterloo</MenuItem>
                             </Select>
                         </FormControl>
                 </Box>
@@ -401,68 +402,68 @@ function CreateGraphs() {
 
                 {/* Dialog for displaying subject graph */}
                 {(() => {
-                    return(
-                        <div>
-                            <Dialog
-                                keepMounted
-                                open={openSubject}
-                                onClose={handleSubjectClose}
-                                aria-labelledby="subject-alert-dialog-title"
-                                aria-describedby="alert-dialog-description"
-                                fullWidth={true}
-                                maxWidth='xl'
-                            >
-                                <DialogTitle id="subject-alert-dialog-title" className='center'>
-                                    {(() => {
-                                        if (subjectGraph.nodes.length !== 0) {
-                                            return(
-                                                'Graph of ' + subject
-                                            )
-                                        } else {
-                                            return(
-                                                'No graph to display'
-                                            )
-                                        }
-                                    })()}
-                                </DialogTitle>
-                                <DialogContent id='subject-dialog' ref={subjectGraphRef}>
+                        return(
+                            <div>
+                                <Dialog
+                                    keepMounted
+                                    open={openSubject}
+                                    onClose={handleSubjectClose}
+                                    aria-labelledby="subject-alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                    fullWidth={true}
+                                    maxWidth='xl'
+                                >
+                                    <DialogTitle id="subject-alert-dialog-title" className='center'>
                                         {(() => {
-                                            if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined)) {
+                                            if (subjectGraph.nodes.length !== 0) {
                                                 return(
-                                                    <TransformWrapper
-                                                        wheel={{step: 0.2}}
-                                                        centerOnInit={true}
-                                                    >
-                                                        <TransformComponent>
-                                                            <Canvas
-                                                                zoom={0.2}
-                                                                nodes={subjectGraph.nodes}
-                                                                edges={subjectGraph.edges}
-                                                                node = {(node) => (
-                                                                    <Node
-                                                                        onClick={() => {onClickNode(node.properties.id)}}
-                                                                        style = {{fill: node.properties.color}}
-                                                                    />
-                                                                )}
-                                                                edge = {(edge) => (
-                                                                    <Edge
-                                                                        style = {{stroke: edge.properties.color}}
-                                                                    />
-                                                                )}
-                                                            />
-                                                        </TransformComponent>
-                                                    </TransformWrapper>
+                                                    'Graph of ' + subject
+                                                )
+                                            } else {
+                                                return(
+                                                    'No graph to display'
                                                 )
                                             }
                                         })()}
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleSubjectClose}>Close</Button>
-                                </DialogActions>
+                                    </DialogTitle>
+                                    <DialogContent id='subject-dialog' ref={subjectGraphRef}>
+                                            {(() => {
+                                                if((subjectGraph.nodes !== null && subjectGraph.nodes.length !== 0 && subjectGraph.nodes !== undefined)) {
+                                                    return(
+                                                        <TransformWrapper
+                                                            wheel={{step: 0.2}}
+                                                            centerOnInit={true}
+                                                        >
+                                                            <TransformComponent>
+                                                                <Canvas
+                                                                    zoom={0.2}
+                                                                    nodes={subjectGraph.nodes}
+                                                                    edges={subjectGraph.edges}
+                                                                    node = {(node) => (
+                                                                        <Node
+                                                                            onClick={() => {onClickNode(node.properties.id)}}
+                                                                            style = {{fill: node.properties.color}}
+                                                                        />
+                                                                    )}
+                                                                    edge = {(edge) => (
+                                                                        <Edge
+                                                                            style = {{stroke: edge.properties.color}}
+                                                                        />
+                                                                    )}
+                                                                />
+                                                            </TransformComponent>
+                                                        </TransformWrapper>
+                                                    )
+                                                }
+                                            })()}
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={handleSubjectClose}>Close</Button>
+                                    </DialogActions>
 
-                            </Dialog>
-                        </div>
-                    )
+                                </Dialog>
+                            </div>
+                        )
                 })()}
 
                 {/* Dialog for displaying major graph */}
@@ -672,6 +673,8 @@ function CreateGraphs() {
                 })()}
 
             </Box>
+
+            
            
             
 

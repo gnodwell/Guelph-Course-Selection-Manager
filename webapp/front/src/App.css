@@ -163,7 +163,7 @@ img,
 canvas,
 iframe,
 video,
-svg,
+/* svg, */
 select,
 textarea {
   max-width: 100%;
@@ -446,7 +446,7 @@ img,
 canvas,
 iframe,
 video,
-svg,
+/* svg, */
 select,
 textarea {
   max-width: 100%;
