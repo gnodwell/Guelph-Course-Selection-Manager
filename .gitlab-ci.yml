@@ -60,6 +60,7 @@ front-end-test-job:
     - npx playwright test
 
 
+
 back-end-test-job:
   stage: test
   script:
